@@ -38,7 +38,7 @@ public class ObstacleFactory {
     /**
      * 无限血量
      */
-    private static final int INFINITE_HP = 2147483647;
+    private static final int INFINITE_HP = 2047483647;
 
     /**
      * 石头血量

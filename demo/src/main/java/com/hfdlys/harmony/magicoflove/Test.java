@@ -22,11 +22,11 @@ public class Test {
             ServerSocket serverSocket = new ServerSocket(2344);
             Socket socket2 = serverSocket.accept();
             InputStream inputStream = socket2.getInputStream();
-            CodedInputStream codedInputStream = CodedInputStream.newInstance(inputStream);
             System.out.println("waiting for message");
+            CodedInputStream codedInputStream = CodedInputStream.newInstance(inputStream);
             Message newMessage = codecMessage.readFrom(codedInputStream);
             System.out.println(newMessage.getCode());
-            // System.out.println(((newMessage.getContent().unpack(ControlMessage.class))).getAimX());
+            System.out.println(((newMessage.getContent().unpack(ControlMessage.class))).getAimX());
             newMessage.setCode(2);
             OutputStream outputStream = socket2.getOutputStream();
             CodedOutputStream codedOutputStream = CodedOutputStream.newInstance(outputStream);

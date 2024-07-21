@@ -20,6 +20,10 @@ public class Message {
     @Protobuf(fieldType = FieldType.INT32, order = 1, required = true)
     private Integer code;
 
-    
+    /*
+     * 信息内容
+     */
+    @Protobuf(fieldType = FieldType.OBJECT, order = 2, required = true)
+    private Any content;
 
 }

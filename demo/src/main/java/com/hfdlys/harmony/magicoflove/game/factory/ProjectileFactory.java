@@ -76,7 +76,7 @@ public class ProjectileFactory {
                         new Hitbox(0, 0, 0, 0, 8),
                         texture_all.getCutTexture(0 * 16, 5 * 16, 16, 16, 8, 8),
                         10,
-                        0,
+                        senderId,
                         20,
                         ox,
                         oy);
@@ -88,7 +88,7 @@ public class ProjectileFactory {
                         new Hitbox(0, 0, 0, 0, 8),
                         texture_all.getCutTexture(x * 16, y * 16, 16, 16, 8, 8),
                         10,
-                        0,
+                        senderId,
                         20,
                         ox,
                         oy);
