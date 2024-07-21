@@ -56,6 +56,22 @@ public class Projectile extends Entity {
     }
 
     /**
+     * 构造一个发送者编号的弹射物
+     * @param hitbox 碰撞箱
+     * @param texture 贴图
+     * @param damage 伤害
+     * @param senderID 发送者编号
+     */
+    public Projectile(Hitbox hitbox, Texture texture, int damage, int senderID, int range, int ox, int oy) {
+        super(hitbox, texture, damage); // 伤害越大，hp越多
+        this.damage = damage;
+        this.senderID = senderID;
+        this.range = range;
+        this.ox = ox;
+        this.oy = oy;
+    }
+
+    /**
      * 深拷贝弹射物
      */
     public Projectile(Projectile projectile) {

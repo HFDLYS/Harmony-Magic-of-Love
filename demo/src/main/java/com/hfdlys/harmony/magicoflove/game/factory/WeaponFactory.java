@@ -17,17 +17,19 @@ import java.io.IOException;
  */
 public class WeaponFactory {
     /**
-     * 
+     * 爱之剑
      */
-    public static final int LOVE_SWORD = 0;
+    public static final int LOVE_SWORD = 1;
 
     /**
-     * 
+     * 爱之杖
      */
-    public static final int LOVE_STAVES = 1;
+    public static final int LOVE_STAVES = 2;
 
-    /** */
-    public static final int CHAOS_STAVES = 2;
+    /**
+     * 混沌杖
+     */
+    public static final int CHAOS_STAVES = 3;
 
     /**
      * 获取武器原型的一份复制
@@ -37,7 +39,7 @@ public class WeaponFactory {
     public static Weapon getWeapon(int type) {
         try {
             if(type == LOVE_SWORD) {
-                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.RAMDOM);
+                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.RAMDOM, 0, 0, 0);
                 Texture texture = new Texture("weapon/love_sword.png", 32, 32, 16, 16);
                 Texture texture_Right = new Texture(ImageUtil.rotate(texture.getImage(), -90), 32, 32, 16, 16);
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
@@ -50,7 +52,7 @@ public class WeaponFactory {
                 weapon.setTag("Pistol");
                 return weapon;
             } else if (type == LOVE_STAVES) {
-                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.HEART);
+                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.HEART, 0, 0, 0);
                 Texture texture = new Texture("weapon/love_staves.png", 32, 32, 16, 16);
                 Texture texture_Right = new Texture(ImageUtil.rotate(texture.getImage(), -90), 32, 32, 16, 16);
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
@@ -63,7 +65,7 @@ public class WeaponFactory {
                 weapon.setTag("Love Staves");
                 return weapon;
             } else if (type == CHAOS_STAVES) {
-                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.MUSIC_NOTE);
+                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.MUSIC_NOTE, 0, 0, 0);
                 Texture texture = new Texture("weapon/chaos_staves.png", 32, 32, 16, 16);
                 Texture texture_Right = new Texture(ImageUtil.rotate(texture.getImage(), -90), 32, 32, 16, 16);
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
@@ -77,11 +79,8 @@ public class WeaponFactory {
                     public boolean attack(int senderID, int x, int y, int aimX, int aimY) {
                     if(GameManager.getInstance().getTimeStamp() - getLastShootTimeStamp() <= getInterval()) return false;
                         setLastShootTimeStamp(GameManager.getInstance().getTimeStamp());
-                        Projectile newProjectile = ProjectileFactory.getProjectile(ProjectileFactory.RAMDOM);
-                        newProjectile.setSenderID(senderID);
+                        Projectile newProjectile = ProjectileFactory.getProjectile(ProjectileFactory.RAMDOM, senderID, x, y);
                         newProjectile.setDamage(getDamage());
-                        newProjectile.setOx(x);
-                        newProjectile.setOy(y);
                         newProjectile.setRange(getRange());
                         int dx = aimX - x;
                         int dy = aimY - y;

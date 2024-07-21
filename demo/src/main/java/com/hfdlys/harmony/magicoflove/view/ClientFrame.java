@@ -5,7 +5,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 public class ClientFrame extends JFrame {
-    private static final long serialVersionUID = 1L;
 
     private JPanel contentPane;
     private JTextField textField;
@@ -14,7 +13,18 @@ public class ClientFrame extends JFrame {
     public ClientFrame() {
         repaint();
         setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 450, 300);
         
+    }
+    
+
+    void launchFrame() {
+        setVisible(true);
+    }
+
+    void launchLoginFrame() {
+        repaint();
         setTitle("登录");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
@@ -22,13 +32,13 @@ public class ClientFrame extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("用户名：");
-        lblNewLabel.setBounds(100, 50, 54, 15);
-        contentPane.add(lblNewLabel);
+        JLabel NameLabel = new JLabel("用户名：");
+        NameLabel.setBounds(100, 50, 54, 15);
+        contentPane.add(NameLabel);
 
-        JLabel lblNewLabel_1 = new JLabel("密码：");
-        lblNewLabel_1.setBounds(100, 100, 54, 15);
-        contentPane.add(lblNewLabel_1);
+        JLabel PasswordLabel = new JLabel("密码：");
+        PasswordLabel.setBounds(100, 100, 54, 15);
+        contentPane.add(PasswordLabel);
 
         textField = new JTextField();
         textField.setBounds(200, 50, 100, 21);
@@ -39,8 +49,8 @@ public class ClientFrame extends JFrame {
         passwordField.setBounds(200, 100, 100, 21);
         contentPane.add(passwordField);
 
-        JButton btnNewButton = new JButton("登录");
-        btnNewButton.addActionListener(new ActionListener() {
+        JButton LoginButton = new JButton("登录");
+        LoginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = textField.getText();
                 String password = new String(passwordField.getPassword());
@@ -58,8 +68,7 @@ public class ClientFrame extends JFrame {
                 
             }
         });
-        btnNewButton.setBounds(150, 150, 93, 23);
-        contentPane.add(btnNewButton);
+        LoginButton.setBounds(150, 150, 93, 23);
+        contentPane.add(LoginButton);
     }
-    
 }

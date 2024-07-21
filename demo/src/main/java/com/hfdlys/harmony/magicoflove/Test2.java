@@ -12,29 +12,31 @@ import com.hfdlys.harmony.magicoflove.network.protoc.Message;
 import java.io.*;
 import java.net.*;
 
-public class Test {
+public class Test2 {
     public static void main(String[] args) {
         Codec<Message> codecMessage = ProtobufProxy.create(Message.class);
         Message message = new Message();
         byte array[] = new byte[1000];
         
         try {
-            ServerSocket serverSocket = new ServerSocket(2344);
-            Socket socket2 = serverSocket.accept();
-            InputStream inputStream = socket2.getInputStream();
-            CodedInputStream codedInputStream = CodedInputStream.newInstance(inputStream);
-            System.out.println("waiting for message");
-            Message newMessage = codecMessage.readFrom(codedInputStream);
-            System.out.println(newMessage.getCode());
-            // System.out.println(((newMessage.getContent().unpack(ControlMessage.class))).getAimX());
-            newMessage.setCode(2);
-            OutputStream outputStream = socket2.getOutputStream();
+            Socket socket1 = new Socket("localhost", 2344);
+            OutputStream outputStream = socket1.getOutputStream();
             CodedOutputStream codedOutputStream = CodedOutputStream.newInstance(outputStream);
-            codecMessage.writeTo(newMessage, codedOutputStream);
+            ControlMessage controlMessage = new ControlMessage();
+            controlMessage.setAimX(233);
+            // message.setContent(Any.pack(controlMessage));
+            message.setCode(1);
+            Thread.sleep(10000);
+            System.out.println("message code: " + message.getCode());
+            codecMessage.writeTo(message, codedOutputStream);
             codedOutputStream.flush();
+            codecMessage.writeTo(message, codedOutputStream);
+            codedOutputStream.flush();
+            Message newMessage = codecMessage.readFrom(CodedInputStream.newInstance(socket1.getInputStream()));
+            System.out.println(newMessage.getCode());
             // Message newMessage = codecMessage.decode(bytes);
             // System.out.println(((newMessage.getContent().unpack(ControlMessage.class))).getAimX());
-            serverSocket.close();
+            socket1.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

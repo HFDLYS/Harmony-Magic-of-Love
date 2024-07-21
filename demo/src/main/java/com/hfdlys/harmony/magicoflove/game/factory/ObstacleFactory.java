@@ -6,11 +6,14 @@ import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
 import com.hfdlys.harmony.magicoflove.game.common.Texture;
 import com.hfdlys.harmony.magicoflove.game.entity.Obstacle;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 障碍物工厂类
  * @author Jiasheng Wang
  * @since 2024-07-18
  */
+@Slf4j
 public class ObstacleFactory {
     /**
      * 障碍物编号：空气墙 - 0
@@ -61,10 +64,6 @@ public class ObstacleFactory {
     public static Obstacle getObstacle(int type, int x, int y, int lx, int ly) {
         try {
             if(type == AIR_WALL) {
-                //if(lx == 0 && ly == 0) {
-                //    System.out.println("空气墙碰撞箱参数异常!");
-                //    return null;
-                //}
                 return new Obstacle(
                         new Hitbox(x, y, lx, ly),
                         null,
@@ -72,27 +71,27 @@ public class ObstacleFactory {
                 );
             } else if(type == STONE) {
                 return new Obstacle(
-                        new Hitbox(x, y, 50),
-                        new Texture("pics/stone.png", 100, 100, 50, 50),
+                        new Hitbox(x, y, 16),
+                        new Texture("obstacle/stone.png", 32, 32, 16, 16),
                         STONE_HP
                 );
             } else if(type == CONCRETE) {
                 return new Obstacle(
-                        new Hitbox(x, y, 50),
-                        new Texture("pics/block.png", 200, 200, 120, 100),
+                        new Hitbox(x, y, 16),
+                        new Texture("obstacle/block.png", 32, 32, 16, 16),
                         CONCRETE_HP
                 );
             } else if(type == WOOD) {
                 return new Obstacle(
-                        new Hitbox(x, y, 50),
-                        new Texture("pics/wood.png", 100, 100, 50, 50),
+                        new Hitbox(x, y, 16),
+                        new Texture("obstacle/wood.png", 32, 32, 16, 16),
                         WOOD_HP
                 );
             } else {
-                System.out.println("未知障碍物类型!");
+                log.error("未知的障碍物类型: {}", type);
             }
         } catch (IOException e) {
-            System.out.println("障碍物生成异常!");
+            log.error("读取障碍物贴图失败: {}", e.getMessage());
             e.getStackTrace();
         }
         return null;

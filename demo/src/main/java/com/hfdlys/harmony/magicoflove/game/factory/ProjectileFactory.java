@@ -58,7 +58,7 @@ public class ProjectileFactory {
      * @param type
      * @return
      */
-    public static Projectile getProjectile(int type) {
+    public static Projectile getProjectile(int type, int senderId, int ox, int oy) {
         try {
             Texture texture_all = new Texture("weapon/projectile.png", 48, 160, 16, 16);
             switch (type) {
@@ -67,15 +67,19 @@ public class ProjectileFactory {
                         new Hitbox(0, 0, 0, 0, 8),
                         texture_all.getCutTexture(0 * 16, 4 * 16, 16, 16, 8, 8),
                         20,
-                        0,
-                        20);
+                        senderId,
+                        20,
+                        ox,
+                        oy);
                 case HEART:
                     return new Projectile(
                         new Hitbox(0, 0, 0, 0, 8),
                         texture_all.getCutTexture(0 * 16, 5 * 16, 16, 16, 8, 8),
                         10,
                         0,
-                        20);
+                        20,
+                        ox,
+                        oy);
             
                 default:
                     int x = (int)((Math.random() * 2) + 0.5);
@@ -85,7 +89,9 @@ public class ProjectileFactory {
                         texture_all.getCutTexture(x * 16, y * 16, 16, 16, 8, 8),
                         10,
                         0,
-                        20);
+                        20,
+                        ox,
+                        oy);
             }
                 
         } catch (Exception e) {

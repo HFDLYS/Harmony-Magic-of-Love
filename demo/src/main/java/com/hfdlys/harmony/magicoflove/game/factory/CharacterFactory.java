@@ -19,7 +19,7 @@ public class CharacterFactory {
      * @param type 类型
      * @return 对应类型角色
      */
-    public static Character getCharacter(int type, int x, int y, int hp) {
+    public static Character getCharacter(int type, int x, int y, int hp, int weaponType) {
         try {
             switch (type) {
                 case 1: {
@@ -47,7 +47,8 @@ public class CharacterFactory {
                         240 / GameManager.getInstance().getFps(),
                         moveAnimation,
                         deadAnimation,
-                        new ClientController()
+                        new ClientController(),
+                        WeaponFactory.getWeapon(weaponType)
                     );
                 }
                 case 2: {
@@ -75,7 +76,8 @@ public class CharacterFactory {
                         240 / GameManager.getInstance().getFps(),
                         moveAnimation,
                         deadAnimation,
-                        new Client2Controller()
+                        new Client2Controller(),
+                        WeaponFactory.getWeapon(weaponType)
                     );
                 }
                 default:

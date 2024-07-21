@@ -126,7 +126,6 @@ public class Weapon {
         newProjectile.setOx(x);
         newProjectile.setOy(y);
         newProjectile.setRange(range);
-        System.out.println(newProjectile);
         int dx = aimX - x;
         int dy = aimY - y;
         int len = (int)Math.sqrt(dx * dx + dy * dy);

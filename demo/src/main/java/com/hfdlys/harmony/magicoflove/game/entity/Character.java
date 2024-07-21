@@ -102,6 +102,14 @@ public class Character extends Entity {
         this.controller = controller;
     }
 
+    /**
+     * 构造函数（带控制器和武器）
+     */
+    public Character(Hitbox hitbox, Texture texture, int hp, int maxHp, int velocity, Animation[] moveAnimation, Animation deadAnimation, Controller controller, Weapon weapon) {
+        this(hitbox, texture, hp, maxHp, velocity, moveAnimation, deadAnimation, controller);
+        this.weapon = weapon;
+    }
+
     public void move(int direct) throws IllegalArgumentException {
         if(direct < 0 || direct > 8)
             throw new IllegalArgumentException("move() argument exception.");

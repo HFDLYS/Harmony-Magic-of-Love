@@ -46,11 +46,9 @@ public class ClientController extends Controller {
 
         Point aimPoint = new Point(MouseInfo.getPointerInfo().getLocation());
         SwingUtilities.convertPointFromScreen(aimPoint, GameFrame.getInstance());
-        // BE CAREFUL!! 这里进行了坐标系变换 + swap(x, y)
         getControl().setAimX((int) ((aimPoint.y - GameFrame.getInstance().getHeight() / 2) / GameFrame.getInstance().getScale()));
         getControl().setAimY((int) ((aimPoint.x - GameFrame.getInstance().getWidth() / 2) / GameFrame.getInstance().getScale()));
         
-        // play
         if(character == null) return;
         character.move(getControl().getMoveDirect());
         character.aim(getControl().getAimX(), getControl().getAimY());

@@ -6,7 +6,6 @@ import com.hfdlys.harmony.magicoflove.database.entity.User;
 import com.hfdlys.harmony.magicoflove.database.mapper.UserMapper;
 import com.hfdlys.harmony.magicoflove.util.SecurityUtil;
 
-import java.security.MessageDigest;
 
 /**
  * <p>

@@ -81,10 +81,9 @@ public class GameFrame extends JFrame {
         EntityManager entityManager = EntityManager.getInstance();
         entityManager.restart();
 
-        Character c = CharacterFactory.getCharacter(1, -200, -500, 100);
-        c.setWeapon(WeaponFactory.getWeapon(WeaponFactory.LOVE_STAVES));
+        Character c = CharacterFactory.getCharacter(1, -200, -500, 100, WeaponFactory.CHAOS_STAVES);
         entityManager.addWithoutMessage(c);
-        entityManager.addWithoutMessage(CharacterFactory.getCharacter(2, +200, 50, 100));
+        entityManager.addWithoutMessage(CharacterFactory.getCharacter(2, +200, 50, 100, 0));
     }
 
     /**
