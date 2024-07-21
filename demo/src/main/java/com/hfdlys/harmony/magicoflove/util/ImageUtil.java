@@ -1,11 +1,13 @@
 package com.hfdlys.harmony.magicoflove.util;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.awt.image.AffineTransformOp;
 
 
@@ -16,6 +18,24 @@ import java.awt.image.AffineTransformOp;
  * @since 2024-07-18
  */
 public class ImageUtil {
+    /**
+     * 判断一个文件是否是有效的图片文件
+     * @param file 文件
+     */
+     public static boolean isValidImageFile(File file) {
+        try {
+            BufferedImage image = ImageIO.read(file);
+            if (image != null && file.getName().toLowerCase().endsWith(".png")) {
+                int width = image.getWidth();
+                int height = image.getHeight();
+                return width == 832 && height == 1344;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * 将一个按钮变为全透明
      * @param button 按钮

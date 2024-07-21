@@ -1,7 +1,7 @@
 package com.hfdlys.harmony.magicoflove.game.controller;
 
-import com.hfdlys.harmony.magicoflove.network.protoc.ControlMessage;
 import com.hfdlys.harmony.magicoflove.game.entity.Character;
+import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
 
 import lombok.Data;
 

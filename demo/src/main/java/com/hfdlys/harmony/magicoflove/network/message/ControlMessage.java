@@ -1,4 +1,4 @@
-package com.hfdlys.harmony.magicoflove.network.protoc;
+package com.hfdlys.harmony.magicoflove.network.message;
 
 
 import lombok.Data;

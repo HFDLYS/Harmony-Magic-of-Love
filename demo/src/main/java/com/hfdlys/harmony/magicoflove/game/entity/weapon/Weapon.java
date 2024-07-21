@@ -4,7 +4,9 @@ import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
 import com.hfdlys.harmony.magicoflove.game.common.Texture;
 import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.game.entity.Projectile;
+import com.hfdlys.harmony.magicoflove.game.factory.ProjectileFactory;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
+import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ProjectileRegisterMessage;
 
 import lombok.Data;
 
@@ -46,6 +48,11 @@ public class Weapon {
     private int range;
 
     /**
+     * 抛射物类型
+     */
+    private int projectileType;
+
+    /**
      * 武器纹理
      */
     private Texture[] texture;
@@ -64,11 +71,12 @@ public class Weapon {
      * @param range 射程
      * @param textures 纹理
      */
-    public Weapon(Projectile projectile, int velocity, int damage, int interval, int range, Texture[] textures, int shootSoundEffectType) {
+    public Weapon(Projectile projectile, int velocity, int damage, int interval, int range, int projectileType, Texture[] textures, int shootSoundEffectType) {
         this.projectile = projectile;
         this.velocity = velocity;
         this.damage = damage;
         this.range = range;
+        this.projectileType = projectileType;
         this.interval = interval;
         this.texture = textures;
         this.shootSoundEffectType = shootSoundEffectType;
@@ -78,7 +86,7 @@ public class Weapon {
      * deep copy constructor
      */
     public Weapon(Weapon another) {
-        this(new Projectile(another.projectile), another.velocity, another.damage, another.interval, another.range, another.texture, another.shootSoundEffectType);
+        this(new Projectile(another.projectile), another.velocity, another.damage, another.interval, another.range, another.projectileType, another.texture, another.shootSoundEffectType);
     }
 
     /**
@@ -144,7 +152,7 @@ public class Weapon {
                 (int)Math.ceil(1.0 * velocity * dx / len),
                 (int)Math.ceil(1.0 * velocity * dy / len));
         
-        EntityManager.getInstance().addWithoutMessage(newProjectile);
+        EntityManager.getInstance().add(newProjectile, new ProjectileRegisterMessage(projectileType, x, y, senderID));
         return true;
     }
 }

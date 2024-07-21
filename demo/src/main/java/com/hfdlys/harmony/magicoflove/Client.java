@@ -4,10 +4,17 @@ import java.net.*;
 import java.io.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hfdlys.harmony.magicoflove.network.protoc.Message;
+import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
+import com.hfdlys.harmony.magicoflove.network.message.Message;
+import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
+import com.hfdlys.harmony.magicoflove.network.message.UserMessgae;
+import com.hfdlys.harmony.magicoflove.view.ClientFrame;
+import com.hfdlys.harmony.magicoflove.view.ServerFrame;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+@Data
 @Slf4j
 public class Client {
     /**
@@ -18,6 +25,10 @@ public class Client {
     private final String host = "localhost";
 
     private final int port = 2336;
+
+    private Socket socket;
+
+    private Integer userId;
 
     private BufferedReader reader;
 
@@ -36,7 +47,6 @@ public class Client {
         }
     }
 
-    Socket socket;
 
 
 
@@ -48,18 +58,35 @@ public class Client {
     }
 
     public void run() {
+        ClientFrame.getInstance().launchFrame();
         try {
-            Message test = new Message();
-            test.setCode(1);
-            sendMessage(test);
-            sendMessage(test);
-            sendMessage(test);
             while (true) {
                 synchronized(reader) {
-                    log.info("waiting for message");
                     String line = reader.readLine();
                     Message message = objectMapper.readValue(line, Message.class);
-                    log.info("Received message: " + message.getCode());
+                    switch (message.getCode()) {
+                        case MessageCodeConstants.HEART_BEAT:
+                            PingMessage pingMessage = objectMapper.readValue(message.getContent(), PingMessage.class);
+                            log.info("Ping: " + (System.currentTimeMillis() - pingMessage.getTimestamp()));
+                            break;
+                        case MessageCodeConstants.SUCCESS:
+                            if (userId != null) {
+                                break;
+                            }
+                            userId = objectMapper.readValue(message.getContent(), UserMessgae.class).getUserId();
+                            log.info("User id: " + userId);
+                            ClientFrame.getInstance().getDialog().finish("登录成功");
+                            break;
+                        case MessageCodeConstants.FAIL:
+                            if (userId != null) {
+                                break;
+                            }
+                            ClientFrame.getInstance().getDialog().finish("登录失败");
+                            break;
+                        
+                        default:
+                            break;
+                    }
                 }
             }
         } catch (Exception e) {

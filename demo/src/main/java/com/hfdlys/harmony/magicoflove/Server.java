@@ -3,9 +3,11 @@ package com.hfdlys.harmony.magicoflove;
 import java.net.*;
 import java.util.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.network.handler.ClientHandler;
-import com.hfdlys.harmony.magicoflove.network.protoc.Message;
+import com.hfdlys.harmony.magicoflove.network.message.Message;
+import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
 import com.hfdlys.harmony.magicoflove.view.ServerFrame;
 
 import java.util.concurrent.*;
@@ -102,14 +104,20 @@ public class Server {
     private class HeartBeatThread extends Thread {
         @Override
         public void run() {
+            ObjectMapper objectMapper = new ObjectMapper();
             while (true) {
                 try {
                     Thread.sleep(3000);
                     Message message = new Message();
+                    PingMessage pingMessage = new PingMessage();
+                    pingMessage.setTimestamp(System.currentTimeMillis());
                     message.setCode(MessageCodeConstants.HEART_BEAT);
+                    message.setContent(objectMapper.writeValueAsString(pingMessage));
                     for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
                         ClientHandler clientHandler = entry.getValue();
                         if (clientHandler.getSocket().isClosed()) {
+                            ServerFrame.getInstance().appendText("客户端" + entry.getKey() + "已断开连接\n");
+                            log.info("Client " + entry.getKey() + " disconnected");
                             clientMap.remove(entry.getKey());
                             continue;
                         }

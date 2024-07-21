@@ -1,10 +1,14 @@
 package com.hfdlys.harmony.magicoflove.database.service;
 
+import java.sql.Blob;
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hfdlys.harmony.magicoflove.database.MySQLJDBC;
 import com.hfdlys.harmony.magicoflove.database.entity.User;
 import com.hfdlys.harmony.magicoflove.database.mapper.UserMapper;
 import com.hfdlys.harmony.magicoflove.util.SecurityUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -15,6 +19,7 @@ import com.hfdlys.harmony.magicoflove.util.SecurityUtil;
  * @author Jiasheng Wang
  * @since 2024-07-21
  */
+@Slf4j
 public class UserService {
     /*
      * 单例模式
@@ -46,7 +51,7 @@ public class UserService {
             if (user == null) {
                 return -1;
             }
-            if (SecurityUtil.hashPassword(password) == user.getPassward()) {
+            if (SecurityUtil.hashPassword(password).equals(user.getPassword())) {
                 return user.getUserId();
             }
             return -1;
@@ -56,7 +61,7 @@ public class UserService {
         }
     }
 
-    public Integer register(String username, String password) {
+    public Integer register(String username, String password, byte[] skin) {
         User user = new User();
         user.setUsername(username);
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
@@ -64,8 +69,10 @@ public class UserService {
         if (userMapper.selectOne(wrapper) != null) {
             return -1;
         }
+        
         try {
-            user.setPassward(SecurityUtil.hashPassword(password));
+            user.setSkin(skin);
+            user.setPassword(SecurityUtil.hashPassword(password));
             userMapper.insert(user);
             return user.getUserId();
         } catch (Exception e) {

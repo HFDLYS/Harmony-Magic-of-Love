@@ -26,9 +26,9 @@ public class User implements Serializable {
 
     private String username;
 
-    private String passward;
+    private String password;
 
-    private Blob skin;
+    private byte[] skin;
 
 
 }

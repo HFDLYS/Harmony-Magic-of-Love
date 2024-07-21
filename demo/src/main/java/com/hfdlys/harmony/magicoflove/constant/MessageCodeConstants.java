@@ -12,6 +12,26 @@ public class MessageCodeConstants {
     public static final int HEART_BEAT = 0;
 
     /**
+     * 登录
+     */
+    public static final int LOGIN = 101;
+
+    /**
+     * 注册
+     */
+    public static final int REGISTER = 102;
+
+    /**
+     * 成功
+     */
+    public static final int SUCCESS = 201;
+
+    /**
+     * 失败
+     */
+    public static final int FAIL = 202;
+
+    /**
      * 控制信息
      */
     public static final int CONTROL = 401;

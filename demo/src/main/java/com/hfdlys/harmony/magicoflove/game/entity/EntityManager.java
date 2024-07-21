@@ -1,10 +1,9 @@
 package com.hfdlys.harmony.magicoflove.game.entity;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.*;
 
 import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
+import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.EntityRegisterMessage;
 
 public class EntityManager {
     /**
@@ -25,7 +24,12 @@ public class EntityManager {
     /**
      * 储存目前存在的所有实体
      */
-    private ArrayList<Entity> entityList;
+    private List<Entity> entityList;
+
+    /**
+     * 实体注册信息
+     */
+    private List<EntityRegisterMessage> entityRegisterMessages = new ArrayList<>();
 
     /**
      * 实体修改锁
@@ -134,10 +138,10 @@ public class EntityManager {
                     if((anotherEntity instanceof Character) && !havePlayedHitSound) {
                         havePlayedHitSound = true;
                         // MyTool.playSound("sound/hit.wav");
-                        // factoryMessages.add(new HitSoundEffectMessage(0));
+                        // entityRegisterMessages.add(new HitSoundEffectMessage(0));
                     } else if(anotherEntity instanceof Obstacle) {
                         // MyTool.playSound("sound/blt_imp_masonry_far_01.wav");
-                        // factoryMessages.add(new HitSoundEffectMessage(1));
+                        // entityRegisterMessages.add(new HitSoundEffectMessage(1));
                     }
                 } else if(anotherEntity instanceof Projectile) {
                     entity.reduceHp(((Projectile)anotherEntity).getDamage());
@@ -145,7 +149,7 @@ public class EntityManager {
                     if((entity instanceof Character) && !havePlayedHitSound) {
                         havePlayedHitSound = true;
                         // MyTool.playSound("sound/hit.wav");
-                        // factoryMessages.add(new HitSoundEffectMessage(0));
+                        // entityRegisterMessages.add(new HitSoundEffectMessage(0));
                     }
                 }
 
@@ -209,9 +213,9 @@ public class EntityManager {
     /**
      * 往游戏中添加一个新实体
      * @param entity 新实体
-     * @param factoryMessage 实体信息
-     
-    public void add(Entity entity, FactoryMessage factoryMessage) {
+     * @param entityRegisterMessage 实体信息
+    */
+    public void add(Entity entity, EntityRegisterMessage entityRegisterMessage) {
         if(entity == null) {
             System.out.println("添加了空实体");
             return;
@@ -221,10 +225,10 @@ public class EntityManager {
             entityList.add(entity);
         }
 
-        factoryMessage.setId(entityCount);
-        factoryMessages.add(factoryMessage);
+        entityRegisterMessage.setId(entityCount);
+        entityRegisterMessages.add(entityRegisterMessage);
     }
-    */
+    
 
     /**
      * 往游戏中添加一个新实体

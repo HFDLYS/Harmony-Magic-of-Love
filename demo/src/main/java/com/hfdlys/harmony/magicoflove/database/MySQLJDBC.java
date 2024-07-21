@@ -1,10 +1,12 @@
 package com.hfdlys.harmony.magicoflove.database;
 
 import java.io.InputStream;
+import java.sql.Blob;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.type.BlobTypeHandler;
 
 import com.baomidou.mybatisplus.core.MybatisSqlSessionFactoryBuilder;
 import com.hfdlys.harmony.magicoflove.database.mapper.LogMapper;
@@ -48,6 +50,7 @@ public class MySQLJDBC {
         SqlSessionFactory sessionFactory = new MybatisSqlSessionFactoryBuilder().build(inputStream);
         sessionFactory.getConfiguration().addMapper(UserMapper.class);
         sessionFactory.getConfiguration().addMapper(LogMapper.class);
+        sessionFactory.getConfiguration().getTypeHandlerRegistry().register(byte[].class, BlobTypeHandler.class);
         session = sessionFactory.openSession(true);
         log.info("MyBatis session opened.");
     }

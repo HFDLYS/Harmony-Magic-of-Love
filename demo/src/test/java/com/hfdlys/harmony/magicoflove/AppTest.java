@@ -4,8 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.hfdlys.harmony.magicoflove.network.protoc.ControlMessage;
-import com.hfdlys.harmony.magicoflove.network.protoc.Message;
+import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
+import com.hfdlys.harmony.magicoflove.network.message.Message;
 
 /**
  * Unit test for simple App.

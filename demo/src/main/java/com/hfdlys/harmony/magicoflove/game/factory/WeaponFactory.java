@@ -6,6 +6,7 @@ import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.game.entity.Projectile;
 import com.hfdlys.harmony.magicoflove.game.entity.weapon.Weapon;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
+import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ProjectileRegisterMessage;
 import com.hfdlys.harmony.magicoflove.util.ImageUtil;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class WeaponFactory {
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
-                        projectile, 1440 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 64,
+                        projectile, 1440 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 12, ProjectileFactory.RAMDOM,
                         textures,
                         ProjectileFactory.RAMDOM
                 );
@@ -58,7 +59,7 @@ public class WeaponFactory {
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
-                        projectile, 360 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 200,
+                        projectile, 360 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 200, ProjectileFactory.HEART,
                         textures,
                         ProjectileFactory.HEART
                 );
@@ -71,7 +72,7 @@ public class WeaponFactory {
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
-                        projectile, 360 / GameManager.getInstance().getFps(), 1, 1440 / GameManager.getInstance().getFps(), 500,
+                        projectile, 360 / GameManager.getInstance().getFps(), 1, 1440 / GameManager.getInstance().getFps(), 500, ProjectileFactory.RAMDOM,
                         textures,
                         ProjectileFactory.RAMDOM
                 ) {
@@ -102,7 +103,7 @@ public class WeaponFactory {
                                 (int)Math.ceil(1.0 * getVelocity() * dx / len),
                                 (int)Math.ceil(1.0 * getVelocity() * dy / len));
                         
-                        EntityManager.getInstance().addWithoutMessage(newProjectile);
+                        EntityManager.getInstance().add(newProjectile, new ProjectileRegisterMessage(type, x, y, senderID));
                         return true;
                     }
                 };
