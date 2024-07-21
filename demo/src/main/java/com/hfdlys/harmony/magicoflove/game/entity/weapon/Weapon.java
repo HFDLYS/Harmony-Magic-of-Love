@@ -121,14 +121,23 @@ public class Weapon {
         if(GameManager.getInstance().getTimeStamp() - lastShootTimeStamp <= interval) return false;
         lastShootTimeStamp = GameManager.getInstance().getTimeStamp();
         Projectile newProjectile = getNewProjectile();
+        x += 12;
+        int dx = aimX - x;
+        int dy = aimY - y;
+        if (dy > 0) {
+            y += 16;
+        } else {
+            y -= 16;
+        }
+        dy = aimY - y;
+        int len = (int)Math.sqrt(dx * dx + dy * dy);
+
+        
         newProjectile.setSenderID(senderID);
         newProjectile.setDamage(damage);
         newProjectile.setOx(x);
         newProjectile.setOy(y);
         newProjectile.setRange(range);
-        int dx = aimX - x;
-        int dy = aimY - y;
-        int len = (int)Math.sqrt(dx * dx + dy * dy);
 
         newProjectile.setHitbox(new Hitbox(x, y, 8));
         newProjectile.getHitbox().setVelocity(

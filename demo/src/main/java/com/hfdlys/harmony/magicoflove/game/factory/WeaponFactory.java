@@ -82,9 +82,20 @@ public class WeaponFactory {
                         Projectile newProjectile = ProjectileFactory.getProjectile(ProjectileFactory.RAMDOM, senderID, x, y);
                         newProjectile.setDamage(getDamage());
                         newProjectile.setRange(getRange());
+                        x += 12;
                         int dx = aimX - x;
                         int dy = aimY - y;
+                        if (dy > 0) {
+                            y += 16;
+                        } else {
+                            y -= 16;
+                        }
+                        dy = aimY - y;
                         int len = (int)Math.sqrt(dx * dx + dy * dy);
+                        
+                        newProjectile.setSenderID(senderID);
+                        newProjectile.setOx(x);
+                        newProjectile.setOy(y);
 
                         newProjectile.setHitbox(new Hitbox(x, y, 8));
                         newProjectile.getHitbox().setVelocity(
