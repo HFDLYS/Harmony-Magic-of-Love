@@ -3,10 +3,7 @@ package com.hfdlys.harmony.magicoflove;
 import java.net.*;
 import java.io.*;
 
-import com.baidu.bjf.remoting.protobuf.Codec;
-import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
-import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.CodedOutputStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.network.protoc.Message;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +19,18 @@ public class Client {
 
     private final int port = 2336;
 
+    private BufferedReader reader;
+
+    private PrintWriter writer;
+
+    private ObjectMapper objectMapper;
+
     private Client() {
         try {
             socket = new Socket(host, port);
-            codedInputStream = CodedInputStream.newInstance(socket.getInputStream());
-            codedOutputStream = CodedOutputStream.newInstance(socket.getOutputStream());
-            messageCodec = ProtobufProxy.create(Message.class);
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new PrintWriter(socket.getOutputStream(), true);
+            objectMapper = new ObjectMapper();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,10 +38,7 @@ public class Client {
 
     Socket socket;
 
-    private CodedInputStream codedInputStream;
-    private CodedOutputStream codedOutputStream;
 
-    Codec<Message> messageCodec;
 
     public static Client getInstance() {
         if (instance == null) {
@@ -55,9 +55,10 @@ public class Client {
             sendMessage(test);
             sendMessage(test);
             while (true) {
-                synchronized(codedInputStream) {
+                synchronized(reader) {
                     log.info("waiting for message");
-                    Message message = messageCodec.readFrom(codedInputStream);
+                    String line = reader.readLine();
+                    Message message = objectMapper.readValue(line, Message.class);
                     log.info("Received message: " + message.getCode());
                 }
             }
@@ -68,9 +69,9 @@ public class Client {
 
     public void sendMessage(Message message) {
         try {
-            synchronized(codedOutputStream) {
-                messageCodec.writeTo(message, codedOutputStream);
-                codedOutputStream.flush();
+            synchronized(writer) {
+                log.info("Sending message: " + message.getCode());
+                writer.println(objectMapper.writeValueAsString(message));
             }
         } catch (Exception e) {
             e.printStackTrace();

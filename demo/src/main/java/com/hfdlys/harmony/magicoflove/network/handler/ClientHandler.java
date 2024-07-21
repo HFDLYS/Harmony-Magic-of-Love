@@ -1,9 +1,6 @@
 package com.hfdlys.harmony.magicoflove.network.handler;
 
-import com.baidu.bjf.remoting.protobuf.Codec;
-import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
-import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.CodedOutputStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.network.protoc.Message;
 import com.hfdlys.harmony.magicoflove.view.ServerFrame;
@@ -29,16 +26,17 @@ import java.util.*;
 public class ClientHandler extends Thread {
     private Socket socket;
     
-    private CodedInputStream codedInputStream;
-    private CodedOutputStream codedOutputStream;
+    private BufferedReader reader;
 
-    Codec<Message> messagCodec;
+    private PrintWriter writer;
+
+    private ObjectMapper objectMapper;
 
     public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
-        codedInputStream = CodedInputStream.newInstance(socket.getInputStream());
-        codedOutputStream = CodedOutputStream.newInstance(socket.getOutputStream());
-        messagCodec = ProtobufProxy.create(Message.class);
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        writer = new PrintWriter(socket.getOutputStream(), true);
+        objectMapper = new ObjectMapper();
     }
 
     private Integer userId;
@@ -49,8 +47,8 @@ public class ClientHandler extends Thread {
             log.info("Client connected: " + socket.getInetAddress());
             ServerFrame.getInstance().appendText("接收连接：" + socket.getInetAddress() + "\n");
             while (true) {
-                synchronized(codedInputStream) {
-                    Message message = messagCodec.readFrom(codedInputStream);
+                synchronized(reader) {
+                    Message message = objectMapper.readValue(reader.readLine(), Message.class);
                     log.info("Received message: " + message.getCode());
                 }
             }
@@ -61,10 +59,8 @@ public class ClientHandler extends Thread {
 
     public void sendMessage(Message message) {
         try {
-            synchronized(codedOutputStream) {
-                log.info("Sending message: " + message.getCode());
-                messagCodec.writeTo(message, codedOutputStream);
-                codedOutputStream.flush();
+            synchronized(writer) {
+                writer.println(objectMapper.writeValueAsString(message));
             }
         } catch (Exception e) {
             e.printStackTrace();

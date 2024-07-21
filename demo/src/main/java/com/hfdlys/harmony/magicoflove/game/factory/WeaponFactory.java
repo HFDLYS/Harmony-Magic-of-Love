@@ -49,7 +49,7 @@ public class WeaponFactory {
                         textures,
                         ProjectileFactory.RAMDOM
                 );
-                weapon.setTag("Pistol");
+                weapon.setTag("Love Sword");
                 return weapon;
             } else if (type == LOVE_STAVES) {
                 Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.HEART, 0, 0, 0);

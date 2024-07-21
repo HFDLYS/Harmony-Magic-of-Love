@@ -59,23 +59,10 @@
 			<version>1.18.26</version>
 		</dependency>
 
-		<!--jprotobuf依赖-->
 		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>3.21.7</version>
-		</dependency>
-		<dependency>
-			<groupId>com.baidu</groupId>
-			<artifactId>jprotobuf</artifactId>
-			<version>2.4.23</version>
-		</dependency>
-		<dependency>
-			<groupId>com.baidu</groupId>
-			<artifactId>jprotobuf-protoparser</artifactId>
-			<version>1.0.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.12.3</version>
 		</dependency>
 	</dependencies>
 
@@ -125,25 +112,6 @@
 				<plugin>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>3.0.0</version>
-				</plugin>
-				<plugin>
-					<groupId>com.baidu</groupId>
-					<artifactId>jprotobuf-precompile-plugin</artifactId>
-					<version>2.2.9</version>
-					<configuration>
-						<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-						<filterClassPackage>com.baidu</filterClassPackage>
-						<generateProtoFile>true</generateProtoFile>
-						<compileDependencies>true</compileDependencies>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>compile</phase>
-							<goals>
-								<goal>precompile</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -105,10 +105,14 @@ public class Server {
             while (true) {
                 try {
                     Thread.sleep(3000);
+                    Message message = new Message();
+                    message.setCode(MessageCodeConstants.HEART_BEAT);
                     for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
                         ClientHandler clientHandler = entry.getValue();
-                        Message message = new Message();
-                        message.setCode(MessageCodeConstants.HEART_BEAT);
+                        if (clientHandler.getSocket().isClosed()) {
+                            clientMap.remove(entry.getKey());
+                            continue;
+                        }
                         clientHandler.sendMessage(message);
                     }
                 } catch (Exception e) {

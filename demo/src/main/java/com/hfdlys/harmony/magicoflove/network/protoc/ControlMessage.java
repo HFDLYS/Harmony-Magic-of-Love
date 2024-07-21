@@ -1,6 +1,5 @@
 package com.hfdlys.harmony.magicoflove.network.protoc;
 
-import com.baidu.bjf.remoting.protobuf.annotation.ProtobufClass;
 
 import lombok.Data;
 
@@ -12,7 +11,6 @@ import lombok.Data;
  */
 
 @Data
-@ProtobufClass
 public class ControlMessage {
     /**
      * 实体ID
