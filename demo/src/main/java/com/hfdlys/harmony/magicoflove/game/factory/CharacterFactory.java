@@ -5,7 +5,9 @@ import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
 import com.hfdlys.harmony.magicoflove.game.common.Texture;
 import com.hfdlys.harmony.magicoflove.game.controller.Client2Controller;
 import com.hfdlys.harmony.magicoflove.game.controller.ClientController;
+import com.hfdlys.harmony.magicoflove.game.controller.Controller;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
+import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
 import com.hfdlys.harmony.magicoflove.game.entity.Character;
 
 /**
@@ -19,7 +21,7 @@ public class CharacterFactory {
      * @param type 类型
      * @return 对应类型角色
      */
-    public static Character getCharacter(int type, int x, int y, int hp, int weaponType) {
+    public static Character getTestCharacter(int type, int x, int y, int hp, int weaponType) {
         try {
             switch (type) {
                 case 1: {
@@ -83,6 +85,48 @@ public class CharacterFactory {
                 default:
                     return null;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * /**
+     * 获取角色
+     * @param userId 用户编号
+     * @param weaponType 武器类型
+     * @param Controller 控制器
+     * @return 对应类型角色
+     */
+    public static Character getCharacter(int userId, int weaponType) {
+        try {
+            Texture[][] texture_move = new Texture[4][9];
+            Texture texture_all = GameManager.getInstance().getPlayerSkin(userId);
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 9; j++) {
+                    texture_move[i][j] = texture_all.getCutTexture(512 + 64 * i, 64 * j, 64, 64, 32, 32); 
+                }
+            }
+            Animation moveAnimation[] = new Animation[4];
+            for (int i = 0; i < 4; i++) {
+                moveAnimation[i] = new Animation(texture_move[i], 9);
+            }
+            Texture[] texture = new Texture[6];
+            for (int i = 0; i < 6; i++) {
+                texture[i] = texture_all.getCutTexture(1280, i * 64, 64, 64, 32, 32);
+            }
+            Animation deadAnimation = new Animation(texture, 6);
+            return new Character(
+                new Hitbox(0, 0, 0, 0, 8, 16),
+                texture_move[2][0],
+                100,
+                100,
+                240 / GameManager.getInstance().getFps(),
+                moveAnimation,
+                deadAnimation,
+                null,
+                WeaponFactory.getWeapon(weaponType)
+            );
         } catch (Exception e) {
             e.printStackTrace();
             return null;

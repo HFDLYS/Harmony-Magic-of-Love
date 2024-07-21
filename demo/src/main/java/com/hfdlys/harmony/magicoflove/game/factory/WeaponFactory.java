@@ -46,6 +46,7 @@ public class WeaponFactory {
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
+                        type,
                         projectile, 1440 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 12, ProjectileFactory.RAMDOM,
                         textures,
                         ProjectileFactory.RAMDOM
@@ -59,6 +60,7 @@ public class WeaponFactory {
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
+                        type,
                         projectile, 360 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 200, ProjectileFactory.HEART,
                         textures,
                         ProjectileFactory.HEART
@@ -72,6 +74,7 @@ public class WeaponFactory {
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
+                        type,
                         projectile, 360 / GameManager.getInstance().getFps(), 1, 1440 / GameManager.getInstance().getFps(), 500, ProjectileFactory.RAMDOM,
                         textures,
                         ProjectileFactory.RAMDOM

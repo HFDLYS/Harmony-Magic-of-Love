@@ -3,7 +3,13 @@ package com.hfdlys.harmony.magicoflove.game.entity;
 import java.util.*;
 
 import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
+import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
+import com.hfdlys.harmony.magicoflove.game.factory.ObstacleFactory;
+import com.hfdlys.harmony.magicoflove.network.message.EntityManagerMessage;
+import com.hfdlys.harmony.magicoflove.network.message.EntityMessage;
+import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.CharacterRegisterMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.EntityRegisterMessage;
+import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ObstacleRegisterMessage;
 
 public class EntityManager {
     /**
@@ -30,6 +36,11 @@ public class EntityManager {
      * 实体注册信息
      */
     private List<EntityRegisterMessage> entityRegisterMessages = new ArrayList<>();
+
+    /**
+     * 实体信息
+     */
+    private HashMap<Integer, EntityMessage> entityMessageHashMap;
 
     /**
      * 实体修改锁
@@ -171,13 +182,22 @@ public class EntityManager {
             hitbox.setCoordinate(nextHitbox.getX(), nextHitbox.getY());
         }
 
-        /*
-        // 第2.5阶段，记录实体信息
+        
+        // 记录实体信息
         entityMessageHashMap = new HashMap<>();
         for(Entity e: entityList) {
-            entityMessageHashMap.put(e.getId(), new EntityMessage(e.getId(), e.getHp(), e.getHitbox().getX(), e.getHitbox().getY(), e.getHitbox().getVx(), e.getHitbox().getVy(), e.getHitbox().getLx(), e.getHitbox().getLy()));
+            EntityMessage entityMessage = new EntityMessage(e.getId(), e.getHp(), e.getHitbox().getX(), e.getHitbox().getY(), e.getHitbox().getVx(), e.getHitbox().getVy(), e.getHitbox().getLx(), e.getHitbox().getLy());
+            if (e instanceof Character) {
+                Character character = (Character)e;
+                entityMessage.setAimX(character.getAimX());
+                entityMessage.setAimY(character.getAimY());
+                if (character.getWeapon() != null) {
+                    entityMessage.setWeaponType(character.getWeapon().getType());
+                }
+            }
+            entityMessageHashMap.put(e.getId(), entityMessage);
         }
-        */
+
         // 第三阶段，将死亡(hp<=0)的实体从entityList中移除
         clearDeadEntity();
     }
@@ -261,25 +281,6 @@ public class EntityManager {
     }
 
     /**
-     * 将实体管理器内所有实体的坐标按顺序输出，便于调试
-     * @return 坐标序列字符串
-     */
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        for(int i = 0; i < entityList.size(); i++) {
-            str.append(i + 1).append(": (")
-                    .append(entityList.get(i).getHitbox().getX())
-                    .append(", ")
-                    .append(entityList.get(i).getHitbox().getY())
-                    .append(")")
-                    .append(entityList.get(i).isExist())
-                    .append("     ");
-        }
-        return str.toString();
-    }
-
-    /**
      * 按给定方式排序实体列表
      * @param comparator 比较器
      */
@@ -306,4 +307,28 @@ public class EntityManager {
         return entityList.size();
     }
 
+    /**
+     * 获取实体管理器信息
+     * @return 实体管理器信息
+     */
+    public EntityManagerMessage getEntityManagerMessage() {
+        EntityManagerMessage entityManagerMessage = new EntityManagerMessage(entityRegisterMessages, entityMessageHashMap);
+        entityRegisterMessages = new ArrayList<>();
+        return entityManagerMessage;
+    }
+
+    public void loadEntityManagerMessage(EntityManagerMessage entityManagerMessage) {
+        
+        for (EntityRegisterMessage entityRegisterMessage: entityManagerMessage.getEntityRegisterMessages()) {
+            if (entityRegisterMessage instanceof CharacterRegisterMessage) {
+                CharacterRegisterMessage characterRegisterMessage = (CharacterRegisterMessage)entityRegisterMessage;
+                Character character = CharacterFactory.getCharacter(characterRegisterMessage.getUserId(), characterRegisterMessage.getWeaponType());
+                addWithoutMessage(character);
+            } else if (entityRegisterMessage instanceof ObstacleRegisterMessage) {
+                ObstacleRegisterMessage obstacleRegisterMessage = (ObstacleRegisterMessage)entityRegisterMessage;
+                Obstacle obstacle = ObstacleFactory.getObstacle(obstacleRegisterMessage.getType(), 0, 0);
+                addWithoutMessage(obstacle);
+            }
+        }
+    }
 }

@@ -1,10 +1,12 @@
 package com.hfdlys.harmony.magicoflove;
 
 import java.net.*;
+import java.util.List;
 import java.io.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
+import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
 import com.hfdlys.harmony.magicoflove.network.message.UserMessgae;
@@ -82,6 +84,15 @@ public class Client {
                                 break;
                             }
                             ClientFrame.getInstance().getDialog().finish("登录失败");
+                            break;
+                        case MessageCodeConstants.USER_INFO:
+                            if (userId == null) {
+                                break;
+                            }
+                            List<UserMessgae> userMessgae = objectMapper.readValue(message.getContent(), objectMapper.getTypeFactory().constructCollectionType(List.class, UserMessgae.class));
+                            for (UserMessgae user : userMessgae) {
+                                GameManager.getInstance().addPlayerSkin(user.getUserId(), user.getSkin());
+                            }
                             break;
                         
                         default:

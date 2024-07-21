@@ -81,9 +81,9 @@ public class GameFrame extends JFrame {
         EntityManager entityManager = EntityManager.getInstance();
         entityManager.restart();
 
-        Character c = CharacterFactory.getCharacter(1, -200, -500, 100, WeaponFactory.CHAOS_STAVES);
+        Character c = CharacterFactory.getTestCharacter(1, -200, -500, 100, WeaponFactory.CHAOS_STAVES);
         entityManager.addWithoutMessage(c);
-        entityManager.addWithoutMessage(CharacterFactory.getCharacter(2, +200, 50, 100, 0));
+        entityManager.addWithoutMessage(CharacterFactory.getTestCharacter(2, +200, 50, 100, 0));
     }
 
     /**
@@ -130,7 +130,7 @@ public class GameFrame extends JFrame {
             texture.setScale(1);
             g.drawImage(texture.getImage(), (int)(entity.getHitbox().getY()*scale) - texture.getDy() + getWidth() / 2, (int)(entity.getHitbox().getX()*scale) - texture.getDx() + getHeight() / 2, null);
         }
-
+        
         setBackground(new Color(38, 40, 74));
         graphics.drawImage(offScreenImage, 0, 0, null);
     }

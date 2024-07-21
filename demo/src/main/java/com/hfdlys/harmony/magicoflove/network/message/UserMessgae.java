@@ -5,4 +5,8 @@ import lombok.Data;
 @Data
 public class UserMessgae {
     private Integer userId;
+
+    private String userName;
+
+    private byte[] skin;
 }

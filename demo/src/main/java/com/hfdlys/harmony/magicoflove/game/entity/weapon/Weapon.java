@@ -18,6 +18,10 @@ import lombok.Data;
 @Data
 public class Weapon {
     /**
+     * 武器type
+     */
+    private int type;
+    /**
      * 武器Tag
      */
     private String Tag;
@@ -71,7 +75,7 @@ public class Weapon {
      * @param range 射程
      * @param textures 纹理
      */
-    public Weapon(Projectile projectile, int velocity, int damage, int interval, int range, int projectileType, Texture[] textures, int shootSoundEffectType) {
+    public Weapon(int type, Projectile projectile, int velocity, int damage, int interval, int range, int projectileType, Texture[] textures, int shootSoundEffectType) {
         this.projectile = projectile;
         this.velocity = velocity;
         this.damage = damage;
@@ -86,7 +90,7 @@ public class Weapon {
      * deep copy constructor
      */
     public Weapon(Weapon another) {
-        this(new Projectile(another.projectile), another.velocity, another.damage, another.interval, another.range, another.projectileType, another.texture, another.shootSoundEffectType);
+        this(another.type, new Projectile(another.projectile), another.velocity, another.damage, another.interval, another.range, another.projectileType, another.texture, another.shootSoundEffectType);
     }
 
     /**

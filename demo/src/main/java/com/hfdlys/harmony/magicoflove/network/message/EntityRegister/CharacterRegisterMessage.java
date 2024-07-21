@@ -10,11 +10,14 @@ import lombok.EqualsAndHashCode;
 public class CharacterRegisterMessage extends EntityRegisterMessage {
     private int userId;
 
+    private int weaponType;
+
     public CharacterRegisterMessage() {
     }
 
-    public CharacterRegisterMessage(int type, int userId, ControlMessage control) {
+    public CharacterRegisterMessage(int type, int userId, int weaponType) {
         super(type);
         this.userId = userId;
+        this.weaponType = weaponType;
     }
 }

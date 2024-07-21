@@ -12,7 +12,7 @@ import lombok.Data;
  * @since 2024-07-18
  */
 @Data
-public abstract class Controller {
+public class Controller {
     /**
      * 控制包
      */
@@ -22,5 +22,12 @@ public abstract class Controller {
      * 控制
      */
     public void control(Character character) {
+    }
+    
+    public Controller() {
+    }
+
+    public Controller(ControlMessage control) {
+        this.control = control;
     }
 }

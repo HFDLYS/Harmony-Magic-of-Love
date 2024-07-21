@@ -2,9 +2,15 @@ package com.hfdlys.harmony.magicoflove.manager;
 
 
 
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 
+import com.hfdlys.harmony.magicoflove.game.common.Texture;
 import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.view.GameFrame;
 
@@ -48,6 +54,11 @@ public class GameManager {
     private final int fps = 120;
 
     /**
+     * 玩家皮肤
+     */
+    private HashMap<Integer, Texture> playerSkin;
+
+    /**
      * 是否锁帧数
      */
     private final boolean fixedFps = true;
@@ -67,6 +78,7 @@ public class GameManager {
      */
     private GameManager() {
         timeStamp = 0;
+        playerSkin = new HashMap<>();
     }
 
     /**
@@ -170,6 +182,15 @@ public class GameManager {
         }
     }
 
+    public void addPlayerSkin(int id, byte[] data) throws IOException {
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+        Texture texture = new Texture(image, 1344, 832, 32, 32);
+        playerSkin.put(id, texture);
+    }
+
+    public Texture getPlayerSkin(int id) {
+        return playerSkin.get(id);
+    }
 
     /**
      * 设置平台属性

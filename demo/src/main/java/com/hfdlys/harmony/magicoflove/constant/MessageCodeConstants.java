@@ -32,6 +32,11 @@ public class MessageCodeConstants {
     public static final int FAIL = 202;
 
     /**
+     * 用户信息
+     */
+    public static final int USER_INFO = 301;
+
+    /**
      * 控制信息
      */
     public static final int CONTROL = 401;
