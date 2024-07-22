@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package com.hfdlys.harmony.magicoflove.network.message;
+
+message RegisterMessage {
+  string username = 1;
+  string password = 2;
+  bytes skin = 3;
+}
+
+message LoginMessage {
+  string username = 1;
+  string password = 2;
+}
+
+message UserMessage {
+  int32 userId = 1;
+  string userName = 2;
+  bytes skin = 3;
+}
+
+message Message {
+  int32 code = 1;
+  string content = 2;
+}
