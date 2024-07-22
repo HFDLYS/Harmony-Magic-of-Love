@@ -20,6 +20,7 @@ import com.hfdlys.harmony.magicoflove.game.factory.MapFactory;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.view.GameFrame;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,22 +28,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author Jiasheng
  * @since 2024-07-18
  */
+@Data
 @Slf4j
 public class GameManager {
-    /**
-     * 单例模式，实例
-     */
-    private static GameManager Instance = null;
-
-    /**
-     * 单例模式，获取实例
-     * @return 实例
-     */
-    public static GameManager getInstance() {
-        if(Instance == null)
-            Instance = new GameManager();
-        return Instance;
-    }
 
     /**
      * 用户id
@@ -65,6 +53,11 @@ public class GameManager {
     private HashMap<Integer, Texture> playerSkin;
 
     /**
+     * 实体管理器
+     */
+    private EntityManager entityManager;
+
+    /**
      * 是否锁帧数
      */
     private final boolean fixedFps = true;
@@ -82,9 +75,10 @@ public class GameManager {
     /**
      * 构造方法
      */
-    private GameManager() {
+    public GameManager() {
         timeStamp = 0;
         playerSkin = new HashMap<>();
+        entityManager = new EntityManager(this);
     }
 
     /**
@@ -187,13 +181,12 @@ public class GameManager {
     }
 
     public void runServer() {
-        MapFactory.createMap();
+        MapFactory.createMap(this);
 
         long lastTime = -1;
         long lastSecondTime = -1;
         int cnt = 0;
 
-        ObjectMapper objectMapper = new ObjectMapper();
         while(true) {
             if(lastTime == -1) {
                 lastTime = System.currentTimeMillis();
@@ -203,8 +196,8 @@ public class GameManager {
             timeStamp++;
 
             // 调用其他管理器
-            EntityManager.getInstance().run();
-            Server.getInstance().broadcast(MessageCodeConstants.ENTITY_MANAGER_INFO, EntityManager.getInstance().getEntityManagerMessage());
+            entityManager.run();
+            Server.getInstance().broadcast(MessageCodeConstants.ENTITY_MANAGER_INFO, entityManager.getEntityManagerMessage());
 
             // 帧数限制
             long time = System.currentTimeMillis();
@@ -256,6 +249,6 @@ public class GameManager {
 
 
     public static void main(String[] args) {
-        GameManager.getInstance().run();
+        
     }
 }

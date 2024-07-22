@@ -22,6 +22,7 @@ public class CharacterFactory {
      * @param type 类型
      * @return 对应类型角色
      */
+    /*
     public static Character getTestCharacter(int type, int x, int y, int hp, int weaponType) {
         try {
             switch (type) {
@@ -47,7 +48,7 @@ public class CharacterFactory {
                         texture_move[2][0],
                         hp,
                         hp,
-                        240 / GameManager.getInstance().getFps(),
+                        240 / gameManager.getFps(),
                         moveAnimation,
                         deadAnimation,
                         new ClientController(GameFrame.getInstance()),
@@ -76,7 +77,7 @@ public class CharacterFactory {
                         texture_move[2][0],
                         hp,
                         hp,
-                        240 / GameManager.getInstance().getFps(),
+                        240 / gameManager.getFps(),
                         moveAnimation,
                         deadAnimation,
                         new Client2Controller(),
@@ -91,6 +92,7 @@ public class CharacterFactory {
             return null;
         }
     }
+    */
     /**
      * /**
      * 获取角色
@@ -99,10 +101,10 @@ public class CharacterFactory {
      * @param Controller 控制器
      * @return 对应类型角色
      */
-    public static Character getCharacter(int userId, String username, int weaponType, Controller controller) {
+    public static Character getCharacter(int userId, String username, int weaponType, Controller controller, GameManager gameManager) {
         try {
             Texture[][] texture_move = new Texture[4][9];
-            Texture texture_all = GameManager.getInstance().getPlayerSkin(userId);
+            Texture texture_all = gameManager.getPlayerSkin(userId);
             if (texture_all == null) {
                 texture_all = new Texture("character/enemy.png", 1344, 832, 32, 32);
             }
@@ -125,13 +127,13 @@ public class CharacterFactory {
                 texture_move[2][0],
                 400,
                 400,
-                240 / GameManager.getInstance().getFps(),
+                240 / gameManager.getFps(),
                 userId,
                 username,
                 moveAnimation,
                 deadAnimation,
                 controller,
-                WeaponFactory.getWeapon(weaponType)
+                WeaponFactory.getWeapon(weaponType, gameManager)
             );
         } catch (Exception e) {
             e.printStackTrace();

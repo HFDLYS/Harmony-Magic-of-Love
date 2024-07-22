@@ -146,7 +146,7 @@ public class Character extends Entity {
         if(controller != null)
             controller.control(this);
 
-        float a = (float)(3600.0 / GameManager.getInstance().getFps() / GameManager.getInstance().getFps());
+        float a = (float)(3600.0 / 120 / 120);
         int v2 = (int)(velocity / Math.sqrt(2));
         switch (direct) {
             case 0: {getHitbox().setTargetVelocity(0, 0, a); break;}
@@ -188,22 +188,22 @@ public class Character extends Entity {
      * 获取当前角色贴图
      * @return 贴图
      */
-    public Texture getCurrentTexture() {
+    public Texture getCurrentTexture(GameManager gameManager) {
         Texture character;
         int vx = getHitbox().getVx();
         int vy = getHitbox().getVy();
         if(vx == 0 && vy == 0) character = moveAnimation[lastDirect].getTextures()[0];
         else if(vx > 0) {
-            character = moveAnimation[2].play(GameManager.getInstance().getTimeStamp());
+            character = moveAnimation[2].play(gameManager.getTimeStamp());
             lastDirect = 2;
         } else if(vx < 0) {
-            character = moveAnimation[0].play(GameManager.getInstance().getTimeStamp());
+            character = moveAnimation[0].play(gameManager.getTimeStamp());
             lastDirect = 0;
         } else if(vy < 0) {
-            character = moveAnimation[1].play(GameManager.getInstance().getTimeStamp());
+            character = moveAnimation[1].play(gameManager.getTimeStamp());
             lastDirect = 1;
         }else {
-            character = moveAnimation[3].play(GameManager.getInstance().getTimeStamp());
+            character = moveAnimation[3].play(gameManager.getTimeStamp());
             lastDirect = 3;
         }
 

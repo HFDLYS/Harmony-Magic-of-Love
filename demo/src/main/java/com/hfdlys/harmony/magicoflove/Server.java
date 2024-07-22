@@ -71,10 +71,15 @@ public class Server {
      */
     private final int playerMax = 100;
 
+    private GameManager gameManager;
+
     private ThreadPoolExecutor executorPool;
 
     public void run() {
         ServerFrame.getInstance().launchFrame();
+        new Thread(() -> {
+            gameManager.runServer();
+        }).start();
         new ServerHandler().start();
         
     }
@@ -87,6 +92,7 @@ public class Server {
             clientMap = new HashMap<>();
             clientMapByUserId = new HashMap<>();
             serverSocket = new ServerSocket(port);
+            gameManager = new GameManager();
             executorPool = new ThreadPoolExecutor(50, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
         } catch (Exception e) {
             e.printStackTrace();

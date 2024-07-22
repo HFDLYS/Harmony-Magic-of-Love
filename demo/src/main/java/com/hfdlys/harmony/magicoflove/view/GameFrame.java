@@ -67,6 +67,8 @@ public class GameFrame extends JFrame {
     
     private static GameFrame instance = null;
 
+    private EntityManager entityManager;
+
     File selectedFile = null;
 
     /**
@@ -91,16 +93,16 @@ public class GameFrame extends JFrame {
         this.setLocationRelativeTo(null);
         
         /*
-        EntityManager entityManager = EntityManager.getInstance();
+        EntityManager entityManager = entityManager;
         entityManager.restart();
 
         Character c = CharacterFactory.getTestCharacter(1, 0, 0, 100, WeaponFactory.CHAOS_STAVES);
         entityManager.addWithoutMessage(c);
         entityManager.addWithoutMessage(CharacterFactory.getTestCharacter(2, +200, 50, 100, 0));
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, -450, 0, 25, 600), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 450, 0, 25, 600), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, -600, 450, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, 600, 450, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        entityManager.add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, -450, 0, 25, 600), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        entityManager.add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 450, 0, 25, 600), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        entityManager.add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, -600, 450, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        entityManager.add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, 600, 450, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
         */
     }
 
@@ -122,6 +124,7 @@ public class GameFrame extends JFrame {
             log.error("Failed to load background image", e);
         }
         setMenuState(1);
+        entityManager = Client.getInstance().getGameManager().getEntityManager();
         Client.getInstance().setController(new ClientController(this));
     }
 
@@ -186,7 +189,7 @@ public class GameFrame extends JFrame {
         int x = (getWidth() - backgroundImage0.getWidth(this)) / 2;
         int y = (getHeight() - backgroundImage0.getHeight(this)) / 2;
         g.drawImage(backgroundImage0, x, y, this);
-        EntityManager.getInstance().sort(new Comparator<Entity>() {
+        Client.getInstance().getGameManager().getEntityManager().sort(new Comparator<Entity>() {
             @Override
             public int compare(Entity o1, Entity o2) {
                 return o1.getHitbox().getX() - o2.getHitbox().getX();
@@ -194,11 +197,11 @@ public class GameFrame extends JFrame {
         });
         
 
-        for(int i = 0; i < EntityManager.getInstance().getEntitySize(); i++) {
-            Entity entity = EntityManager.getInstance().getEntity(i);
+        for(int i = 0; i < entityManager.getEntitySize(); i++) {
+            Entity entity = entityManager.getEntity(i);
             Texture texture;
             if(entity instanceof Character) {
-                texture = ((Character)entity).getCurrentTexture();
+                texture = ((Character)entity).getCurrentTexture(Client.getInstance().getGameManager());
             } else {
                 texture = entity.getTexture();
             }

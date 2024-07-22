@@ -44,6 +44,8 @@ public class Client {
 
     private ObjectMapper objectMapper;
 
+    private GameManager gameManager;
+
     private Controller controller;
 
     private Client() {
@@ -52,6 +54,7 @@ public class Client {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
             objectMapper = new ObjectMapper();
+            gameManager = new GameManager();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,12 +111,12 @@ public class Client {
                                 // log.info("User info: " + message.getContent());
                                 List<UserMessgae> userMessgae = objectMapper.readValue(message.getContent(), objectMapper.getTypeFactory().constructCollectionType(List.class, UserMessgae.class));
                                 for (UserMessgae user : userMessgae) {
-                                    GameManager.getInstance().addPlayerSkin(user.getUserId(), user.getSkin());
+                                    gameManager.addPlayerSkin(user.getUserId(), user.getSkin());
                                 }
                                 break;
                             case MessageCodeConstants.ENTITY_MANAGER_INFO:
                                 // log.info("Entity manager info: " + message.getContent());
-                                EntityManager.getInstance().loadEntityManagerMessage(objectMapper.readValue(message.getContent(), EntityManagerMessage.class));
+                                gameManager.getEntityManager().loadEntityManagerMessage(objectMapper.readValue(message.getContent(), EntityManagerMessage.class));
                                 break;
                             default:
                                 break;
@@ -129,7 +132,7 @@ public class Client {
     public void run() {
         new ServerHandler().start();
         
-        GameManager.getInstance().run();
+        gameManager.run();
     }
     
 

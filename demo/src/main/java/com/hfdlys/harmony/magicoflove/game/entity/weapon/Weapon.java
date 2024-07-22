@@ -67,6 +67,11 @@ public class Weapon {
     private int shootSoundEffectType;
 
     /**
+     * 游戏管理器
+     */
+    private GameManager gameManager;
+
+    /**
      * 构造一把武器
      * @param projectile 攻击
      * @param velocity 速度
@@ -75,8 +80,10 @@ public class Weapon {
      * @param range 射程
      * @param textures 纹理
      */
-    public Weapon(int type, Projectile projectile, int velocity, int damage, int interval, int range, int projectileType, Texture[] textures, int shootSoundEffectType) {
+    public Weapon(int type, GameManager gameManager, Projectile projectile, int velocity, int damage, int interval, int range, int projectileType, Texture[] textures, int shootSoundEffectType) {
         this.projectile = projectile;
+        this.type = type;
+        this.gameManager = gameManager;
         this.velocity = velocity;
         this.damage = damage;
         this.range = range;
@@ -90,7 +97,7 @@ public class Weapon {
      * deep copy constructor
      */
     public Weapon(Weapon another) {
-        this(another.type, new Projectile(another.projectile), another.velocity, another.damage, another.interval, another.range, another.projectileType, another.texture, another.shootSoundEffectType);
+        this(another.type, another.gameManager, new Projectile(another.projectile), another.velocity, another.damage, another.interval, another.range, another.projectileType, another.texture, another.shootSoundEffectType);
     }
 
     /**
@@ -130,8 +137,8 @@ public class Weapon {
      * @return true if shoot
      */
     public boolean attack(int senderID, int x, int y, int aimX, int aimY) {
-        if(GameManager.getInstance().getTimeStamp() - lastShootTimeStamp <= interval) return false;
-        lastShootTimeStamp = GameManager.getInstance().getTimeStamp();
+        if(gameManager.getTimeStamp() - lastShootTimeStamp <= interval) return false;
+        lastShootTimeStamp = gameManager.getTimeStamp();
         Projectile newProjectile = getNewProjectile();
         x += 12;
         int dx = aimX - x;
@@ -156,7 +163,7 @@ public class Weapon {
                 (int)Math.ceil(1.0 * velocity * dx / len),
                 (int)Math.ceil(1.0 * velocity * dy / len));
         
-        EntityManager.getInstance().add(newProjectile, new ProjectileRegisterMessage(projectileType, x, y, senderID));
+        gameManager.getEntityManager().add(newProjectile, new ProjectileRegisterMessage(projectileType, x, y, senderID));
         return true;
     }
 }

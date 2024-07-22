@@ -37,7 +37,7 @@ public class WeaponFactory {
      * @param type 武器编号(常量)
      * @return 武器原型的一份复制
      */
-    public static Weapon getWeapon(int type) {
+    public static Weapon getWeapon(int type, GameManager gameManager) {
         try {
             if(type == LOVE_SWORD) {
                 Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.SWORD_QI, 0, 0, 0);
@@ -47,7 +47,8 @@ public class WeaponFactory {
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
                         type,
-                        projectile, 1440 / GameManager.getInstance().getFps(), 50, 7200 / GameManager.getInstance().getFps(), 12, ProjectileFactory.RAMDOM,
+                        gameManager,
+                        projectile, 1440 / gameManager.getFps(), 50, 7200 / gameManager.getFps(), 12, ProjectileFactory.RAMDOM,
                         textures,
                         ProjectileFactory.SWORD_QI
                 );
@@ -61,7 +62,8 @@ public class WeaponFactory {
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
                         type,
-                        projectile, 360 / GameManager.getInstance().getFps(), 20, 7200 / GameManager.getInstance().getFps(), 200, ProjectileFactory.HEART,
+                        gameManager,
+                        projectile, 360 / gameManager.getFps(), 20, 7200 / gameManager.getFps(), 200, ProjectileFactory.HEART,
                         textures,
                         ProjectileFactory.HEART
                 );
@@ -75,14 +77,15 @@ public class WeaponFactory {
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
                         type,
-                        projectile, 360 / GameManager.getInstance().getFps(), 5, 1440 / GameManager.getInstance().getFps(), 500, ProjectileFactory.RAMDOM,
+                        gameManager,
+                        projectile, 360 / gameManager.getFps(), 5, 1440 / gameManager.getFps(), 500, ProjectileFactory.RAMDOM,
                         textures,
                         ProjectileFactory.RAMDOM
                 ) {
                     @Override
                     public boolean attack(int senderID, int x, int y, int aimX, int aimY) {
-                    if(GameManager.getInstance().getTimeStamp() - getLastShootTimeStamp() <= getInterval()) return false;
-                        setLastShootTimeStamp(GameManager.getInstance().getTimeStamp());
+                    if(gameManager.getTimeStamp() - getLastShootTimeStamp() <= getInterval()) return false;
+                        setLastShootTimeStamp(gameManager.getTimeStamp());
                         Projectile newProjectile = ProjectileFactory.getProjectile(ProjectileFactory.RAMDOM, senderID, x, y);
                         newProjectile.setDamage(getDamage());
                         newProjectile.setRange(getRange());
@@ -106,7 +109,7 @@ public class WeaponFactory {
                                 (int)Math.ceil(1.0 * getVelocity() * dx / len),
                                 (int)Math.ceil(1.0 * getVelocity() * dy / len));
                         
-                        EntityManager.getInstance().add(newProjectile, new ProjectileRegisterMessage(type, x, y, senderID));
+                        gameManager.getEntityManager().add(newProjectile, new ProjectileRegisterMessage(type, x, y, senderID));
                         return true;
                     }
                 };

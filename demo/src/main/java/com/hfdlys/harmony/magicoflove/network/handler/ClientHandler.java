@@ -84,7 +84,7 @@ public class ClientHandler extends Thread {
                                 ServerFrame.getInstance().appendText("用户" + userId + "登录成功\n");
                                 UserMessgae userMessgae = new UserMessgae();
                                 userMessgae.setUserId(userId);
-                                GameManager.getInstance().addPlayerSkin(userId, user.getSkin());
+                                Server.getInstance().getGameManager().addPlayerSkin(userId, user.getSkin());
                                 sendMessage(MessageCodeConstants.SUCCESS, userMessgae);
                                 initGame();
                             } else {
@@ -106,7 +106,7 @@ public class ClientHandler extends Thread {
                                 ServerFrame.getInstance().appendText("用户" + registerUserId + "注册成功\n");
                                 UserMessgae userMessgae = new UserMessgae();
                                 userMessgae.setUserId(registerUserId);
-                                GameManager.getInstance().addPlayerSkin(userId, registerMessage.getSkin());
+                                Server.getInstance().getGameManager().addPlayerSkin(userId, registerMessage.getSkin());
                                 sendMessage(MessageCodeConstants.SUCCESS, userMessgae);
                                 initGame();
                             } else {
@@ -165,7 +165,7 @@ public class ClientHandler extends Thread {
         int min = 1;
         int max = 4;
         int randomInt = random.nextInt(max - min) + min;
-        EntityManager.getInstance().add(CharacterFactory.getCharacter(user.getUserId(), user.getUsername(), randomInt, controller), new CharacterRegisterMessage(0, user.getUserId(), user.getUsername(), randomInt));
+        Server.getInstance().getGameManager().getEntityManager().add(CharacterFactory.getCharacter(user.getUserId(), user.getUsername(), randomInt, controller, Server.getInstance().getGameManager()), new CharacterRegisterMessage(0, user.getUserId(), user.getUsername(), randomInt));
     }
 
     public void sendMessage(int code, Object content) {

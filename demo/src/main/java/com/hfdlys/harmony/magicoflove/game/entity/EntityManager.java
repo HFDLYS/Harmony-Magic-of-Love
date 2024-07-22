@@ -8,6 +8,7 @@ import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ObstacleFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ProjectileFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.WeaponFactory;
+import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.EntityManagerMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.CharacterRegisterMessage;
@@ -19,28 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class EntityManager {
-    /**
-     * 多例模式
-     */
-    private static HashMap<Integer, EntityManager> Instances = new HashMap<>();
-
-    /**
-     * 多体模式，获取实例
-     * @return 实例
-     */
-    public static EntityManager getInstance(Integer roomId) {
-        if(Instances.get(roomId) == null)
-            Instances.put(roomId, new EntityManager());
-        return Instances.get(roomId);
-    }
-
-    /**
-     * 单例默认
-     */
-    public static EntityManager getInstance() {
-        return getInstance(0);
-    }
-    
     /**
      * 储存目前存在的所有实体
      */
@@ -67,14 +46,20 @@ public class EntityManager {
     private int entityCount;
 
     /**
+     * 游戏管理器
+     */
+    private GameManager gameManager;
+
+    /**
      * 初始化实体管理类
      */
-    private EntityManager() {
+    public EntityManager(GameManager gameManager) {
         synchronized (entityListModifyLock) {
             entityList = new ArrayList<>();
             entityRegisterMessages = new HashMap<>();
             entityMessageHashMap = new HashMap<>();
         }
+        this.gameManager = gameManager;
         entityCount = 0;
     }
 
@@ -339,7 +324,7 @@ public class EntityManager {
             if (entityMessageHashMap.get(entityRegisterMessage.getId()) != null) continue;
             if (entityRegisterMessage instanceof CharacterRegisterMessage) {
                 CharacterRegisterMessage characterRegisterMessage = (CharacterRegisterMessage)entityRegisterMessage;
-                Character character = CharacterFactory.getCharacter(characterRegisterMessage.getUserId(), characterRegisterMessage.getUsername(), characterRegisterMessage.getWeaponType(), null);
+                Character character = CharacterFactory.getCharacter(characterRegisterMessage.getUserId(), characterRegisterMessage.getUsername(), characterRegisterMessage.getWeaponType(), null, gameManager);
                 addWithoutMessage(characterRegisterMessage.getId(), character);
             } else if (entityRegisterMessage instanceof ObstacleRegisterMessage) {
                 ObstacleRegisterMessage obstacleRegisterMessage = (ObstacleRegisterMessage)entityRegisterMessage;
@@ -366,7 +351,7 @@ public class EntityManager {
                 character.aim(entityMessage.getAimX(), entityMessage.getAimY());
                 if (entityMessage.getWeaponType() != 0) {
                     if (character.getWeapon() == null || character.getWeapon().getType() != entityMessage.getWeaponType()) {
-                        character.setWeapon(WeaponFactory.getWeapon(entityMessage.getWeaponType()));
+                        character.setWeapon(WeaponFactory.getWeapon(entityMessage.getWeaponType(), gameManager));
                     }
                 }
             }
