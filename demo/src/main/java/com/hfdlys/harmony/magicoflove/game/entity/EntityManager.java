@@ -5,12 +5,18 @@ import java.util.*;
 import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
 import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ObstacleFactory;
+import com.hfdlys.harmony.magicoflove.game.factory.ProjectileFactory;
+import com.hfdlys.harmony.magicoflove.game.factory.WeaponFactory;
 import com.hfdlys.harmony.magicoflove.network.message.EntityManagerMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.CharacterRegisterMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.EntityRegisterMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ObstacleRegisterMessage;
+import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ProjectileRegisterMessage;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class EntityManager {
     /**
      * 单体模式
@@ -35,7 +41,7 @@ public class EntityManager {
     /**
      * 实体注册信息
      */
-    private List<EntityRegisterMessage> entityRegisterMessages = new ArrayList<>();
+    private HashMap<Integer, EntityRegisterMessage> entityRegisterMessages;
 
     /**
      * 实体信息
@@ -58,6 +64,8 @@ public class EntityManager {
     private EntityManager() {
         synchronized (entityListModifyLock) {
             entityList = new ArrayList<>();
+            entityRegisterMessages = new HashMap<>();
+            entityMessageHashMap = new HashMap<>();
         }
         entityCount = 0;
     }
@@ -74,8 +82,9 @@ public class EntityManager {
 
         // 第一阶段，实体刷新（控制器）+ 前景hp刷新
         for(int i = 0; i < entityList.size(); i++) {
-            if(entityList.get(i) instanceof Character)
+            if(entityList.get(i) instanceof Character) {
                 ((Character)entityList.get(i)).play();
+            }
         }
 
         boolean havePlayedHitSound = false;
@@ -184,7 +193,6 @@ public class EntityManager {
 
         
         // 记录实体信息
-        entityMessageHashMap = new HashMap<>();
         for(Entity e: entityList) {
             EntityMessage entityMessage = new EntityMessage(e.getId(), e.getHp(), e.getHitbox().getX(), e.getHitbox().getY(), e.getHitbox().getVx(), e.getHitbox().getVy(), e.getHitbox().getLx(), e.getHitbox().getLy());
             if (e instanceof Character) {
@@ -195,6 +203,7 @@ public class EntityManager {
                     entityMessage.setWeaponType(character.getWeapon().getType());
                 }
             }
+            
             entityMessageHashMap.put(e.getId(), entityMessage);
         }
 
@@ -207,12 +216,14 @@ public class EntityManager {
             ArrayList<Entity> newEntityList = new ArrayList<>();
             for(Entity e: entityList) {
                 if(!e.isExist()) { // 死亡
-                    
+                    entityMessageHashMap.remove(e.getId());
+                    entityRegisterMessages.remove(e.getId());
                     if(e instanceof Character) {
                         // TODO 播放死亡特效
                     }
                 } else {
                     newEntityList.add(e);
+
                 }
             }
             entityList = newEntityList;
@@ -240,13 +251,14 @@ public class EntityManager {
             System.out.println("添加了空实体");
             return;
         }
+        
         entity.setId(++entityCount);
         synchronized (entityListModifyLock) {
             entityList.add(entity);
         }
-
         entityRegisterMessage.setId(entityCount);
-        entityRegisterMessages.add(entityRegisterMessage);
+        log.info("add entity: {}", entityRegisterMessage.getId());
+        entityRegisterMessages.put(entityRegisterMessage.getId(), entityRegisterMessage);
     }
     
 
@@ -260,6 +272,7 @@ public class EntityManager {
             return;
         }
         entity.setId(ID);
+        log.info("add entity: {}", entity.getId());
         synchronized (entityListModifyLock) {
             entityList.add(entity);
         }
@@ -313,22 +326,54 @@ public class EntityManager {
      */
     public EntityManagerMessage getEntityManagerMessage() {
         EntityManagerMessage entityManagerMessage = new EntityManagerMessage(entityRegisterMessages, entityMessageHashMap);
-        entityRegisterMessages = new ArrayList<>();
+        // 清空实体注册信息
+        // entityRegisterMessages = new ArrayList<>();
         return entityManagerMessage;
     }
 
+    /**
+     * 加载实体管理器信息
+     * @param entityManagerMessage 实体管理器信息
+     */
     public void loadEntityManagerMessage(EntityManagerMessage entityManagerMessage) {
         
-        for (EntityRegisterMessage entityRegisterMessage: entityManagerMessage.getEntityRegisterMessages()) {
+        for (EntityRegisterMessage entityRegisterMessage: entityManagerMessage.getEntityRegisterMessages().values()) {
+            if (entityMessageHashMap.get(entityRegisterMessage.getId()) != null) continue;
             if (entityRegisterMessage instanceof CharacterRegisterMessage) {
                 CharacterRegisterMessage characterRegisterMessage = (CharacterRegisterMessage)entityRegisterMessage;
-                Character character = CharacterFactory.getCharacter(characterRegisterMessage.getUserId(), characterRegisterMessage.getWeaponType());
-                addWithoutMessage(character);
+                Character character = CharacterFactory.getCharacter(characterRegisterMessage.getUserId(), characterRegisterMessage.getWeaponType(), null);
+                addWithoutMessage(characterRegisterMessage.getId(), character);
             } else if (entityRegisterMessage instanceof ObstacleRegisterMessage) {
                 ObstacleRegisterMessage obstacleRegisterMessage = (ObstacleRegisterMessage)entityRegisterMessage;
                 Obstacle obstacle = ObstacleFactory.getObstacle(obstacleRegisterMessage.getType(), 0, 0);
-                addWithoutMessage(obstacle);
+                addWithoutMessage(obstacleRegisterMessage.getId(), obstacle);
+            } else if (entityRegisterMessage instanceof ProjectileRegisterMessage) {
+                ProjectileRegisterMessage projectileRegisterMessage = (ProjectileRegisterMessage)entityRegisterMessage;
+                Projectile projectile = ProjectileFactory.getProjectile(projectileRegisterMessage.getType(), projectileRegisterMessage.getSenderId(), projectileRegisterMessage.getOx(), projectileRegisterMessage.getOy());
+                addWithoutMessage(projectileRegisterMessage.getId(), projectile);
+            }
+        }
+        this.entityMessageHashMap = entityManagerMessage.getEntityMessageHashMap();
+        for(int i = 0; i < entityList.size(); i++) {
+            Entity entity = entityList.get(i);
+            EntityMessage entityMessage = entityMessageHashMap.get(entity.getId());
+            // log.info("load entity: {}", entity.getId());
+            if(entityMessage == null) continue;
+            entity.setHp(entityMessage.getHp());
+            entity.getHitbox().setCoordinate(entityMessage.getX(), entityMessage.getY());
+            entity.getHitbox().setVelocity(entityMessage.getVx(), entityMessage.getVy());
+            entity.getHitbox().setHitboxLength(entityMessage.getLx(), entityMessage.getLy());
+            if (entity instanceof Character) {
+                Character character = (Character)entity;
+                character.aim(entityMessage.getAimX(), entityMessage.getAimY());
+                if (entityMessage.getWeaponType() != 0) {
+                    if (character.getWeapon() == null || character.getWeapon().getType() != entityMessage.getWeaponType()) {
+                        character.setWeapon(WeaponFactory.getWeapon(entityMessage.getWeaponType()));
+                    }
+                }
             }
         }
     }
+
+
 }

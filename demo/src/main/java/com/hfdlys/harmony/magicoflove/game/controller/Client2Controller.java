@@ -42,18 +42,18 @@ public class Client2Controller extends Controller {
         else if(!keyboard['W'-'A'] && keyboard['S'-'A']) x = 2;
         else x = 1;
 
-        getControl().setMoveDirect(directTable[x][y]);
+        getControlMessage().setMoveDirect(directTable[x][y]);
 
         Point aimPoint = new Point(MouseInfo.getPointerInfo().getLocation());
         SwingUtilities.convertPointFromScreen(aimPoint, GameFrame.getInstance());
         // BE CAREFUL!! 这里进行了坐标系变换 + swap(x, y)
-        getControl().setAimX((int) ((aimPoint.y - GameFrame.getInstance().getHeight() / 2) / GameFrame.getInstance().getScale()));
-        getControl().setAimY((int) ((aimPoint.x - GameFrame.getInstance().getWidth() / 2) / GameFrame.getInstance().getScale()));
+        getControlMessage().setAimX((int) ((aimPoint.y - GameFrame.getInstance().getHeight() / 2) / GameFrame.getInstance().getScale()));
+        getControlMessage().setAimY((int) ((aimPoint.x - GameFrame.getInstance().getWidth() / 2) / GameFrame.getInstance().getScale()));
         
         // play
         if(character == null) return;
-        character.move(getControl().getMoveDirect());
-        character.aim(getControl().getAimX(), getControl().getAimY());
+        character.move(getControlMessage().getMoveDirect());
+        character.aim(getControlMessage().getAimX(), getControlMessage().getAimY());
         
         
     }
@@ -108,17 +108,17 @@ public class Client2Controller extends Controller {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 if(e.getButton() == MouseEvent.BUTTON1) {
-                    getControl().setAttack(true);
+                    getControlMessage().setAttack(true);
                 } else if(e.getButton() == MouseEvent.BUTTON3) {
-                    getControl().setRush(true);
+                    getControlMessage().setRush(true);
                 }
             }
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 if(e.getButton() == MouseEvent.BUTTON1) {
-                    getControl().setAttack(false);
+                    getControlMessage().setAttack(false);
                 } else if(e.getButton() == MouseEvent.BUTTON3) {
-                    getControl().setRush(false);
+                    getControlMessage().setRush(false);
                 }
             }
         });

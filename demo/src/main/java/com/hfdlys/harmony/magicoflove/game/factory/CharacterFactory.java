@@ -8,6 +8,7 @@ import com.hfdlys.harmony.magicoflove.game.controller.ClientController;
 import com.hfdlys.harmony.magicoflove.game.controller.Controller;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
+import com.hfdlys.harmony.magicoflove.view.GameFrame;
 import com.hfdlys.harmony.magicoflove.game.entity.Character;
 
 /**
@@ -49,7 +50,7 @@ public class CharacterFactory {
                         240 / GameManager.getInstance().getFps(),
                         moveAnimation,
                         deadAnimation,
-                        new ClientController(),
+                        new ClientController(GameFrame.getInstance()),
                         WeaponFactory.getWeapon(weaponType)
                     );
                 }
@@ -98,10 +99,13 @@ public class CharacterFactory {
      * @param Controller 控制器
      * @return 对应类型角色
      */
-    public static Character getCharacter(int userId, int weaponType) {
+    public static Character getCharacter(int userId, int weaponType, Controller controller) {
         try {
             Texture[][] texture_move = new Texture[4][9];
             Texture texture_all = GameManager.getInstance().getPlayerSkin(userId);
+            if (texture_all == null) {
+                texture_all = new Texture("character/enemy.png", 1344, 832, 32, 32);
+            }
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 9; j++) {
                     texture_move[i][j] = texture_all.getCutTexture(512 + 64 * i, 64 * j, 64, 64, 32, 32); 
@@ -124,7 +128,7 @@ public class CharacterFactory {
                 240 / GameManager.getInstance().getFps(),
                 moveAnimation,
                 deadAnimation,
-                null,
+                controller,
                 WeaponFactory.getWeapon(weaponType)
             );
         } catch (Exception e) {

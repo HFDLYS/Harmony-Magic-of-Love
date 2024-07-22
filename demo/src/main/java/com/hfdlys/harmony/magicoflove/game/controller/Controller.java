@@ -12,11 +12,11 @@ import lombok.Data;
  * @since 2024-07-18
  */
 @Data
-public class Controller {
+public abstract class Controller {
     /**
      * 控制包
      */
-    private ControlMessage control = new ControlMessage();
+    private ControlMessage controlMessage = new ControlMessage();
 
     /**
      * 控制
@@ -28,6 +28,6 @@ public class Controller {
     }
 
     public Controller(ControlMessage control) {
-        this.control = control;
+        this.controlMessage = control;
     }
 }

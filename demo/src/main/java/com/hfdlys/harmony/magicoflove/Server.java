@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
+import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.handler.ClientHandler;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
@@ -12,6 +13,7 @@ import com.hfdlys.harmony.magicoflove.view.ServerFrame;
 
 import java.util.concurrent.*;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Jiasheng Wang
  * @since 2024-07-18
  */
+@Data
 @Slf4j
 public class Server {
     /**
@@ -48,6 +51,11 @@ public class Server {
     private HashMap<String, ClientHandler> clientMap;
 
     /**
+     * 根据userId定位客户端
+     */
+    private HashMap<Integer, ClientHandler> clientMapByUserId;
+
+    /**
      * 服务器开放端口
      */
     private int port = 2336;
@@ -72,6 +80,7 @@ public class Server {
     private Server() {
         try {
             clientMap = new HashMap<>();
+            clientMapByUserId = new HashMap<>();
             serverSocket = new ServerSocket(port);
             executorPool = new ThreadPoolExecutor(50, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
         } catch (Exception e) {
@@ -79,13 +88,33 @@ public class Server {
         }
     }
 
+    /**
+     * 广播信息
+     */
+    public void broadcast(int code, Object content) {
+        for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
+            ClientHandler clientHandler = entry.getValue();
+            clientHandler.sendMessage(code, content);
+        }
+    }
 
-    
 
+    private class GameRoomHandler extends Thread {
+        @Override
+        public void run() {
+            GameManager.getInstance().runServer();
+        }
+    }
+
+
+    /**
+     * 服务器处理线程
+     */
     private class ServerHandler extends Thread {
         @Override
         public void run() {
             new HeartBeatThread().start();
+            new GameRoomHandler().start();
             while (true) {
                 try {
                     log.info("Waiting for connection...");
@@ -101,18 +130,21 @@ public class Server {
         }
     }
 
+    /**
+     * 广播信息
+     */
+
+    /**
+     * 心跳线程
+     */
     private class HeartBeatThread extends Thread {
         @Override
         public void run() {
-            ObjectMapper objectMapper = new ObjectMapper();
             while (true) {
                 try {
                     Thread.sleep(3000);
-                    Message message = new Message();
                     PingMessage pingMessage = new PingMessage();
                     pingMessage.setTimestamp(System.currentTimeMillis());
-                    message.setCode(MessageCodeConstants.HEART_BEAT);
-                    message.setContent(objectMapper.writeValueAsString(pingMessage));
                     for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
                         ClientHandler clientHandler = entry.getValue();
                         if (clientHandler.getSocket().isClosed()) {
@@ -121,7 +153,7 @@ public class Server {
                             clientMap.remove(entry.getKey());
                             continue;
                         }
-                        clientHandler.sendMessage(message);
+                        clientHandler.sendMessage(MessageCodeConstants.HEART_BEAT, pingMessage);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

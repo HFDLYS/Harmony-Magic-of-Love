@@ -10,8 +10,14 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hfdlys.harmony.magicoflove.Client;
+import com.hfdlys.harmony.magicoflove.Server;
+import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.game.common.Texture;
 import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
+import com.hfdlys.harmony.magicoflove.game.factory.MapFactory;
+import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.view.GameFrame;
 
 import lombok.extern.slf4j.Slf4j;
@@ -137,10 +143,9 @@ public class GameManager {
      */
     public void run() {
 
-
-        GameFrame.getInstance();
         init();
-
+        GameFrame.getInstance().init();
+        Client.getInstance().start();
         long lastTime = -1;
         long lastSecondTime = -1;
         int cnt = 0;
@@ -153,9 +158,9 @@ public class GameManager {
             timeStamp++;
 
             // 调用其他管理器
-            EntityManager.getInstance().run();
-            GameFrame.getInstance().renderGame();
-
+            // EntityManager.getInstance().run();
+            GameFrame.getInstance().renderMenu();
+            
             // 帧数限制
             long time = System.currentTimeMillis();
             if(fixedFps) {
@@ -182,6 +187,56 @@ public class GameManager {
         }
     }
 
+    public void runServer() {
+        MapFactory.createMap();
+
+        long lastTime = -1;
+        long lastSecondTime = -1;
+        int cnt = 0;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        while(true) {
+            if(lastTime == -1) {
+                lastTime = System.currentTimeMillis();
+                lastSecondTime = System.currentTimeMillis();
+            }
+            // 时间戳+1
+            timeStamp++;
+
+            // 调用其他管理器
+            EntityManager.getInstance().run();
+            Server.getInstance().broadcast(MessageCodeConstants.ENTITY_MANAGER_INFO, EntityManager.getInstance().getEntityManagerMessage());
+
+            // 帧数限制
+            long time = System.currentTimeMillis();
+            if(fixedFps) {
+                lastTime += 1000 / fps;
+                long delta = lastTime - time;
+                if(delta <= delta_bias) {
+                    if(delta < delta_bias) {
+                        
+                    }
+                } else {
+                    try {
+                        Thread.sleep(delta - delta_bias);
+                    } catch (InterruptedException e) {
+                        System.out.println(e);
+                    }
+                }
+            }
+            cnt++;
+            if(System.currentTimeMillis() - lastSecondTime >= 1000) {
+                lastSecondTime = System.currentTimeMillis();
+                cnt = 0;
+            }
+        }
+    }
+
+    /**
+     * 添加玩家皮肤
+     * @param id 玩家id
+     * @param data 图片数据
+     */
     public void addPlayerSkin(int id, byte[] data) throws IOException {
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
         Texture texture = new Texture(image, 1344, 832, 32, 32);

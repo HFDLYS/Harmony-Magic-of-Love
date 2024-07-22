@@ -43,21 +43,21 @@ public class UserService {
         return instance;
     }
 
-    public Integer login(String username, String password) {
+    public User login(String username, String password) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, username);
         try {
             User user = userMapper.selectOne(wrapper);
             if (user == null) {
-                return -1;
+                return null;
             }
             if (SecurityUtil.hashPassword(password).equals(user.getPassword())) {
-                return user.getUserId();
+                return user;
             }
-            return -1;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return -1;
+            return null;
         }
     }
 

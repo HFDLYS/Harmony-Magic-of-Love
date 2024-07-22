@@ -37,6 +37,11 @@ public class MessageCodeConstants {
     public static final int USER_INFO = 301;
 
     /**
+     * 实体管理器信息
+     */
+    public static final int ENTITY_MANAGER_INFO = 302;
+
+    /**
      * 控制信息
      */
     public static final int CONTROL = 401;

@@ -71,5 +71,6 @@ public class EntityMessage {
         this.vy = vy;
         this.lx = lx;
         this.ly = ly;
+        weaponType = 0;
     }
 }

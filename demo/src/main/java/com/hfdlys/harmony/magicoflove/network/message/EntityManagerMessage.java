@@ -13,7 +13,7 @@ public class EntityManagerMessage {
     /**
      * 实体注册信息
      */
-    private List<EntityRegisterMessage> entityRegisterMessages = new ArrayList<>();
+    private HashMap<Integer, EntityRegisterMessage> entityRegisterMessages;
 
     /**
      * 实体信息
@@ -23,7 +23,7 @@ public class EntityManagerMessage {
     public EntityManagerMessage() {
     }
 
-    public EntityManagerMessage(List<EntityRegisterMessage> entityRegisterMessages, HashMap<Integer, EntityMessage> entityMessageHashMap) {
+    public EntityManagerMessage(HashMap<Integer, EntityRegisterMessage> entityRegisterMessages, HashMap<Integer, EntityMessage> entityMessageHashMap) {
         this.entityRegisterMessages = entityRegisterMessages;
         this.entityMessageHashMap = entityMessageHashMap;
     }

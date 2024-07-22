@@ -6,6 +6,7 @@ import java.awt.*;
 public class LoadingDialog extends JDialog {
     public LoadingDialog(Frame owner) {
         super(owner, "Loading", true); // 创建模态对话框
+        setAutoRequestFocus(false);
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
@@ -38,7 +39,7 @@ public class LoadingDialog extends JDialog {
         JLabel label = new JLabel(message);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(label, BorderLayout.NORTH);
-
+        setFocusable(false);
         JButton button = new JButton("确定");
 
         getContentPane().add(panel);
@@ -49,8 +50,9 @@ public class LoadingDialog extends JDialog {
     }
 
     public void close() {
-        ClientFrame.getInstance().launchFrame();
         setVisible(false);
+        ClientFrame.getInstance().launchFrame();
+        
         dispose();
     }
 }

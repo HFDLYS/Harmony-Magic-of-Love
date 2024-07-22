@@ -18,6 +18,8 @@ import com.hfdlys.harmony.magicoflove.Client;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.database.entity.User;
 import com.hfdlys.harmony.magicoflove.database.service.UserService;
+import com.hfdlys.harmony.magicoflove.game.controller.ClientController;
+import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.LoginMessage;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.network.message.RegisterMessage;
@@ -37,8 +39,9 @@ public class ClientFrame extends JFrame {
     private LoadingDialog dialog;
 
     private ClientFrame() {
-        repaint();
+        
         setResizable(false);
+        setAutoRequestFocus(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         objectMapper = new ObjectMapper();
         dialog = new LoadingDialog(this);
@@ -60,7 +63,9 @@ public class ClientFrame extends JFrame {
         if (Client.getInstance().getUserId() == null || Client.getInstance().getUserId() == -1) {
             launchLoginFrame();
         } else {
-            
+            this.setFocusable(false);
+            this.setVisible(false);
+            GameManager.getInstance().run();
         }
     }
 
@@ -120,8 +125,7 @@ public class ClientFrame extends JFrame {
                     LoginMessage loginMessage = new LoginMessage();
                     loginMessage.setUsername(username);
                     loginMessage.setPassword(password);
-                    Message message = new Message(MessageCodeConstants.LOGIN, objectMapper.writeValueAsString(loginMessage));
-                    Client.getInstance().sendMessage(message);
+                    Client.getInstance().sendMessage(MessageCodeConstants.LOGIN, loginMessage);
                     dialog.initUI();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -231,8 +235,7 @@ public class ClientFrame extends JFrame {
                 try (InputStream in = new FileInputStream(selectedFile)) {
                     byte[] imageBytes = in.readAllBytes();
                     RegisterMessage registerMessage = new RegisterMessage(username, password, imageBytes);
-                    Message message = new Message(MessageCodeConstants.REGISTER, objectMapper.writeValueAsString(registerMessage));
-                    Client.getInstance().sendMessage(message);
+                    Client.getInstance().sendMessage(MessageCodeConstants.REGISTER, registerMessage);
                     dialog.initUI();
                 } catch (Exception ex) {
                     ex.printStackTrace();
