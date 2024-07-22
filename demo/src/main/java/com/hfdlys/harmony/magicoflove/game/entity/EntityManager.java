@@ -373,6 +373,7 @@ public class EntityManager {
                 }
             }
         }
+        clearDeadEntity();
     }
 
 
