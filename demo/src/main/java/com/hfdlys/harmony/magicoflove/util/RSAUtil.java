@@ -34,6 +34,12 @@ public class RSAUtil {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
+    /**
+     * 读取公钥和私钥
+     * @param publicKeyFile 公钥文件
+     * @param privateKeyFile 私钥文件
+     * @throws Exception
+     */
     private void readKeyPair(String publicKeyFile, String privateKeyFile) throws Exception {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
@@ -69,7 +75,11 @@ public class RSAUtil {
     }
 
 
-    // 加密方法
+    /**
+     * 加密方法
+     * @param data
+     * @return
+     */
     public String encrypt(String data) {
         try {
             if (publicKey == null) {
@@ -85,7 +95,11 @@ public class RSAUtil {
         }
     }
 
-    // 解密方法
+    /**
+     * 解密方法
+     * @param encryptedData
+     * @return
+     */
     public String decrypt(String encryptedData) {
         try {
             if (privateKey == null) {

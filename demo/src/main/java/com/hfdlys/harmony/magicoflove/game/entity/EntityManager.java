@@ -2,6 +2,7 @@ package com.hfdlys.harmony.magicoflove.game.entity;
 
 import java.util.*;
 
+import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
 import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ObstacleFactory;
@@ -79,16 +80,19 @@ public class EntityManager {
             System.out.println("实体列表为空");
             return;
         }
-
-        // 第一阶段，实体刷新（控制器）+ 前景hp刷新
+        clearDeadEntity();
+        // 第一阶段，实体刷新（控制器）+ 掉线判断
         for(int i = 0; i < entityList.size(); i++) {
             if(entityList.get(i) instanceof Character) {
-                ((Character)entityList.get(i)).play();
+                Character character = (Character)entityList.get(i);
+                if(Server.getInstance().getClientMapByUserId().get(character.getUserId()) == null) {
+                    character.reduceHp(10000);
+                }
+                character.play();
             }
         }
 
         boolean havePlayedHitSound = false;
-        boolean havePlayedHitWallSound = false;
 
         // 第二阶段，以移动为核心的判断（移动、碰撞、伤害）
         for(int i = 0; i < entityList.size(); i++) {
@@ -208,7 +212,7 @@ public class EntityManager {
         }
 
         // 第三阶段，将死亡(hp<=0)的实体从entityList中移除
-        clearDeadEntity();
+        
     }
 
     private void clearDeadEntity() {
@@ -246,10 +250,10 @@ public class EntityManager {
      * @param entity 新实体
      * @param entityRegisterMessage 实体信息
     */
-    public void add(Entity entity, EntityRegisterMessage entityRegisterMessage) {
+    public int add(Entity entity, EntityRegisterMessage entityRegisterMessage) {
         if(entity == null) {
             System.out.println("添加了空实体");
-            return;
+            return -1;
         }
         
         entity.setId(++entityCount);
@@ -259,6 +263,7 @@ public class EntityManager {
         entityRegisterMessage.setId(entityCount);
         log.info("add entity: {}", entityRegisterMessage.getId());
         entityRegisterMessages.put(entityRegisterMessage.getId(), entityRegisterMessage);
+        return entityRegisterMessage.getId();
     }
     
 

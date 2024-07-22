@@ -59,6 +59,11 @@ public class Character extends Entity {
     private int velocity;
 
     /**
+     * 用户id
+     */
+    private int userId;
+
+    /**
      * 移动动画
      * 0: 上
      * 1: 左
@@ -109,6 +114,16 @@ public class Character extends Entity {
         this(hitbox, texture, hp, maxHp, velocity, moveAnimation, deadAnimation, controller);
         this.weapon = weapon;
     }
+
+    /**
+     * 构造函数（带控制器和武器）
+     */
+    public Character(Hitbox hitbox, Texture texture, int hp, int maxHp, int velocity, int userId,Animation[] moveAnimation, Animation deadAnimation, Controller controller, Weapon weapon) {
+        this(hitbox, texture, hp, maxHp, velocity, moveAnimation, deadAnimation, controller);
+        this.userId = userId;
+        this.weapon = weapon;
+    }
+
 
     public void move(int direct) throws IllegalArgumentException {
         if(direct < 0 || direct > 8)

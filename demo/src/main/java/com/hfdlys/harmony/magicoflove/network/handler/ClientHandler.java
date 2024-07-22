@@ -126,7 +126,8 @@ public class ClientHandler extends Thread {
                 }
             }
         } catch (Exception e) {
-            
+            ServerFrame.getInstance().appendText("用户" + user.getUsername() + "退出游戏\n");
+            Server.getInstance().getClientMapByUserId().remove(user.getUserId());
         }
     }
 
@@ -134,7 +135,6 @@ public class ClientHandler extends Thread {
         Server.getInstance().getClientMapByUserId().put(user.getUserId(), this);
         ServerFrame.getInstance().appendText("用户" + user.getUsername() + "初始化游戏\n");
         List<UserMessgae> userMessgaes = new ArrayList<>();
-        EntityManager.getInstance().add(CharacterFactory.getCharacter(user.getUserId(), 2, controller), new CharacterRegisterMessage(0, user.getUserId(), 2));
         for (ClientHandler clientHandler : Server.getInstance().getClientMap().values()) {
             if (clientHandler.getUser() != null) {
                 UserMessgae userMessgae = new UserMessgae();
@@ -159,6 +159,8 @@ public class ClientHandler extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        EntityManager.getInstance().add(CharacterFactory.getCharacter(user.getUserId(), 2, controller), new CharacterRegisterMessage(0, user.getUserId(), 2));
     }
 
     public void sendMessage(int code, Object content) {

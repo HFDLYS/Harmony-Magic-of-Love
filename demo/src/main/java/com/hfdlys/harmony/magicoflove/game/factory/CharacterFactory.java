@@ -126,6 +126,7 @@ public class CharacterFactory {
                 100,
                 100,
                 240 / GameManager.getInstance().getFps(),
+                userId,
                 moveAnimation,
                 deadAnimation,
                 controller,

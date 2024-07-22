@@ -17,9 +17,7 @@ import com.hfdlys.harmony.magicoflove.network.message.EntityManagerMessage;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
 import com.hfdlys.harmony.magicoflove.network.message.UserMessgae;
-import com.hfdlys.harmony.magicoflove.view.ClientFrame;
 import com.hfdlys.harmony.magicoflove.view.GameFrame;
-import com.hfdlys.harmony.magicoflove.view.ServerFrame;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
