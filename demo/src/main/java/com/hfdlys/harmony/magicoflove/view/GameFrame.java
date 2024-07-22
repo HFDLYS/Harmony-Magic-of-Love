@@ -9,6 +9,8 @@ import java.util.Comparator;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import org.apache.ibatis.io.Resources;
+
 import com.hfdlys.harmony.magicoflove.Client;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.game.common.Animation;
@@ -46,7 +48,7 @@ public class GameFrame extends JFrame {
      * 初始窗口大小
      * 高度
      */
-    private final int WINDOW_Y = 900;
+    private final int WINDOW_Y = 800;
 
     /**
      * 初始窗口大小
@@ -58,6 +60,10 @@ public class GameFrame extends JFrame {
      * 缩放
      */
     private float scale = 1.0f;
+
+    private Image backgroundImage0;
+
+    private ImageIcon logoIcon;
     
     private static GameFrame instance = null;
 
@@ -109,6 +115,12 @@ public class GameFrame extends JFrame {
         setVisible(true);
         requestFocusInWindow();
         requestFocus();
+        try {
+            backgroundImage0 = ImageIO.read(Resources.getResourceAsStream("ui/background.png"));
+            logoIcon = new ImageIcon(ImageIO.read(Resources.getResourceAsStream("ui/logo.png")));
+        } catch (IOException e) {
+            log.error("Failed to load background image", e);
+        }
         setMenuState(1);
         Client.getInstance().setController(new ClientController(this));
     }
@@ -156,15 +168,24 @@ public class GameFrame extends JFrame {
      * 渲染游戏画面
      */
     public void renderGame() {
+        
         if (Client.getInstance().getUserId() == null) {
             return;
         }
-
+        
+        if (!isRendered) {
+            isRendered = true;
+            setTitle("和弦：❤的魔法");
+        }
+        requestFocus();
         Graphics graphics = this.getGraphics();
         
         // 画布
         Image offScreenImage = this.createImage(getWidth(), getHeight());
         Graphics g = offScreenImage.getGraphics();
+        int x = (getWidth() - backgroundImage0.getWidth(this)) / 2;
+        int y = (getHeight() - backgroundImage0.getHeight(this)) / 2;
+        g.drawImage(backgroundImage0, x, y, this);
         EntityManager.getInstance().sort(new Comparator<Entity>() {
             @Override
             public int compare(Entity o1, Entity o2) {
@@ -181,7 +202,7 @@ public class GameFrame extends JFrame {
             } else {
                 texture = entity.getTexture();
             }
-            if(texture == null) continue; // 空气墙等实体没有贴图，直接跳过渲染
+            if(texture == null) continue;
             texture.setScale(1);
             g.drawImage(texture.getImage(), (int)(entity.getHitbox().getY()*scale) - texture.getDy() + getWidth() / 2, (int)(entity.getHitbox().getX()*scale) - texture.getDx() + getHeight() / 2, null);
         }
@@ -196,40 +217,60 @@ public class GameFrame extends JFrame {
 
         isRendered = true;
         setTitle("登录");
-        JPanel contentPane = new JPanel(new GridBagLayout());
+        JPanel contentPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage0 != null) {
+                    // Calculate the x and y coordinates to center the image
+                    int x = (getWidth() - backgroundImage0.getWidth(this)) / 2;
+                    int y = (getHeight() - backgroundImage0.getHeight(this)) / 2;
+                    // Draw the image
+                    g.drawImage(backgroundImage0, x, y, this);
+                }
+            }
+        };
+        JPanel mainPane = new JPanel(new GridBagLayout());
+        mainPane.setBackground(new Color(0, 0, 0, 0));
+
         GridBagConstraints gbc = new GridBagConstraints();
+        JLabel logoLabel = new JLabel(logoIcon);
+        contentPanel.add(logoLabel, BorderLayout.NORTH);
+        
 
         // 创建用户名标签和文本框
         JLabel usernameLabel = new JLabel("用户名：");
-        JTextField usernameField = new JTextField(20);
+        JTextField usernameField = new JTextField(30);
         
         // 设置用户名标签的布局
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.LINE_END;
-        contentPane.add(usernameLabel, gbc);
+        mainPane.add(usernameLabel, gbc);
         
         // 设置用户名文本框的布局
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.LINE_START;
-        contentPane.add(usernameField, gbc);
+        mainPane.add(usernameField, gbc);
 
         // 创建密码标签和密码框
         JLabel passwordLabel = new JLabel("密码：");
-        JPasswordField passwordField = new JPasswordField(20);
+        JPasswordField passwordField = new JPasswordField(30);
         
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.LINE_END;
-        contentPane.add(passwordLabel, gbc);
+        mainPane.add(passwordLabel, gbc);
         
         // 设置密码框的布局
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.LINE_START;
-        contentPane.add(passwordField, gbc);
+        mainPane.add(passwordField, gbc);
+
+        
 
         JButton loginButton = new JButton("登录");
         JButton registerButton = new JButton("注册");
@@ -259,18 +300,19 @@ public class GameFrame extends JFrame {
         
         
         gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        contentPane.add(loginButton, gbc);
-
-        gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        contentPane.add(registerButton, gbc);
+        mainPane.add(loginButton, gbc);
 
-        setContentPane(contentPane);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        mainPane.add(registerButton, gbc);
+
+        contentPanel.add(mainPane, BorderLayout.CENTER);
+        setContentPane(contentPanel);
         revalidate();
         repaint();
     }
@@ -282,9 +324,25 @@ public class GameFrame extends JFrame {
 
         isRendered = true;
         setTitle("注册");
-        JPanel contentPane = new JPanel(new GridBagLayout());
+        JPanel contentPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage0 != null) {
+                    // Calculate the x and y coordinates to center the image
+                    int x = (getWidth() - backgroundImage0.getWidth(this)) / 2;
+                    int y = (getHeight() - backgroundImage0.getHeight(this)) / 2;
+                    // Draw the image
+                    g.drawImage(backgroundImage0, x, y, this);
+                }
+            }
+        };
+        JPanel mainPane = new JPanel(new GridBagLayout());
+        mainPane.setBackground(new Color(0, 0, 0, 0));
         GridBagConstraints gbc = new GridBagConstraints();
-        setContentPane(contentPane);
+
+        JLabel logoLabel = new JLabel(logoIcon);
+        contentPanel.add(logoLabel, BorderLayout.NORTH);
 
         // 创建用户名标签和文本框
         JLabel usernameLabel = new JLabel("用户名：");
@@ -295,13 +353,13 @@ public class GameFrame extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.LINE_END;
-        contentPane.add(usernameLabel, gbc);
+        mainPane.add(usernameLabel, gbc);
         
         // 设置用户名文本框的布局
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.LINE_START;
-        contentPane.add(usernameField, gbc);
+        mainPane.add(usernameField, gbc);
 
         // 创建密码标签和密码框
         JLabel passwordLabel = new JLabel("密码：");
@@ -310,13 +368,13 @@ public class GameFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.LINE_END;
-        contentPane.add(passwordLabel, gbc);
+        mainPane.add(passwordLabel, gbc);
         
         // 设置密码框的布局
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.LINE_START;
-        contentPane.add(passwordField, gbc);
+        mainPane.add(passwordField, gbc);
 
         JLabel chooseFileLabel = new JLabel("皮肤文件:");
 
@@ -324,7 +382,7 @@ public class GameFrame extends JFrame {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.LINE_START;
-        contentPane.add(chooseFileLabel, gbc);
+        mainPane.add(chooseFileLabel, gbc);
 
         JButton chooseFileButton = new JButton("选择皮肤文件");
         
@@ -374,15 +432,16 @@ public class GameFrame extends JFrame {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.LINE_END;
-        contentPane.add(chooseFileButton, gbc);
+        mainPane.add(chooseFileButton, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        contentPane.add(registerButton, gbc);
+        mainPane.add(registerButton, gbc);
 
-        setContentPane(contentPane);
+        contentPanel.add(mainPane, BorderLayout.CENTER);
+        setContentPane(contentPanel);
         revalidate();
         repaint();
     }
@@ -396,17 +455,38 @@ public class GameFrame extends JFrame {
         remove(getContentPane());
         repaint();
         setTitle("加载中");
-        JPanel contentPane = new JPanel(new GridBagLayout());
+
+        JPanel contentPanel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage0 != null) {
+                    // Calculate the x and y coordinates to center the image
+                    int x = (getWidth() - backgroundImage0.getWidth(this)) / 2;
+                    int y = (getHeight() - backgroundImage0.getHeight(this)) / 2;
+                    // Draw the image
+                    g.drawImage(backgroundImage0, x, y, this);
+                }
+            }
+        };
+
+
+        JPanel mainPane = new JPanel(new GridBagLayout());
+        mainPane.setBackground(new Color(0, 0, 0, 0));
+
+        JLabel logoLabel = new JLabel(logoIcon);
+        contentPanel.add(logoLabel, BorderLayout.NORTH);
         GridBagConstraints gbc = new GridBagConstraints();
-        setContentPane(contentPane);
+        setContentPane(mainPane);
 
         JLabel loadingLabel = new JLabel("加载中...");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        contentPane.add(loadingLabel, gbc);
+        mainPane.add(loadingLabel, gbc);
 
-        setContentPane(contentPane);
+        contentPanel.add(mainPane, BorderLayout.CENTER);
+        setContentPane(contentPanel);
         revalidate();
         repaint();
     }

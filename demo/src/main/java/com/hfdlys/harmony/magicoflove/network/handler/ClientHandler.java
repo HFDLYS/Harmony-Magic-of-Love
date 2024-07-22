@@ -159,8 +159,11 @@ public class ClientHandler extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        EntityManager.getInstance().add(CharacterFactory.getCharacter(user.getUserId(), 2, controller), new CharacterRegisterMessage(0, user.getUserId(), 2));
+        Random random = new Random();
+        int min = 1;
+        int max = 3;
+        int randomInt = random.nextInt(max - min) + min;
+        EntityManager.getInstance().add(CharacterFactory.getCharacter(user.getUserId(), randomInt, controller), new CharacterRegisterMessage(0, user.getUserId(), user.getUsername(), randomInt));
     }
 
     public void sendMessage(int code, Object content) {

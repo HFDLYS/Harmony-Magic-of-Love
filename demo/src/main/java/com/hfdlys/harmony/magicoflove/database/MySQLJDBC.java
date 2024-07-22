@@ -36,6 +36,7 @@ public class MySQLJDBC {
         }
         return instance;
     }
+    SqlSessionFactory sessionFactory;
 
     private SqlSession session = null;
 
@@ -47,7 +48,7 @@ public class MySQLJDBC {
             log.error("Failed to load mysql-config.xml", e);
         }
 
-        SqlSessionFactory sessionFactory = new MybatisSqlSessionFactoryBuilder().build(inputStream);
+        sessionFactory = new MybatisSqlSessionFactoryBuilder().build(inputStream);
         sessionFactory.getConfiguration().addMapper(UserMapper.class);
         sessionFactory.getConfiguration().addMapper(LogMapper.class);
         sessionFactory.getConfiguration().getTypeHandlerRegistry().register(byte[].class, BlobTypeHandler.class);
@@ -77,7 +78,14 @@ public class MySQLJDBC {
      */
     public SqlSession getSqlSession() {
         if (session.getConnection() == null) {
-            log.error("MyBatis session is closed.");
+            session = sessionFactory.openSession(true);
+        }
+        try {
+            if (session.getConnection().isClosed()) {
+                session = sessionFactory.openSession(true);
+            }
+        } catch (Exception e) {
+            log.error("MyBatis session is closed.", e);
             return null;
         }
         return session;

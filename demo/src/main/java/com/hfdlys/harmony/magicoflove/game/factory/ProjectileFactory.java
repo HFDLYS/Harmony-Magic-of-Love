@@ -53,6 +53,9 @@ public class ProjectileFactory {
      */
     public static final int MUSIC_NOTE = 4;
 
+    /** */
+    public static final int SWORD_QI = 5;
+
     /**
      * 
      * @param type
@@ -80,7 +83,15 @@ public class ProjectileFactory {
                         20,
                         ox,
                         oy);
-            
+                case SWORD_QI:
+                    return new Projectile(
+                        new Hitbox(0, 0, 0, 0, 8),
+                        null,
+                        50,
+                        senderId,
+                        4,
+                        ox,
+                        oy);
                 default:
                     int x = (int)((Math.random() * 2) + 0.5);
                     int y = (int)((Math.random() * 9) + 0.5);

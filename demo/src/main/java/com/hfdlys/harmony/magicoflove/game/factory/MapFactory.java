@@ -6,9 +6,9 @@ import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ObstacleReg
 public class MapFactory {
     public static void createMap() {
         // 四面墙
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, -425, 0, 25, 550), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 425, 0, 25, 550), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, -525, 450, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
-        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, 525, 450, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, -375, 0, 25, 600), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 375, 0, 25, 600), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, -575, 400, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
+        EntityManager.getInstance().add(ObstacleFactory.getObstacle(ObstacleFactory.AIR_WALL, 0, 575, 400, 25), new ObstacleRegisterMessage(ObstacleFactory.AIR_WALL));
     }
 }

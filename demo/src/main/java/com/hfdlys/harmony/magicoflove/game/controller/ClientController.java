@@ -89,7 +89,6 @@ public class ClientController extends Controller {
                 super.keyPressed(e);
                 if(KeyEvent.VK_A <= e.getKeyCode() && e.getKeyCode() <= KeyEvent.VK_Z) {
                     keyboard[e.getKeyCode() - 'A'] = true;
-                    System.out.println("Key " + (char)e.getKeyCode() + " pressed");
                 }
             }
             @Override
@@ -106,7 +105,6 @@ public class ClientController extends Controller {
                 super.mousePressed(e);
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     getControlMessage().setAttack(true);
-                    System.out.println("Attack");
                 } else if(e.getButton() == MouseEvent.BUTTON3) {
                     getControlMessage().setRush(true);
                 }

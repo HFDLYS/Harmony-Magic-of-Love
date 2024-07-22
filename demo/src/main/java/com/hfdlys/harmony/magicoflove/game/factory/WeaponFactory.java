@@ -40,16 +40,16 @@ public class WeaponFactory {
     public static Weapon getWeapon(int type) {
         try {
             if(type == LOVE_SWORD) {
-                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.RAMDOM, 0, 0, 0);
+                Projectile projectile = ProjectileFactory.getProjectile(ProjectileFactory.SWORD_QI, 0, 0, 0);
                 Texture texture = new Texture("weapon/love_sword.png", 32, 32, 16, 16);
                 Texture texture_Right = new Texture(ImageUtil.rotate(texture.getImage(), -90), 32, 32, 16, 16);
                 Texture texture_Left = new Texture(ImageUtil.rotate(texture.getImage(), 90), 32, 32, 16, 16);
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
                         type,
-                        projectile, 1440 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 12, ProjectileFactory.RAMDOM,
+                        projectile, 1440 / GameManager.getInstance().getFps(), 50, 7200 / GameManager.getInstance().getFps(), 12, ProjectileFactory.RAMDOM,
                         textures,
-                        ProjectileFactory.RAMDOM
+                        ProjectileFactory.SWORD_QI
                 );
                 weapon.setTag("Love Sword");
                 return weapon;
