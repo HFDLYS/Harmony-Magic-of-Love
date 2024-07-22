@@ -162,7 +162,6 @@ public class ClientHandler extends Thread {
     }
 
     public void sendMessage(int code, Object content) {
-
         try {
             synchronized(writer) {
                 Message message = new Message();

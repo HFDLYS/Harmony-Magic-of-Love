@@ -188,8 +188,8 @@ public class Character extends Entity {
 
         if(weapon != null) {
             BufferedImage image;
-            float dy = ((controller ==null || controller.getControlMessage() == null) ? aimY : controller.getControlMessage().getAimY()) - getHitbox().getY();
-            float dx = ((controller ==null || controller.getControlMessage() == null) ? aimX : controller.getControlMessage().getAimX()) - getHitbox().getX();
+            float dy = ((controller == null || controller.getControlMessage() == null) ? aimY : controller.getControlMessage().getAimY()) - getHitbox().getY();
+            float dx = ((controller == null || controller.getControlMessage() == null) ? aimX : controller.getControlMessage().getAimX()) - getHitbox().getX();
             if(dx == 0) { // weapon in the front of character
                 if(dy <= 0)
                     return new Texture(ImageUtil.combineTwoBufferedImage(character.getImage(), weapon.getTextures(0).getImage(), 16, 32), 64, 64, 32, 32);

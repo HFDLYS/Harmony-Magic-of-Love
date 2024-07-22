@@ -55,16 +55,26 @@ public class MySQLJDBC {
         log.info("MyBatis session opened.");
     }
 
+    /**
+     * 重新加载MyBatis会话
+     */
     public void reload() {
         session.clearCache();
         log.info("MyBatis session reloaded.");
     }
 
+    /**
+     * 关闭MyBatis会话
+     */
     public void close() {
         session.close();
         log.info("MyBatis session closed.");
     }
 
+    /**
+     * 获取MyBatis会话
+     * @return MyBatis会话
+     */
     public SqlSession getSqlSession() {
         if (session.getConnection() == null) {
             log.error("MyBatis session is closed.");
