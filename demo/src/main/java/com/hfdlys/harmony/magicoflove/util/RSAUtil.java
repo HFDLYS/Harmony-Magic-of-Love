@@ -62,7 +62,7 @@ public class RSAUtil {
 
     public void init() {
         try {
-            readKeyPair("RSAKey/public.key", "RSAKey/public.key");
+            readKeyPair("RSAKey/public.key", "RSAKey/private.key");
         } catch (Exception e) {
             log.error("Failed to read RSA key pair", e);
         }
