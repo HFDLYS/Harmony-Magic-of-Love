@@ -51,6 +51,11 @@ public class Server {
     private HashMap<String, ClientHandler> clientMap;
 
     /**
+     * 线程锁
+     */
+    private final Object clientMapLock = new Object();
+
+    /**
      * 根据userId定位客户端
      */
     private HashMap<Integer, ClientHandler> clientMapByUserId;
@@ -92,17 +97,11 @@ public class Server {
      * 广播信息
      */
     public void broadcast(int code, Object content) {
-        for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
-            ClientHandler clientHandler = entry.getValue();
-            clientHandler.sendMessage(code, content);
-        }
-    }
-
-
-    private class GameRoomHandler extends Thread {
-        @Override
-        public void run() {
-            GameManager.getInstance().runServer();
+        synchronized (clientMapLock) {
+            for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
+                ClientHandler clientHandler = entry.getValue();
+                clientHandler.sendMessage(code, content);
+            }
         }
     }
 
@@ -114,7 +113,6 @@ public class Server {
         @Override
         public void run() {
             new HeartBeatThread().start();
-            new GameRoomHandler().start();
             while (true) {
                 try {
                     log.info("Waiting for connection...");
@@ -130,9 +128,6 @@ public class Server {
         }
     }
 
-    /**
-     * 广播信息
-     */
 
     /**
      * 心跳线程
@@ -145,15 +140,17 @@ public class Server {
                     Thread.sleep(3000);
                     PingMessage pingMessage = new PingMessage();
                     pingMessage.setTimestamp(System.currentTimeMillis());
-                    for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
-                        ClientHandler clientHandler = entry.getValue();
-                        if (clientHandler.getSocket().isClosed()) {
-                            ServerFrame.getInstance().appendText("客户端" + entry.getKey() + "已断开连接\n");
-                            log.info("Client " + entry.getKey() + " disconnected");
-                            clientMap.remove(entry.getKey());
-                            continue;
+                    synchronized (clientMapLock) {
+                        for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
+                            ClientHandler clientHandler = entry.getValue();
+                            if (clientHandler.getSocket().isClosed()) {
+                                ServerFrame.getInstance().appendText("客户端" + entry.getKey() + "已断开连接\n");
+                                log.info("Client " + entry.getKey() + " disconnected");
+                                clientMap.remove(entry.getKey());
+                                continue;
+                            }
+                            clientHandler.sendMessage(MessageCodeConstants.HEART_BEAT, pingMessage);
                         }
-                        clientHandler.sendMessage(MessageCodeConstants.HEART_BEAT, pingMessage);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

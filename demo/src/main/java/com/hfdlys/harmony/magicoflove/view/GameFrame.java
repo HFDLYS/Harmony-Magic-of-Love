@@ -205,6 +205,26 @@ public class GameFrame extends JFrame {
             if(texture == null) continue;
             texture.setScale(1);
             g.drawImage(texture.getImage(), (int)(entity.getHitbox().getY()*scale) - texture.getDy() + getWidth() / 2, (int)(entity.getHitbox().getX()*scale) - texture.getDx() + getHeight() / 2, null);
+            if(entity instanceof Character && ((Character)entity).getUsername() != null) {
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("宋体", Font.BOLD, 20));
+                String name = ((Character)entity).getUsername();
+                int hp = ((Character)entity).getHp();
+                int maxhp = ((Character)entity).getMaxHp();
+                if (maxhp == 0) {
+                    maxhp = 400;
+                }
+                if (hp < 0) {
+                    hp = 0;
+                }
+                
+                int dy = name.length() / 2 * 10;
+                g.drawString(name, (int)(entity.getHitbox().getY()*scale) - dy + getWidth() / 2, (int)(entity.getHitbox().getX()*scale) - texture.getDx() + getHeight() / 2);
+                g.setColor(Color.GRAY);
+                g.fillRect((int)(entity.getHitbox().getY()*scale) - 32 + getWidth() / 2 - 1, (int)(entity.getHitbox().getX()*scale) + texture.getDx() + getHeight() / 2 + 20, 66, 10);
+                g.setColor(Color.RED);
+                g.fillRect((int)(entity.getHitbox().getY()*scale) - 32 + getWidth() / 2, (int)(entity.getHitbox().getX()*scale) + texture.getDx() + getHeight() / 2 + 20 + 1, (int)(64*(maxhp-hp)/maxhp), 8);
+            }
         }
         setBackground(new Color(38, 40, 74));
         graphics.drawImage(offScreenImage, 0, 0, null);
@@ -401,7 +421,9 @@ public class GameFrame extends JFrame {
                 }
             }
         });
+        JButton cancelButton = new JButton("取消");
 
+        cancelButton.addActionListener(e -> setMenuState(1));
     
         JButton registerButton = new JButton("注册");
         registerButton.addActionListener(new ActionListener() {
@@ -435,6 +457,11 @@ public class GameFrame extends JFrame {
         mainPane.add(chooseFileButton, gbc);
 
         gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        gbc.gridx = 1;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;

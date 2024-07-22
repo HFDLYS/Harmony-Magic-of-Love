@@ -61,7 +61,7 @@ public class WeaponFactory {
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
                         type,
-                        projectile, 360 / GameManager.getInstance().getFps(), 1, 7200 / GameManager.getInstance().getFps(), 200, ProjectileFactory.HEART,
+                        projectile, 360 / GameManager.getInstance().getFps(), 20, 7200 / GameManager.getInstance().getFps(), 200, ProjectileFactory.HEART,
                         textures,
                         ProjectileFactory.HEART
                 );
@@ -75,7 +75,7 @@ public class WeaponFactory {
                 Texture[] textures = {texture_Right, texture_Left};
                 Weapon weapon = new Weapon(
                         type,
-                        projectile, 360 / GameManager.getInstance().getFps(), 1, 1440 / GameManager.getInstance().getFps(), 500, ProjectileFactory.RAMDOM,
+                        projectile, 360 / GameManager.getInstance().getFps(), 5, 1440 / GameManager.getInstance().getFps(), 500, ProjectileFactory.RAMDOM,
                         textures,
                         ProjectileFactory.RAMDOM
                 ) {

@@ -64,6 +64,11 @@ public class Character extends Entity {
     private int userId;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * 移动动画
      * 0: 上
      * 1: 左
@@ -118,9 +123,10 @@ public class Character extends Entity {
     /**
      * 构造函数（带控制器和武器）
      */
-    public Character(Hitbox hitbox, Texture texture, int hp, int maxHp, int velocity, int userId,Animation[] moveAnimation, Animation deadAnimation, Controller controller, Weapon weapon) {
+    public Character(Hitbox hitbox, Texture texture, int hp, int maxHp, int velocity, int userId, String username, Animation[] moveAnimation, Animation deadAnimation, Controller controller, Weapon weapon) {
         this(hitbox, texture, hp, maxHp, velocity, moveAnimation, deadAnimation, controller);
         this.userId = userId;
+        this.username = username;
         this.weapon = weapon;
     }
 

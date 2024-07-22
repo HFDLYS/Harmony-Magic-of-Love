@@ -42,9 +42,39 @@ public class MessageCodeConstants {
     public static final int ENTITY_MANAGER_INFO = 302;
 
     /**
+     * 房间列表信息
+     */
+    public static final int ROOM_LIST_INFO = 303;
+
+    /**
+     * 房间信息
+     */
+    public static final int ROOM_INFO = 304;
+
+    /**
+     * 游戏开始
+     */
+    public static final int GAME_START = 305;
+
+    /**
      * 控制信息
      */
     public static final int CONTROL = 401;
+
+    /**
+     * 加入房间
+     */
+    public static final int JOIN_ROOM = 402;
+
+    /**
+     * 作为房主创建房间
+     */
+    public static final int CREATE_ROOM = 403;
+
+    /**
+     * 作为房主开始游戏
+     */
+    public static final int START_GAME = 404;
 
     
 }

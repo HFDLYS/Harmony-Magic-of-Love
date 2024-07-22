@@ -20,20 +20,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EntityManager {
     /**
-     * 单体模式
+     * 多例模式
      */
-    private static EntityManager Instance = null;
+    private static HashMap<Integer, EntityManager> Instances = new HashMap<>();
 
     /**
-     * 单体模式，获取实例
+     * 多体模式，获取实例
      * @return 实例
      */
-    public static EntityManager getInstance() {
-        if(Instance == null)
-            Instance = new EntityManager();
-        return Instance;
+    public static EntityManager getInstance(Integer roomId) {
+        if(Instances.get(roomId) == null)
+            Instances.put(roomId, new EntityManager());
+        return Instances.get(roomId);
     }
 
+    /**
+     * 单例默认
+     */
+    public static EntityManager getInstance() {
+        return getInstance(0);
+    }
+    
     /**
      * 储存目前存在的所有实体
      */
@@ -92,7 +99,6 @@ public class EntityManager {
             }
         }
 
-        boolean havePlayedHitSound = false;
 
         // 第二阶段，以移动为核心的判断（移动、碰撞、伤害）
         for(int i = 0; i < entityList.size(); i++) {
@@ -159,22 +165,9 @@ public class EntityManager {
                 if(entity instanceof Projectile) {
                     anotherEntity.reduceHp(((Projectile)entity).getDamage());
                     entity.reduceHp(1);
-                    if((anotherEntity instanceof Character) && !havePlayedHitSound) {
-                        havePlayedHitSound = true;
-                        // MyTool.playSound("sound/hit.wav");
-                        // entityRegisterMessages.add(new HitSoundEffectMessage(0));
-                    } else if(anotherEntity instanceof Obstacle) {
-                        // MyTool.playSound("sound/blt_imp_masonry_far_01.wav");
-                        // entityRegisterMessages.add(new HitSoundEffectMessage(1));
-                    }
                 } else if(anotherEntity instanceof Projectile) {
                     entity.reduceHp(((Projectile)anotherEntity).getDamage());
                     anotherEntity.reduceHp(1);
-                    if((entity instanceof Character) && !havePlayedHitSound) {
-                        havePlayedHitSound = true;
-                        // MyTool.playSound("sound/hit.wav");
-                        // entityRegisterMessages.add(new HitSoundEffectMessage(0));
-                    }
                 }
 
                 
@@ -346,7 +339,7 @@ public class EntityManager {
             if (entityMessageHashMap.get(entityRegisterMessage.getId()) != null) continue;
             if (entityRegisterMessage instanceof CharacterRegisterMessage) {
                 CharacterRegisterMessage characterRegisterMessage = (CharacterRegisterMessage)entityRegisterMessage;
-                Character character = CharacterFactory.getCharacter(characterRegisterMessage.getUserId(), characterRegisterMessage.getWeaponType(), null);
+                Character character = CharacterFactory.getCharacter(characterRegisterMessage.getUserId(), characterRegisterMessage.getUsername(), characterRegisterMessage.getWeaponType(), null);
                 addWithoutMessage(characterRegisterMessage.getId(), character);
             } else if (entityRegisterMessage instanceof ObstacleRegisterMessage) {
                 ObstacleRegisterMessage obstacleRegisterMessage = (ObstacleRegisterMessage)entityRegisterMessage;

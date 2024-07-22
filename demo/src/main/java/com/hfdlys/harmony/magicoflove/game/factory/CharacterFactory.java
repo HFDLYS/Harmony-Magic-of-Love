@@ -99,7 +99,7 @@ public class CharacterFactory {
      * @param Controller 控制器
      * @return 对应类型角色
      */
-    public static Character getCharacter(int userId, int weaponType, Controller controller) {
+    public static Character getCharacter(int userId, String username, int weaponType, Controller controller) {
         try {
             Texture[][] texture_move = new Texture[4][9];
             Texture texture_all = GameManager.getInstance().getPlayerSkin(userId);
@@ -123,10 +123,11 @@ public class CharacterFactory {
             return new Character(
                 new Hitbox(0, 0, 0, 0, 8, 16),
                 texture_move[2][0],
-                100,
-                100,
+                400,
+                400,
                 240 / GameManager.getInstance().getFps(),
                 userId,
+                username,
                 moveAnimation,
                 deadAnimation,
                 controller,

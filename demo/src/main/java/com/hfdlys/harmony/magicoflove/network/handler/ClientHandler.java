@@ -47,6 +47,8 @@ public class ClientHandler extends Thread {
 
     private Controller controller;
 
+    private int roomId;
+
     public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -161,15 +163,21 @@ public class ClientHandler extends Thread {
         }
         Random random = new Random();
         int min = 1;
-        int max = 3;
+        int max = 4;
         int randomInt = random.nextInt(max - min) + min;
-        EntityManager.getInstance().add(CharacterFactory.getCharacter(user.getUserId(), randomInt, controller), new CharacterRegisterMessage(0, user.getUserId(), user.getUsername(), randomInt));
+        EntityManager.getInstance().add(CharacterFactory.getCharacter(user.getUserId(), user.getUsername(), randomInt, controller), new CharacterRegisterMessage(0, user.getUserId(), user.getUsername(), randomInt));
     }
 
     public void sendMessage(int code, Object content) {
         try {
             synchronized(writer) {
+                if (!socket.isConnected()) {
+                    return;
+                }
                 Message message = new Message();
+                if (code == MessageCodeConstants.ENTITY_MANAGER_INFO && user == null) {
+                    return;
+                }
                 message.setCode(code);
                 message.setContent(objectMapper.writeValueAsString(content));
                 writer.println(objectMapper.writeValueAsString(message));
