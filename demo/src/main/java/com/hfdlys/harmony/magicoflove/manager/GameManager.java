@@ -145,7 +145,6 @@ public class GameManager {
 
         init();
         GameFrame.getInstance().init();
-        Client.getInstance().start();
         long lastTime = -1;
         long lastSecondTime = -1;
         int cnt = 0;

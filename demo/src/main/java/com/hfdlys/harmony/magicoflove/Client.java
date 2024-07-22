@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
-public class Client extends Thread {
+public class Client {
     /**
      * 单例模式
      */
@@ -73,56 +73,65 @@ public class Client extends Thread {
         return instance;
     }
 
-    @Override
-    public void run() {
-        try {
-            while (true) {
-                synchronized(reader) {
-                    String line = reader.readLine();
-                    Message message = objectMapper.readValue(line, Message.class);
-                    switch (message.getCode()) {
-                        case MessageCodeConstants.HEART_BEAT:
-                            PingMessage pingMessage = objectMapper.readValue(message.getContent(), PingMessage.class);
-                            log.info("Ping: " + (System.currentTimeMillis() - pingMessage.getTimestamp()));
-                            break;
-                        case MessageCodeConstants.SUCCESS:
-                            if (userId != null) {
+    private class ServerHandler extends Thread {
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    synchronized(reader) {
+                        String line = reader.readLine();
+                        Message message = objectMapper.readValue(line, Message.class);
+                        switch (message.getCode()) {
+                            case MessageCodeConstants.HEART_BEAT:
+                                PingMessage pingMessage = objectMapper.readValue(message.getContent(), PingMessage.class);
+                                log.info("Ping: " + (System.currentTimeMillis() - pingMessage.getTimestamp()));
                                 break;
-                            }
-                            userId = objectMapper.readValue(message.getContent(), UserMessgae.class).getUserId();
-                            log.info("User id: " + userId);
-                            Client.getInstance().setUserId(userId);
-                            GameFrame.getInstance().setMenuState(5);
-                            break;
-                        case MessageCodeConstants.FAIL:
-                            if (userId != null) {
+                            case MessageCodeConstants.SUCCESS:
+                                if (userId != null) {
+                                    break;
+                                }
+                                userId = objectMapper.readValue(message.getContent(), UserMessgae.class).getUserId();
+                                log.info("User id: " + userId);
+                                Client.getInstance().setUserId(userId);
+                                GameFrame.getInstance().setMenuState(5);
                                 break;
-                            }
-                            GameFrame.getInstance().setMenuState(1);
-                            break;
-                        case MessageCodeConstants.USER_INFO:
-                            if (userId == null) {
+                            case MessageCodeConstants.FAIL:
+                                if (userId != null) {
+                                    break;
+                                }
+                                GameFrame.getInstance().setMenuState(1);
                                 break;
-                            }
-                            // log.info("User info: " + message.getContent());
-                            List<UserMessgae> userMessgae = objectMapper.readValue(message.getContent(), objectMapper.getTypeFactory().constructCollectionType(List.class, UserMessgae.class));
-                            for (UserMessgae user : userMessgae) {
-                                GameManager.getInstance().addPlayerSkin(user.getUserId(), user.getSkin());
-                            }
-                            break;
-                        case MessageCodeConstants.ENTITY_MANAGER_INFO:
-                            // log.info("Entity manager info: " + message.getContent());
-                            EntityManager.getInstance().loadEntityManagerMessage(objectMapper.readValue(message.getContent(), EntityManagerMessage.class));
-                            break;
-                        default:
-                            break;
+                            case MessageCodeConstants.USER_INFO:
+                                if (userId == null) {
+                                    break;
+                                }
+                                // log.info("User info: " + message.getContent());
+                                List<UserMessgae> userMessgae = objectMapper.readValue(message.getContent(), objectMapper.getTypeFactory().constructCollectionType(List.class, UserMessgae.class));
+                                for (UserMessgae user : userMessgae) {
+                                    GameManager.getInstance().addPlayerSkin(user.getUserId(), user.getSkin());
+                                }
+                                break;
+                            case MessageCodeConstants.ENTITY_MANAGER_INFO:
+                                // log.info("Entity manager info: " + message.getContent());
+                                EntityManager.getInstance().loadEntityManagerMessage(objectMapper.readValue(message.getContent(), EntityManagerMessage.class));
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
+
+    public void run() {
+        new ServerHandler().start();
+        
+        GameManager.getInstance().run();
+    }
+    
 
     public void sendMessage(int code, Object content) {
         try {
@@ -137,6 +146,6 @@ public class Client extends Thread {
         }
     }
     public static void main(String[] args) {
-        GameManager.getInstance().run();
+        Client.getInstance().run();
     }
 }
