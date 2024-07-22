@@ -19,7 +19,16 @@ message UserMessage {
   bytes skin = 3;
 }
 
+message PingMessage {
+  int64 timestamp = 1;
+}
+
 message Message {
   int32 code = 1;
-  string content = 2;
+  oneof message {
+    RegisterMessage registerMessage = 2;
+    LoginMessage loginMessage = 3;
+    UserMessage userMessage = 4;
+    PingMessage pingMessage = 5;
+  }
 }

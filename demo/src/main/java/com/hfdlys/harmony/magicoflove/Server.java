@@ -1,126 +1,114 @@
 package com.hfdlys.harmony.magicoflove;
 
-import java.net.*;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.concurrent.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.network.handler.ClientHandler;
-import com.hfdlys.harmony.magicoflove.network.message.Message;
-import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
+import com.hfdlys.harmony.magicoflove.network.message.Messages.Message;
+import com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage;
 import com.hfdlys.harmony.magicoflove.view.ServerFrame;
-
-import java.util.concurrent.*;
+import org.java_websocket.server.WebSocketServer;
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 服务器类
- * @author Jiasheng Wang
- * @since 2024-07-18
- */
 @Slf4j
-public class Server {
-    /**
-     * 单例模式
-     */
-    private static Server instance;
+public class Server extends WebSocketServer {
+    private static volatile Server instance;
+    private final HashMap<String, ClientHandler> clientMap;
+    private int port = 2336;
+    private final int playerMax = 100;
+    private final ThreadPoolExecutor executorPool;
+    private final HeartBeatThread heartBeatThread;
 
-    /**
-     * 获取服务器实例
-     * @return 服务器实例
-     */
     public static Server getInstance() {
         if (instance == null) {
-            instance = new Server();
+            synchronized (Server.class) {
+                if (instance == null) {
+                    instance = new Server(new InetSocketAddress(2336));
+                }
+            }
         }
         return instance;
     }
 
-    /**
-     * ServerSocket
-     */
-    private ServerSocket serverSocket;
+    private Server(InetSocketAddress address) {
+        super(address);
+        clientMap = new HashMap<>();
+        executorPool = new ThreadPoolExecutor(50, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+        heartBeatThread = new HeartBeatThread();
+    }
 
-    /**
-     * 根据UUID定位客户端
-     */
-    private HashMap<String, ClientHandler> clientMap;
-
-    /**
-     * 服务器开放端口
-     */
-    private int port = 2336;
-
-    /**
-     * 玩家人数
-     * 默认人数为100
-     */
-    private final int playerMax = 100;
-
-    private ThreadPoolExecutor executorPool;
-
-    public void run() {
+    public void runs() {
         ServerFrame.getInstance().launchFrame();
-        new ServerHandler().start();
-        
+        log.info("Starting server on port " + port);
+        this.start();
+        this.heartBeatThread.start();
     }
 
-    /**
-     * 构造方法
-     */
-    private Server() {
-        try {
-            clientMap = new HashMap<>();
-            serverSocket = new ServerSocket(port);
-            executorPool = new ThreadPoolExecutor(50, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void onOpen(WebSocket conn, ClientHandshake handshake) {
+        log.info("New connection: " + conn.getRemoteSocketAddress().toString());
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        ClientHandler clientHandler = new ClientHandler(conn);
+        clientMap.put(uuid, clientHandler);
+        executorPool.execute(clientHandler);
     }
 
+    @Override
+    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+        log.info("Closed connection: " + conn.getRemoteSocketAddress().toString());
+        clientMap.values().removeIf(clientHandler -> clientHandler.getConnection().equals(conn));
+    }
 
-    
+    @Override
+    public void onMessage(WebSocket webSocket, String s) {
+        //没用，但父类要求必须重写
+    }
 
-    private class ServerHandler extends Thread {
-        @Override
-        public void run() {
-            new HeartBeatThread().start();
-            while (true) {
-                try {
-                    log.info("Waiting for connection...");
-                    Socket socket = serverSocket.accept();
-                    ClientHandler clientHandler = new ClientHandler(socket);
-                    String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-                    clientMap.put(uuid, clientHandler);
-                    executorPool.execute(clientHandler);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    @Override
+    public void onMessage(WebSocket conn, ByteBuffer message) {
+        clientMap.values().stream()
+                .filter(handler -> handler.getConnection().equals(conn))
+                .findFirst().ifPresent(clientHandler -> clientHandler.handleMessage(message.array()));
+    }
+
+    @Override
+    public void onError(WebSocket conn, Exception ex) {
+        ex.printStackTrace();
+    }
+
+    @Override
+    public void onStart() {
+        log.info("Server started successfully on port " + port);
     }
 
     private class HeartBeatThread extends Thread {
         @Override
         public void run() {
-            ObjectMapper objectMapper = new ObjectMapper();
             while (true) {
                 try {
                     Thread.sleep(3000);
-                    Message message = new Message();
-                    PingMessage pingMessage = new PingMessage();
-                    pingMessage.setTimestamp(System.currentTimeMillis());
-                    message.setCode(MessageCodeConstants.HEART_BEAT);
-                    message.setContent(objectMapper.writeValueAsString(pingMessage));
+                    PingMessage pingMessage = PingMessage.newBuilder()
+                            .setTimestamp(System.currentTimeMillis())
+                            .build();
+                    Message message = Message.newBuilder()
+                            .setCode(MessageCodeConstants.HEART_BEAT)
+                            .setPingMessage(pingMessage)
+                            .build();
                     for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
                         ClientHandler clientHandler = entry.getValue();
-                        if (clientHandler.getSocket().isClosed()) {
+                        if (clientHandler.getConnection().isClosed()) {
                             ServerFrame.getInstance().appendText("客户端" + entry.getKey() + "已断开连接\n");
                             log.info("Client " + entry.getKey() + " disconnected");
                             clientMap.remove(entry.getKey());
                             continue;
                         }
+
                         clientHandler.sendMessage(message);
                     }
                 } catch (Exception e) {
@@ -129,10 +117,8 @@ public class Server {
             }
         }
     }
-    
 
     public static void main(String[] args) {
-        
-        Server.getInstance().run();
+        Server.getInstance().runs();
     }
 }

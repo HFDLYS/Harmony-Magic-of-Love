@@ -2069,6 +2069,441 @@ public final class Messages {
 
   }
 
+  public interface PingMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.hfdlys.harmony.magicoflove.network.message.PingMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 timestamp = 1;</code>
+     * @return The timestamp.
+     */
+    long getTimestamp();
+  }
+  /**
+   * Protobuf type {@code com.hfdlys.harmony.magicoflove.network.message.PingMessage}
+   */
+  public static final class PingMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:com.hfdlys.harmony.magicoflove.network.message.PingMessage)
+      PingMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    static {
+      com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+        com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+        /* major= */ 4,
+        /* minor= */ 27,
+        /* patch= */ 1,
+        /* suffix= */ "",
+        PingMessage.class.getName());
+    }
+    // Use PingMessage.newBuilder() to construct.
+    private PingMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+    }
+    private PingMessage() {
+    }
+
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.class, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.Builder.class);
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 1;
+    private long timestamp_ = 0L;
+    /**
+     * <code>int64 timestamp = 1;</code>
+     * @return The timestamp.
+     */
+    @java.lang.Override
+    public long getTimestamp() {
+      return timestamp_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (timestamp_ != 0L) {
+        output.writeInt64(1, timestamp_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (timestamp_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, timestamp_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage)) {
+        return super.equals(obj);
+      }
+      com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage other = (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) obj;
+
+      if (getTimestamp()
+          != other.getTimestamp()) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTimestamp());
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessage
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessage
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessage
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessage
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessage
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessage
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.hfdlys.harmony.magicoflove.network.message.PingMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.hfdlys.harmony.magicoflove.network.message.PingMessage)
+        com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.hfdlys.harmony.magicoflove.network.message.Messages.internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.hfdlys.harmony.magicoflove.network.message.Messages.internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.class, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.Builder.class);
+      }
+
+      // Construct using com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        bitField0_ = 0;
+        timestamp_ = 0L;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.hfdlys.harmony.magicoflove.network.message.Messages.internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage getDefaultInstanceForType() {
+        return com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage build() {
+        com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage buildPartial() {
+        com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage result = new com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage(this);
+        if (bitField0_ != 0) { buildPartial0(result); }
+        onBuilt();
+        return result;
+      }
+
+      private void buildPartial0(com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.timestamp_ = timestamp_;
+        }
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) {
+          return mergeFrom((com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage other) {
+        if (other == com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance()) return this;
+        if (other.getTimestamp() != 0L) {
+          setTimestamp(other.getTimestamp());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 8: {
+                timestamp_ = input.readInt64();
+                bitField0_ |= 0x00000001;
+                break;
+              } // case 8
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int bitField0_;
+
+      private long timestamp_ ;
+      /**
+       * <code>int64 timestamp = 1;</code>
+       * @return The timestamp.
+       */
+      @java.lang.Override
+      public long getTimestamp() {
+        return timestamp_;
+      }
+      /**
+       * <code>int64 timestamp = 1;</code>
+       * @param value The timestamp to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimestamp(long value) {
+
+        timestamp_ = value;
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 timestamp = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTimestamp() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        timestamp_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:com.hfdlys.harmony.magicoflove.network.message.PingMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.hfdlys.harmony.magicoflove.network.message.PingMessage)
+    private static final com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage();
+    }
+
+    public static com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<PingMessage>
+        PARSER = new com.google.protobuf.AbstractParser<PingMessage>() {
+      @java.lang.Override
+      public PingMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<PingMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PingMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface MessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.hfdlys.harmony.magicoflove.network.message.Message)
       com.google.protobuf.MessageOrBuilder {
@@ -2080,16 +2515,66 @@ public final class Messages {
     int getCode();
 
     /**
-     * <code>string content = 2;</code>
-     * @return The content.
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+     * @return Whether the registerMessage field is set.
      */
-    java.lang.String getContent();
+    boolean hasRegisterMessage();
     /**
-     * <code>string content = 2;</code>
-     * @return The bytes for content.
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+     * @return The registerMessage.
      */
-    com.google.protobuf.ByteString
-        getContentBytes();
+    com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage getRegisterMessage();
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+     */
+    com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessageOrBuilder getRegisterMessageOrBuilder();
+
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+     * @return Whether the loginMessage field is set.
+     */
+    boolean hasLoginMessage();
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+     * @return The loginMessage.
+     */
+    com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage getLoginMessage();
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+     */
+    com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessageOrBuilder getLoginMessageOrBuilder();
+
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+     * @return Whether the userMessage field is set.
+     */
+    boolean hasUserMessage();
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+     * @return The userMessage.
+     */
+    com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage getUserMessage();
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+     */
+    com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessageOrBuilder getUserMessageOrBuilder();
+
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+     * @return Whether the pingMessage field is set.
+     */
+    boolean hasPingMessage();
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+     * @return The pingMessage.
+     */
+    com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage getPingMessage();
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+     */
+    com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessageOrBuilder getPingMessageOrBuilder();
+
+    com.hfdlys.harmony.magicoflove.network.message.Messages.Message.MessageCase getMessageCase();
   }
   /**
    * Protobuf type {@code com.hfdlys.harmony.magicoflove.network.message.Message}
@@ -2113,7 +2598,6 @@ public final class Messages {
       super(builder);
     }
     private Message() {
-      content_ = "";
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -2129,6 +2613,52 @@ public final class Messages {
               com.hfdlys.harmony.magicoflove.network.message.Messages.Message.class, com.hfdlys.harmony.magicoflove.network.message.Messages.Message.Builder.class);
     }
 
+    private int messageCase_ = 0;
+    @SuppressWarnings("serial")
+    private java.lang.Object message_;
+    public enum MessageCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      REGISTERMESSAGE(2),
+      LOGINMESSAGE(3),
+      USERMESSAGE(4),
+      PINGMESSAGE(5),
+      MESSAGE_NOT_SET(0);
+      private final int value;
+      private MessageCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static MessageCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static MessageCase forNumber(int value) {
+        switch (value) {
+          case 2: return REGISTERMESSAGE;
+          case 3: return LOGINMESSAGE;
+          case 4: return USERMESSAGE;
+          case 5: return PINGMESSAGE;
+          case 0: return MESSAGE_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public MessageCase
+    getMessageCase() {
+      return MessageCase.forNumber(
+          messageCase_);
+    }
+
     public static final int CODE_FIELD_NUMBER = 1;
     private int code_ = 0;
     /**
@@ -2140,43 +2670,128 @@ public final class Messages {
       return code_;
     }
 
-    public static final int CONTENT_FIELD_NUMBER = 2;
-    @SuppressWarnings("serial")
-    private volatile java.lang.Object content_ = "";
+    public static final int REGISTERMESSAGE_FIELD_NUMBER = 2;
     /**
-     * <code>string content = 2;</code>
-     * @return The content.
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+     * @return Whether the registerMessage field is set.
      */
     @java.lang.Override
-    public java.lang.String getContent() {
-      java.lang.Object ref = content_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        content_ = s;
-        return s;
-      }
+    public boolean hasRegisterMessage() {
+      return messageCase_ == 2;
     }
     /**
-     * <code>string content = 2;</code>
-     * @return The bytes for content.
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+     * @return The registerMessage.
      */
     @java.lang.Override
-    public com.google.protobuf.ByteString
-        getContentBytes() {
-      java.lang.Object ref = content_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        content_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage getRegisterMessage() {
+      if (messageCase_ == 2) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_;
       }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.getDefaultInstance();
+    }
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+     */
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessageOrBuilder getRegisterMessageOrBuilder() {
+      if (messageCase_ == 2) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_;
+      }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.getDefaultInstance();
+    }
+
+    public static final int LOGINMESSAGE_FIELD_NUMBER = 3;
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+     * @return Whether the loginMessage field is set.
+     */
+    @java.lang.Override
+    public boolean hasLoginMessage() {
+      return messageCase_ == 3;
+    }
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+     * @return The loginMessage.
+     */
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage getLoginMessage() {
+      if (messageCase_ == 3) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_;
+      }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.getDefaultInstance();
+    }
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+     */
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessageOrBuilder getLoginMessageOrBuilder() {
+      if (messageCase_ == 3) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_;
+      }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.getDefaultInstance();
+    }
+
+    public static final int USERMESSAGE_FIELD_NUMBER = 4;
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+     * @return Whether the userMessage field is set.
+     */
+    @java.lang.Override
+    public boolean hasUserMessage() {
+      return messageCase_ == 4;
+    }
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+     * @return The userMessage.
+     */
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage getUserMessage() {
+      if (messageCase_ == 4) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_;
+      }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.getDefaultInstance();
+    }
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+     */
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessageOrBuilder getUserMessageOrBuilder() {
+      if (messageCase_ == 4) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_;
+      }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.getDefaultInstance();
+    }
+
+    public static final int PINGMESSAGE_FIELD_NUMBER = 5;
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+     * @return Whether the pingMessage field is set.
+     */
+    @java.lang.Override
+    public boolean hasPingMessage() {
+      return messageCase_ == 5;
+    }
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+     * @return The pingMessage.
+     */
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage getPingMessage() {
+      if (messageCase_ == 5) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_;
+      }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance();
+    }
+    /**
+     * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+     */
+    @java.lang.Override
+    public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessageOrBuilder getPingMessageOrBuilder() {
+      if (messageCase_ == 5) {
+         return (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_;
+      }
+      return com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2196,8 +2811,17 @@ public final class Messages {
       if (code_ != 0) {
         output.writeInt32(1, code_);
       }
-      if (!com.google.protobuf.GeneratedMessage.isStringEmpty(content_)) {
-        com.google.protobuf.GeneratedMessage.writeString(output, 2, content_);
+      if (messageCase_ == 2) {
+        output.writeMessage(2, (com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_);
+      }
+      if (messageCase_ == 3) {
+        output.writeMessage(3, (com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_);
+      }
+      if (messageCase_ == 4) {
+        output.writeMessage(4, (com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_);
+      }
+      if (messageCase_ == 5) {
+        output.writeMessage(5, (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2212,8 +2836,21 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, code_);
       }
-      if (!com.google.protobuf.GeneratedMessage.isStringEmpty(content_)) {
-        size += com.google.protobuf.GeneratedMessage.computeStringSize(2, content_);
+      if (messageCase_ == 2) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, (com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_);
+      }
+      if (messageCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, (com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_);
+      }
+      if (messageCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, (com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_);
+      }
+      if (messageCase_ == 5) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -2232,8 +2869,27 @@ public final class Messages {
 
       if (getCode()
           != other.getCode()) return false;
-      if (!getContent()
-          .equals(other.getContent())) return false;
+      if (!getMessageCase().equals(other.getMessageCase())) return false;
+      switch (messageCase_) {
+        case 2:
+          if (!getRegisterMessage()
+              .equals(other.getRegisterMessage())) return false;
+          break;
+        case 3:
+          if (!getLoginMessage()
+              .equals(other.getLoginMessage())) return false;
+          break;
+        case 4:
+          if (!getUserMessage()
+              .equals(other.getUserMessage())) return false;
+          break;
+        case 5:
+          if (!getPingMessage()
+              .equals(other.getPingMessage())) return false;
+          break;
+        case 0:
+        default:
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -2247,8 +2903,26 @@ public final class Messages {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + CODE_FIELD_NUMBER;
       hash = (53 * hash) + getCode();
-      hash = (37 * hash) + CONTENT_FIELD_NUMBER;
-      hash = (53 * hash) + getContent().hashCode();
+      switch (messageCase_) {
+        case 2:
+          hash = (37 * hash) + REGISTERMESSAGE_FIELD_NUMBER;
+          hash = (53 * hash) + getRegisterMessage().hashCode();
+          break;
+        case 3:
+          hash = (37 * hash) + LOGINMESSAGE_FIELD_NUMBER;
+          hash = (53 * hash) + getLoginMessage().hashCode();
+          break;
+        case 4:
+          hash = (37 * hash) + USERMESSAGE_FIELD_NUMBER;
+          hash = (53 * hash) + getUserMessage().hashCode();
+          break;
+        case 5:
+          hash = (37 * hash) + PINGMESSAGE_FIELD_NUMBER;
+          hash = (53 * hash) + getPingMessage().hashCode();
+          break;
+        case 0:
+        default:
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2381,7 +3055,20 @@ public final class Messages {
         super.clear();
         bitField0_ = 0;
         code_ = 0;
-        content_ = "";
+        if (registerMessageBuilder_ != null) {
+          registerMessageBuilder_.clear();
+        }
+        if (loginMessageBuilder_ != null) {
+          loginMessageBuilder_.clear();
+        }
+        if (userMessageBuilder_ != null) {
+          userMessageBuilder_.clear();
+        }
+        if (pingMessageBuilder_ != null) {
+          pingMessageBuilder_.clear();
+        }
+        messageCase_ = 0;
+        message_ = null;
         return this;
       }
 
@@ -2409,6 +3096,7 @@ public final class Messages {
       public com.hfdlys.harmony.magicoflove.network.message.Messages.Message buildPartial() {
         com.hfdlys.harmony.magicoflove.network.message.Messages.Message result = new com.hfdlys.harmony.magicoflove.network.message.Messages.Message(this);
         if (bitField0_ != 0) { buildPartial0(result); }
+        buildPartialOneofs(result);
         onBuilt();
         return result;
       }
@@ -2418,8 +3106,26 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000001) != 0)) {
           result.code_ = code_;
         }
-        if (((from_bitField0_ & 0x00000002) != 0)) {
-          result.content_ = content_;
+      }
+
+      private void buildPartialOneofs(com.hfdlys.harmony.magicoflove.network.message.Messages.Message result) {
+        result.messageCase_ = messageCase_;
+        result.message_ = this.message_;
+        if (messageCase_ == 2 &&
+            registerMessageBuilder_ != null) {
+          result.message_ = registerMessageBuilder_.build();
+        }
+        if (messageCase_ == 3 &&
+            loginMessageBuilder_ != null) {
+          result.message_ = loginMessageBuilder_.build();
+        }
+        if (messageCase_ == 4 &&
+            userMessageBuilder_ != null) {
+          result.message_ = userMessageBuilder_.build();
+        }
+        if (messageCase_ == 5 &&
+            pingMessageBuilder_ != null) {
+          result.message_ = pingMessageBuilder_.build();
         }
       }
 
@@ -2438,10 +3144,26 @@ public final class Messages {
         if (other.getCode() != 0) {
           setCode(other.getCode());
         }
-        if (!other.getContent().isEmpty()) {
-          content_ = other.content_;
-          bitField0_ |= 0x00000002;
-          onChanged();
+        switch (other.getMessageCase()) {
+          case REGISTERMESSAGE: {
+            mergeRegisterMessage(other.getRegisterMessage());
+            break;
+          }
+          case LOGINMESSAGE: {
+            mergeLoginMessage(other.getLoginMessage());
+            break;
+          }
+          case USERMESSAGE: {
+            mergeUserMessage(other.getUserMessage());
+            break;
+          }
+          case PINGMESSAGE: {
+            mergePingMessage(other.getPingMessage());
+            break;
+          }
+          case MESSAGE_NOT_SET: {
+            break;
+          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -2475,10 +3197,33 @@ public final class Messages {
                 break;
               } // case 8
               case 18: {
-                content_ = input.readStringRequireUtf8();
-                bitField0_ |= 0x00000002;
+                input.readMessage(
+                    getRegisterMessageFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                messageCase_ = 2;
                 break;
               } // case 18
+              case 26: {
+                input.readMessage(
+                    getLoginMessageFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                messageCase_ = 3;
+                break;
+              } // case 26
+              case 34: {
+                input.readMessage(
+                    getUserMessageFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                messageCase_ = 4;
+                break;
+              } // case 34
+              case 42: {
+                input.readMessage(
+                    getPingMessageFieldBuilder().getBuilder(),
+                    extensionRegistry);
+                messageCase_ = 5;
+                break;
+              } // case 42
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -2494,6 +3239,21 @@ public final class Messages {
         } // finally
         return this;
       }
+      private int messageCase_ = 0;
+      private java.lang.Object message_;
+      public MessageCase
+          getMessageCase() {
+        return MessageCase.forNumber(
+            messageCase_);
+      }
+
+      public Builder clearMessage() {
+        messageCase_ = 0;
+        message_ = null;
+        onChanged();
+        return this;
+      }
+
       private int bitField0_;
 
       private int code_ ;
@@ -2528,76 +3288,572 @@ public final class Messages {
         return this;
       }
 
-      private java.lang.Object content_ = "";
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessageOrBuilder> registerMessageBuilder_;
       /**
-       * <code>string content = 2;</code>
-       * @return The content.
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+       * @return Whether the registerMessage field is set.
        */
-      public java.lang.String getContent() {
-        java.lang.Object ref = content_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          content_ = s;
-          return s;
+      @java.lang.Override
+      public boolean hasRegisterMessage() {
+        return messageCase_ == 2;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+       * @return The registerMessage.
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage getRegisterMessage() {
+        if (registerMessageBuilder_ == null) {
+          if (messageCase_ == 2) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.getDefaultInstance();
         } else {
-          return (java.lang.String) ref;
+          if (messageCase_ == 2) {
+            return registerMessageBuilder_.getMessage();
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>string content = 2;</code>
-       * @return The bytes for content.
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
        */
-      public com.google.protobuf.ByteString
-          getContentBytes() {
-        java.lang.Object ref = content_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          content_ = b;
-          return b;
+      public Builder setRegisterMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage value) {
+        if (registerMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          message_ = value;
+          onChanged();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          registerMessageBuilder_.setMessage(value);
+        }
+        messageCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+       */
+      public Builder setRegisterMessage(
+          com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.Builder builderForValue) {
+        if (registerMessageBuilder_ == null) {
+          message_ = builderForValue.build();
+          onChanged();
+        } else {
+          registerMessageBuilder_.setMessage(builderForValue.build());
+        }
+        messageCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+       */
+      public Builder mergeRegisterMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage value) {
+        if (registerMessageBuilder_ == null) {
+          if (messageCase_ == 2 &&
+              message_ != com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.getDefaultInstance()) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.newBuilder((com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            message_ = value;
+          }
+          onChanged();
+        } else {
+          if (messageCase_ == 2) {
+            registerMessageBuilder_.mergeFrom(value);
+          } else {
+            registerMessageBuilder_.setMessage(value);
+          }
+        }
+        messageCase_ = 2;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+       */
+      public Builder clearRegisterMessage() {
+        if (registerMessageBuilder_ == null) {
+          if (messageCase_ == 2) {
+            messageCase_ = 0;
+            message_ = null;
+            onChanged();
+          }
+        } else {
+          if (messageCase_ == 2) {
+            messageCase_ = 0;
+            message_ = null;
+          }
+          registerMessageBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+       */
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.Builder getRegisterMessageBuilder() {
+        return getRegisterMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessageOrBuilder getRegisterMessageOrBuilder() {
+        if ((messageCase_ == 2) && (registerMessageBuilder_ != null)) {
+          return registerMessageBuilder_.getMessageOrBuilder();
+        } else {
+          if (messageCase_ == 2) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.getDefaultInstance();
         }
       }
       /**
-       * <code>string content = 2;</code>
-       * @param value The content to set.
-       * @return This builder for chaining.
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.RegisterMessage registerMessage = 2;</code>
        */
-      public Builder setContent(
-          java.lang.String value) {
-        if (value == null) { throw new NullPointerException(); }
-        content_ = value;
-        bitField0_ |= 0x00000002;
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessageOrBuilder> 
+          getRegisterMessageFieldBuilder() {
+        if (registerMessageBuilder_ == null) {
+          if (!(messageCase_ == 2)) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.getDefaultInstance();
+          }
+          registerMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessageOrBuilder>(
+                  (com.hfdlys.harmony.magicoflove.network.message.Messages.RegisterMessage) message_,
+                  getParentForChildren(),
+                  isClean());
+          message_ = null;
+        }
+        messageCase_ = 2;
         onChanged();
+        return registerMessageBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessageOrBuilder> loginMessageBuilder_;
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+       * @return Whether the loginMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasLoginMessage() {
+        return messageCase_ == 3;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+       * @return The loginMessage.
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage getLoginMessage() {
+        if (loginMessageBuilder_ == null) {
+          if (messageCase_ == 3) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.getDefaultInstance();
+        } else {
+          if (messageCase_ == 3) {
+            return loginMessageBuilder_.getMessage();
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+       */
+      public Builder setLoginMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage value) {
+        if (loginMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          message_ = value;
+          onChanged();
+        } else {
+          loginMessageBuilder_.setMessage(value);
+        }
+        messageCase_ = 3;
         return this;
       }
       /**
-       * <code>string content = 2;</code>
-       * @return This builder for chaining.
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
        */
-      public Builder clearContent() {
-        content_ = getDefaultInstance().getContent();
-        bitField0_ = (bitField0_ & ~0x00000002);
-        onChanged();
+      public Builder setLoginMessage(
+          com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.Builder builderForValue) {
+        if (loginMessageBuilder_ == null) {
+          message_ = builderForValue.build();
+          onChanged();
+        } else {
+          loginMessageBuilder_.setMessage(builderForValue.build());
+        }
+        messageCase_ = 3;
         return this;
       }
       /**
-       * <code>string content = 2;</code>
-       * @param value The bytes for content to set.
-       * @return This builder for chaining.
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
        */
-      public Builder setContentBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) { throw new NullPointerException(); }
-        checkByteStringIsUtf8(value);
-        content_ = value;
-        bitField0_ |= 0x00000002;
-        onChanged();
+      public Builder mergeLoginMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage value) {
+        if (loginMessageBuilder_ == null) {
+          if (messageCase_ == 3 &&
+              message_ != com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.getDefaultInstance()) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.newBuilder((com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            message_ = value;
+          }
+          onChanged();
+        } else {
+          if (messageCase_ == 3) {
+            loginMessageBuilder_.mergeFrom(value);
+          } else {
+            loginMessageBuilder_.setMessage(value);
+          }
+        }
+        messageCase_ = 3;
         return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+       */
+      public Builder clearLoginMessage() {
+        if (loginMessageBuilder_ == null) {
+          if (messageCase_ == 3) {
+            messageCase_ = 0;
+            message_ = null;
+            onChanged();
+          }
+        } else {
+          if (messageCase_ == 3) {
+            messageCase_ = 0;
+            message_ = null;
+          }
+          loginMessageBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+       */
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.Builder getLoginMessageBuilder() {
+        return getLoginMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessageOrBuilder getLoginMessageOrBuilder() {
+        if ((messageCase_ == 3) && (loginMessageBuilder_ != null)) {
+          return loginMessageBuilder_.getMessageOrBuilder();
+        } else {
+          if (messageCase_ == 3) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.LoginMessage loginMessage = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessageOrBuilder> 
+          getLoginMessageFieldBuilder() {
+        if (loginMessageBuilder_ == null) {
+          if (!(messageCase_ == 3)) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.getDefaultInstance();
+          }
+          loginMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessageOrBuilder>(
+                  (com.hfdlys.harmony.magicoflove.network.message.Messages.LoginMessage) message_,
+                  getParentForChildren(),
+                  isClean());
+          message_ = null;
+        }
+        messageCase_ = 3;
+        onChanged();
+        return loginMessageBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessageOrBuilder> userMessageBuilder_;
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       * @return Whether the userMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasUserMessage() {
+        return messageCase_ == 4;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       * @return The userMessage.
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage getUserMessage() {
+        if (userMessageBuilder_ == null) {
+          if (messageCase_ == 4) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.getDefaultInstance();
+        } else {
+          if (messageCase_ == 4) {
+            return userMessageBuilder_.getMessage();
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       */
+      public Builder setUserMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage value) {
+        if (userMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          message_ = value;
+          onChanged();
+        } else {
+          userMessageBuilder_.setMessage(value);
+        }
+        messageCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       */
+      public Builder setUserMessage(
+          com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.Builder builderForValue) {
+        if (userMessageBuilder_ == null) {
+          message_ = builderForValue.build();
+          onChanged();
+        } else {
+          userMessageBuilder_.setMessage(builderForValue.build());
+        }
+        messageCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       */
+      public Builder mergeUserMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage value) {
+        if (userMessageBuilder_ == null) {
+          if (messageCase_ == 4 &&
+              message_ != com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.getDefaultInstance()) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.newBuilder((com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            message_ = value;
+          }
+          onChanged();
+        } else {
+          if (messageCase_ == 4) {
+            userMessageBuilder_.mergeFrom(value);
+          } else {
+            userMessageBuilder_.setMessage(value);
+          }
+        }
+        messageCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       */
+      public Builder clearUserMessage() {
+        if (userMessageBuilder_ == null) {
+          if (messageCase_ == 4) {
+            messageCase_ = 0;
+            message_ = null;
+            onChanged();
+          }
+        } else {
+          if (messageCase_ == 4) {
+            messageCase_ = 0;
+            message_ = null;
+          }
+          userMessageBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       */
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.Builder getUserMessageBuilder() {
+        return getUserMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessageOrBuilder getUserMessageOrBuilder() {
+        if ((messageCase_ == 4) && (userMessageBuilder_ != null)) {
+          return userMessageBuilder_.getMessageOrBuilder();
+        } else {
+          if (messageCase_ == 4) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.UserMessage userMessage = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessageOrBuilder> 
+          getUserMessageFieldBuilder() {
+        if (userMessageBuilder_ == null) {
+          if (!(messageCase_ == 4)) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.getDefaultInstance();
+          }
+          userMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessageOrBuilder>(
+                  (com.hfdlys.harmony.magicoflove.network.message.Messages.UserMessage) message_,
+                  getParentForChildren(),
+                  isClean());
+          message_ = null;
+        }
+        messageCase_ = 4;
+        onChanged();
+        return userMessageBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessageOrBuilder> pingMessageBuilder_;
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       * @return Whether the pingMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasPingMessage() {
+        return messageCase_ == 5;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       * @return The pingMessage.
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage getPingMessage() {
+        if (pingMessageBuilder_ == null) {
+          if (messageCase_ == 5) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance();
+        } else {
+          if (messageCase_ == 5) {
+            return pingMessageBuilder_.getMessage();
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       */
+      public Builder setPingMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage value) {
+        if (pingMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          message_ = value;
+          onChanged();
+        } else {
+          pingMessageBuilder_.setMessage(value);
+        }
+        messageCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       */
+      public Builder setPingMessage(
+          com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.Builder builderForValue) {
+        if (pingMessageBuilder_ == null) {
+          message_ = builderForValue.build();
+          onChanged();
+        } else {
+          pingMessageBuilder_.setMessage(builderForValue.build());
+        }
+        messageCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       */
+      public Builder mergePingMessage(com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage value) {
+        if (pingMessageBuilder_ == null) {
+          if (messageCase_ == 5 &&
+              message_ != com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance()) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.newBuilder((com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            message_ = value;
+          }
+          onChanged();
+        } else {
+          if (messageCase_ == 5) {
+            pingMessageBuilder_.mergeFrom(value);
+          } else {
+            pingMessageBuilder_.setMessage(value);
+          }
+        }
+        messageCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       */
+      public Builder clearPingMessage() {
+        if (pingMessageBuilder_ == null) {
+          if (messageCase_ == 5) {
+            messageCase_ = 0;
+            message_ = null;
+            onChanged();
+          }
+        } else {
+          if (messageCase_ == 5) {
+            messageCase_ = 0;
+            message_ = null;
+          }
+          pingMessageBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       */
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.Builder getPingMessageBuilder() {
+        return getPingMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       */
+      @java.lang.Override
+      public com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessageOrBuilder getPingMessageOrBuilder() {
+        if ((messageCase_ == 5) && (pingMessageBuilder_ != null)) {
+          return pingMessageBuilder_.getMessageOrBuilder();
+        } else {
+          if (messageCase_ == 5) {
+            return (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_;
+          }
+          return com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.com.hfdlys.harmony.magicoflove.network.message.PingMessage pingMessage = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessageOrBuilder> 
+          getPingMessageFieldBuilder() {
+        if (pingMessageBuilder_ == null) {
+          if (!(messageCase_ == 5)) {
+            message_ = com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.getDefaultInstance();
+          }
+          pingMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage.Builder, com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessageOrBuilder>(
+                  (com.hfdlys.harmony.magicoflove.network.message.Messages.PingMessage) message_,
+                  getParentForChildren(),
+                  isClean());
+          message_ = null;
+        }
+        messageCase_ = 5;
+        onChanged();
+        return pingMessageBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:com.hfdlys.harmony.magicoflove.network.message.Message)
@@ -2667,6 +3923,11 @@ public final class Messages {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_com_hfdlys_harmony_magicoflove_network_message_UserMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_hfdlys_harmony_magicoflove_network_message_Message_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -2686,8 +3947,17 @@ public final class Messages {
       "\014\n\004skin\030\003 \001(\014\"2\n\014LoginMessage\022\020\n\010usernam" +
       "e\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"=\n\013UserMessage" +
       "\022\016\n\006userId\030\001 \001(\005\022\020\n\010userName\030\002 \001(\t\022\014\n\004sk" +
-      "in\030\003 \001(\014\"(\n\007Message\022\014\n\004code\030\001 \001(\005\022\017\n\007con" +
-      "tent\030\002 \001(\tb\006proto3"
+      "in\030\003 \001(\014\" \n\013PingMessage\022\021\n\ttimestamp\030\001 \001" +
+      "(\003\"\374\002\n\007Message\022\014\n\004code\030\001 \001(\005\022Z\n\017register" +
+      "Message\030\002 \001(\0132?.com.hfdlys.harmony.magic" +
+      "oflove.network.message.RegisterMessageH\000" +
+      "\022T\n\014loginMessage\030\003 \001(\0132<.com.hfdlys.harm" +
+      "ony.magicoflove.network.message.LoginMes" +
+      "sageH\000\022R\n\013userMessage\030\004 \001(\0132;.com.hfdlys" +
+      ".harmony.magicoflove.network.message.Use" +
+      "rMessageH\000\022R\n\013pingMessage\030\005 \001(\0132;.com.hf" +
+      "dlys.harmony.magicoflove.network.message" +
+      ".PingMessageH\000B\t\n\007messageb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2711,12 +3981,18 @@ public final class Messages {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_hfdlys_harmony_magicoflove_network_message_UserMessage_descriptor,
         new java.lang.String[] { "UserId", "UserName", "Skin", });
-    internal_static_com_hfdlys_harmony_magicoflove_network_message_Message_descriptor =
+    internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_com_hfdlys_harmony_magicoflove_network_message_PingMessage_descriptor,
+        new java.lang.String[] { "Timestamp", });
+    internal_static_com_hfdlys_harmony_magicoflove_network_message_Message_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_com_hfdlys_harmony_magicoflove_network_message_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_com_hfdlys_harmony_magicoflove_network_message_Message_descriptor,
-        new java.lang.String[] { "Code", "Content", });
+        new java.lang.String[] { "Code", "RegisterMessage", "LoginMessage", "UserMessage", "PingMessage", "Message", });
     descriptor.resolveAllFeaturesImmutable();
   }
 

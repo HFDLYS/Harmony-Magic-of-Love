@@ -14,13 +14,10 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.ByteString;
 import com.hfdlys.harmony.magicoflove.Client;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
-import com.hfdlys.harmony.magicoflove.database.entity.User;
-import com.hfdlys.harmony.magicoflove.database.service.UserService;
-import com.hfdlys.harmony.magicoflove.network.message.LoginMessage;
-import com.hfdlys.harmony.magicoflove.network.message.Message;
-import com.hfdlys.harmony.magicoflove.network.message.RegisterMessage;
+import com.hfdlys.harmony.magicoflove.network.message.Messages.*;
 import com.hfdlys.harmony.magicoflove.util.ImageUtil;
 
 public class ClientFrame extends JFrame {
@@ -117,10 +114,14 @@ public class ClientFrame extends JFrame {
                     return;
                 }
                 try {
-                    LoginMessage loginMessage = new LoginMessage();
-                    loginMessage.setUsername(username);
-                    loginMessage.setPassword(password);
-                    Message message = new Message(MessageCodeConstants.LOGIN, objectMapper.writeValueAsString(loginMessage));
+                    LoginMessage loginMessage = LoginMessage.newBuilder()
+                            .setUsername(username)
+                            .setPassword(password)
+                            .build();
+                    Message message = Message.newBuilder()
+                            .setCode(MessageCodeConstants.LOGIN)
+                            .setLoginMessage(loginMessage)
+                            .build();
                     Client.getInstance().sendMessage(message);
                     dialog.initUI();
                 } catch (Exception ex) {
@@ -230,8 +231,15 @@ public class ClientFrame extends JFrame {
                 }
                 try (InputStream in = new FileInputStream(selectedFile)) {
                     byte[] imageBytes = in.readAllBytes();
-                    RegisterMessage registerMessage = new RegisterMessage(username, password, imageBytes);
-                    Message message = new Message(MessageCodeConstants.REGISTER, objectMapper.writeValueAsString(registerMessage));
+                    RegisterMessage registerMessage = RegisterMessage.newBuilder()
+                            .setUsername(username)
+                            .setPassword(password)
+                            .setSkin(ByteString.copyFrom(imageBytes))
+                            .build();
+                    Message message = Message.newBuilder()
+                            .setCode(MessageCodeConstants.REGISTER)
+                            .setRegisterMessage(registerMessage)
+                            .build();
                     Client.getInstance().sendMessage(message);
                     dialog.initUI();
                 } catch (Exception ex) {
