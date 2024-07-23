@@ -131,6 +131,7 @@ public class RoomHandler extends Thread {
     public void closeRoom() {
         synchronized (playerLock) {
         }
+        this.interrupt();
     }
 
     public boolean startGame(User user) {

@@ -150,12 +150,13 @@ public class ClientHandler extends Thread {
                                 // sendMessage(MessageCodeConstants.FAIL, "");
                                 break;
                             }
-                            roomId = objectMapper.readValue(message.getContent(), Integer.class);
-                            if (Server.getInstance().getRoomManager().joinRoom(roomId, user) == false) {
+                            int roomIdTemp = objectMapper.readValue(message.getContent(), Integer.class);
+                            if (Server.getInstance().getRoomManager().joinRoom(roomIdTemp, user) == false) {
                                 ServerFrame.getInstance().appendText("用户" + user.getUsername() + "加入房间" + roomId + "失败\n");
-                                sendMessage(MessageCodeConstants.FAIL, "");
+                                sendMessage(MessageCodeConstants.FAIL, "用户" + user.getUsername() + "加入房间" + roomId + "失败");
                                 break;
                             }
+                            roomId = roomIdTemp;
                             break;
                         case MessageCodeConstants.START_GAME:
                             if (this.user == null) {
@@ -170,7 +171,7 @@ public class ClientHandler extends Thread {
                             }
                             if (Server.getInstance().getRoomManager().startGame(roomId, user) == false) {
                                 ServerFrame.getInstance().appendText("用户" + user.getUsername() + "开始游戏失败\n");
-                                sendMessage(MessageCodeConstants.FAIL, "");
+                                sendMessage(MessageCodeConstants.FAIL, "用户" + user.getUsername() + "开始游戏失败");
                                 break;
                             }
                             break;

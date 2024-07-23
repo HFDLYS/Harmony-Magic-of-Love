@@ -8,10 +8,14 @@ public class ColorUtil {
         long seed = s.hashCode();
 
         Random random = new Random(seed);
-        int r = random.nextInt(200) + 30;
-        int g = random.nextInt(200) + 30;
-        int b = random.nextInt(200) + 30;
+        int r = 75 + random.nextInt(121);
+        int g = 12 + random.nextInt(51);
+        int b = 235 - random.nextInt(91);
 
         return new Color(r, g, b);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(convertToColor("ss"));
     }
 }

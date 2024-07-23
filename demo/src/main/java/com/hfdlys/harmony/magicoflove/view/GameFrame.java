@@ -230,8 +230,6 @@ public class GameFrame extends JFrame {
                 }
                 int comp = Client.getInstance().getGameManager().getEntityManager().getCamp(entity.getId());
                 String compName = (Client.getInstance().getGameManager().getEntityManager().getCampName(comp));
-                log.info("comp:" + comp);
-                log.info("compName of" + entity.getId() + ": " + compName);
                 g.setColor(ColorUtil.convertToColor(compName));
                 g.setFont(new Font("宋体", Font.BOLD, 20));
                 String name = ((Character)entity).getUsername();
@@ -687,6 +685,7 @@ public class GameFrame extends JFrame {
 
         startGameButton.addActionListener(e -> {
             Client.getInstance().sendMessage(MessageCodeConstants.START_GAME, null);
+            setGameState(GameViewConstants.LOADING_VIEW);
         });
 
         leaveRoomButton.addActionListener(e -> {

@@ -37,6 +37,11 @@ public class EntityManager {
      */
     private HashMap<Integer, Integer> entityCamp;
 
+    /*
+     * 阵营修改锁
+     */
+    private final Object campModifyLock = new Object();
+
     /**
      * 实体信息
      */
@@ -72,11 +77,13 @@ public class EntityManager {
     }
 
     public String getCampName(int id) {
-        id = getCamp(id);
-        if (entityRegisterMessages.get(id) instanceof CharacterRegisterMessage) {
-            return ((CharacterRegisterMessage)entityRegisterMessages.get(id)).getUsername();
-        } else {
-            return "???";
+        synchronized (campModifyLock) {
+            id = getCamp(id);
+            if (entityRegisterMessages.get(id) instanceof CharacterRegisterMessage) {
+                return ((CharacterRegisterMessage)entityRegisterMessages.get(id)).getUsername();
+            } else {
+                return "???";
+            }
         }
     }
 
@@ -84,12 +91,16 @@ public class EntityManager {
      * 查看玩家阵营
      */
     public int getCamp(int id) {
-        if (entityCamp.get(id) == null || entityCamp.get(id) == id) {
-            entityCamp.put(id, id);
-            return id;
-        } else {
-            entityCamp.put(id, getCamp(entityCamp.get(id)));
-            return entityCamp.get(id);
+        synchronized (campModifyLock) {
+            if (entityCamp.get(id) == null) {
+                entityCamp.put(id, id);
+                return id;
+            } else if (entityCamp.get(id) == id) {
+                return id;
+            } else {
+                entityCamp.put(id, getCamp(entityCamp.get(id)));
+                return entityCamp.get(id);
+            }
         }
     }
 
@@ -97,10 +108,12 @@ public class EntityManager {
      * 合并阵营
      */
     public void mergeCamp(int id1, int id2) {
-        int camp1 = getCamp(id1);
-        int camp2 = getCamp(id2);
-        if (camp1 != camp2) {
-            entityCamp.put(camp1, camp2);
+        synchronized (campModifyLock) {
+            int camp1 = getCamp(id1);
+            int camp2 = getCamp(id2);
+            if (camp1 != camp2) {
+                entityCamp.put(camp1, camp2);
+            }
         }
     }
 
@@ -415,7 +428,9 @@ public class EntityManager {
             }
         }
 
-        this.entityCamp = entityManagerMessage.getEntityCamp();
+        synchronized (campModifyLock) {
+            this.entityCamp = entityManagerMessage.getEntityCamp();
+        }
         clearDeadEntity();
     }
 

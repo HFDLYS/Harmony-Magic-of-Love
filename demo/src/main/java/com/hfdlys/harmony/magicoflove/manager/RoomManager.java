@@ -25,6 +25,11 @@ public class RoomManager {
      */
     private int roomId = 0;
 
+    public void run() {
+        RoomLiveHandler roomLiveHandler = new RoomLiveHandler();
+        roomLiveHandler.start();
+    }
+
     /**
      * 
      */
@@ -84,5 +89,24 @@ public class RoomManager {
             roomInfoMessages.add(roomInfoMessage);
         }
         return roomInfoMessages;
+    }
+
+    private class RoomLiveHandler extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                    for (Map.Entry<Integer, RoomHandler> entry : roomMap.entrySet()) {
+                        RoomHandler roomHandler = entry.getValue();
+                        if (roomHandler.getPlayerNum() == 0) {
+                            removeRoom(entry.getKey());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

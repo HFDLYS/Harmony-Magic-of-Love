@@ -58,7 +58,8 @@ public class Client {
             objectMapper = new ObjectMapper();
             gameManager = new GameManager();
         } catch (Exception e) {
-            e.printStackTrace();
+            GameFrame.getInstance().setGameState(GameViewConstants.LOADING_VIEW);
+            JOptionPane.showMessageDialog(null, "服务端不可用", "错误", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -103,6 +104,13 @@ public class Client {
                             case MessageCodeConstants.FAIL:
                                 if (userId != null) {
                                     break;
+                                }
+                                try {
+                                    String info = objectMapper.readValue(message.getContent(), String.class);
+                                    if (info != null) {
+                                        JOptionPane.showMessageDialog(null, info, "Error", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                } catch (Exception e) {
                                 }
                                 GameFrame.getInstance().setGameState(GameViewConstants.LOGIN_VIEW);
                                 break;

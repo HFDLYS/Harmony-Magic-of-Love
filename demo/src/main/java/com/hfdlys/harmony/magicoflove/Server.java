@@ -80,7 +80,7 @@ public class Server {
     public void run() {
         ServerFrame.getInstance().launchFrame();
         new ServerHandler().start();
-        
+        roomManager.run();
     }
 
     /**
