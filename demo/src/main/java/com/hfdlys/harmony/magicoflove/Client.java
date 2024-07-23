@@ -6,6 +6,8 @@ import java.io.*;
 
 import javax.swing.*;
 
+import org.apache.ibatis.io.Resources;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.constant.GameViewConstants;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
@@ -13,6 +15,7 @@ import com.hfdlys.harmony.magicoflove.game.controller.ClientController;
 import com.hfdlys.harmony.magicoflove.game.controller.Controller;
 import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
+import com.hfdlys.harmony.magicoflove.manager.MusicManager;
 import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityManagerMessage;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
@@ -168,7 +171,11 @@ public class Client {
 
     public void run() {
         new ServerHandler().start();
-        
+        try {
+            MusicManager.getInstance().playMusic(Resources.getResourceAsStream("music/main.mp3"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         gameManager.run();
     }
     

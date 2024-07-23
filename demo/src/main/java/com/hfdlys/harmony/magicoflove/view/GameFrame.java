@@ -28,6 +28,7 @@ import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ObstacleFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.WeaponFactory;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
+import com.hfdlys.harmony.magicoflove.manager.MusicManager;
 import com.hfdlys.harmony.magicoflove.network.message.LoginMessage;
 import com.hfdlys.harmony.magicoflove.network.message.RegisterMessage;
 import com.hfdlys.harmony.magicoflove.network.message.RoomInfoMessage;
@@ -191,6 +192,11 @@ public class GameFrame extends JFrame {
         if (!isRendered) {
             isRendered = true;
             setTitle("和弦：❤的魔法");
+            try {
+                MusicManager.getInstance().playMusic(Resources.getResourceAsStream("music/gameStart.mp3"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         requestFocus();
         Graphics graphics = this.getGraphics();
