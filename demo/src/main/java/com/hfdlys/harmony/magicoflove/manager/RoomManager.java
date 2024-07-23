@@ -8,11 +8,18 @@ import com.hfdlys.harmony.magicoflove.view.ServerFrame;
 import lombok.Data;
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Data
 public class RoomManager {
+
+    private ThreadPoolExecutor roomExecutorPool;
+
     public RoomManager() {
         roomMap = new HashMap<>();
+        roomExecutorPool = new ThreadPoolExecutor(50, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
     }
 
     /**
@@ -38,7 +45,8 @@ public class RoomManager {
         RoomHandler roomHandler = new RoomHandler(roomId, roomName);
         roomMap.put(roomId, roomHandler);
         joinRoom(roomId, user);
-        roomHandler.start();
+        ServerFrame.getInstance().appendText(user.getUsername() + "创建了房间" + roomId + "\n");
+        roomExecutorPool.execute(roomHandler);
         return roomId;
     }
 
@@ -61,7 +69,7 @@ public class RoomManager {
     public boolean leaveRoom(int roomId, User user) {
         RoomHandler roomHandler = roomMap.get(roomId);
         if (roomHandler == null) {
-            return false;
+            return true;
         }
         ServerFrame.getInstance().appendText(user.getUsername() + "离开了房间" + roomId + "\n");
         return roomHandler.removePlayer(user);

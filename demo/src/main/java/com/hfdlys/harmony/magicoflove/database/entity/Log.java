@@ -24,10 +24,6 @@ public class Log implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private Integer userId;
-
-    private String ip;
-
     private String content;
 
     private LocalDateTime createTime;

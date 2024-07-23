@@ -3,7 +3,9 @@ package com.hfdlys.harmony.magicoflove.network.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
+import com.hfdlys.harmony.magicoflove.database.entity.Log;
 import com.hfdlys.harmony.magicoflove.database.entity.User;
+import com.hfdlys.harmony.magicoflove.database.service.LogService;
 import com.hfdlys.harmony.magicoflove.database.service.UserService;
 import com.hfdlys.harmony.magicoflove.game.controller.Controller;
 import com.hfdlys.harmony.magicoflove.game.controller.ServerRemoteController;
@@ -191,14 +193,7 @@ public class ClientHandler extends Thread {
                                 sendMessage(MessageCodeConstants.FAIL, "");
                                 break;
                             }
-                            sendMessage(MessageCodeConstants.SUCCESS, "");
-                            break;
-                        case MessageCodeConstants.ASK_LOBBY_INFO:
-                            if (this.user == null) {
-                                ServerFrame.getInstance().appendText("用户未登录\n");
-                                sendMessage(MessageCodeConstants.FAIL, "");
-                                break;
-                            }
+                            sendMessage(MessageCodeConstants.SUCCESS, "退出房间成功");
                             List<RoomInfoMessage> roomInfoMessages = new ArrayList<>();
                             for (RoomHandler roomHandler : Server.getInstance().getRoomManager().getRoomMap().values()) {
                                 RoomInfoMessage roomInfoMessage = new RoomInfoMessage();
@@ -210,6 +205,23 @@ public class ClientHandler extends Thread {
                             }
                             sendMessage(MessageCodeConstants.ROOM_LIST_INFO, roomInfoMessages);
                             break;
+                        case MessageCodeConstants.ASK_LOBBY_INFO:
+                            if (this.user == null) {
+                                ServerFrame.getInstance().appendText("用户未登录\n");
+                                sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            List<RoomInfoMessage> roomInfoMessages2 = new ArrayList<>();
+                            for (RoomHandler roomHandler : Server.getInstance().getRoomManager().getRoomMap().values()) {
+                                RoomInfoMessage roomInfoMessage = new RoomInfoMessage();
+                                roomInfoMessage.setRoomId(roomHandler.getRoomId());
+                                roomInfoMessage.setRoomName(roomHandler.getRoomName());
+                                roomInfoMessage.setRoomPlayer(roomHandler.getPlayerNum());
+                                roomInfoMessage.setMaxPlayer(roomHandler.getMAX_PLAYER_NUM());
+                                roomInfoMessages2.add(roomInfoMessage);
+                            }
+                            sendMessage(MessageCodeConstants.ROOM_LIST_INFO, roomInfoMessages2);
+                            break;
                         default:
                             
                             break;
@@ -217,6 +229,7 @@ public class ClientHandler extends Thread {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             close();
         }
     }
@@ -247,8 +260,11 @@ public class ClientHandler extends Thread {
 
     public void close() {
         try {
-            ServerFrame.getInstance().appendText("用户" + user.getUsername() + "退出游戏\n");
-            Server.getInstance().getClientMapByUserId().remove(user.getUserId());
+            ServerFrame.getInstance().appendText("用户" + socket.getInetAddress() + "退出游戏\n");
+            try {
+                Server.getInstance().getClientMapByUserId().remove(user.getUserId());
+            } catch (Exception e) {
+            }
             if (roomId != 0) {
                 Server.getInstance().getRoomManager().leaveRoom(roomId, user);
             }

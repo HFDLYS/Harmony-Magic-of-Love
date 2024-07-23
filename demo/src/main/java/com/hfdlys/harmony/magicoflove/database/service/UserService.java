@@ -1,14 +1,11 @@
 package com.hfdlys.harmony.magicoflove.database.service;
 
-import java.sql.Blob;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hfdlys.harmony.magicoflove.database.MySQLJDBC;
 import com.hfdlys.harmony.magicoflove.database.entity.User;
 import com.hfdlys.harmony.magicoflove.database.mapper.UserMapper;
 import com.hfdlys.harmony.magicoflove.util.SecurityUtil;
 
-import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -19,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Jiasheng Wang
  * @since 2024-07-21
  */
-@Slf4j
 public class UserService {
     /*
      * 单例模式

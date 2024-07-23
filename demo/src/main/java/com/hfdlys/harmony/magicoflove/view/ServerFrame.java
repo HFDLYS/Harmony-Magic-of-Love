@@ -2,6 +2,9 @@ package com.hfdlys.harmony.magicoflove.view;
 
 import java.net.*;
 import javax.swing.*;
+
+import com.hfdlys.harmony.magicoflove.database.service.LogService;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -10,7 +13,7 @@ public class ServerFrame extends JFrame {
      * 初始窗口大小
      * 高度
      */
-    private final int WINDOW_X = 800;
+    private final int WINDOW_X = 2000;
 
     /**
      * 初始窗口大小
@@ -18,7 +21,7 @@ public class ServerFrame extends JFrame {
      */
     private final int WINDOW_Y = 1000;
 
-    private JTextArea textArea;
+    private JList<String> logList;
     
     private static ServerFrame instance = null;
 
@@ -43,20 +46,34 @@ public class ServerFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         addWindowListener(new WindowCloseListener());
-        textArea = new JTextArea(10, 50);
+
+        logList = new JList<>();
+        logList.setListData(LogService.getInstance().getLogList().stream().map(log -> log.getContent()).toArray(String[]::new));
     }
 
     public void launchFrame() {
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setLayout(new BorderLayout());        
 
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        
+        mainPanel.add(new JScrollPane(logList), BorderLayout.CENTER);
+        setContentPane(mainPanel);
 
-        mainPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
-        add(mainPanel);
+        JPanel operatePanel = new JPanel();
+        operatePanel.setLayout(new FlowLayout());
+        JButton clearButton = new JButton("导出");
+        clearButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int result = fileChooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                String path = fileChooser.getSelectedFile().getAbsolutePath();
+                LogService.getInstance().exportLog(path);
+            }
+        });
+
+        operatePanel.add(clearButton);
+
+        mainPanel.add(operatePanel, BorderLayout.WEST);
 
         pack();
         setVisible(true);
@@ -64,7 +81,11 @@ public class ServerFrame extends JFrame {
     }
 
     public void appendText(String text) {
-        textArea.append(text);
+        if (text.endsWith("\n")) {
+            text = text.substring(0, text.length() - 1);
+        }
+        LogService.getInstance().insertLog(text);
+        logList.setListData(LogService.getInstance().getLogList().stream().map(log -> log.getContent()).toArray(String[]::new));
     }
 
     private class WindowCloseListener implements WindowListener {

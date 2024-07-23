@@ -495,12 +495,13 @@ public class GameFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        mainPane.add(cancelButton, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.LAST_LINE_END;
         mainPane.add(registerButton, gbc);
 
         contentPanel.add(mainPane, BorderLayout.CENTER);
@@ -696,6 +697,7 @@ public class GameFrame extends JFrame {
 
         leaveRoomButton.addActionListener(e -> {
             Client.getInstance().sendMessage(MessageCodeConstants.EXIT_ROOM, null);
+            setGameState(GameViewConstants.LOADING_VIEW);
         });
 
         GridBagConstraints gbc = new GridBagConstraints();

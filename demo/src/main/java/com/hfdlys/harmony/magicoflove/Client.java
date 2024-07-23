@@ -110,7 +110,7 @@ public class Client {
                                 }
                                 try {
                                     String info = objectMapper.readValue(message.getContent(), String.class);
-                                    if (info != null) {
+                                    if (info != null && !info.isEmpty()) {
                                         JOptionPane.showMessageDialog(null, info, "Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 } catch (Exception e) {

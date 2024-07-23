@@ -28,6 +28,8 @@ public class RoomHandler extends Thread {
 
     private final int GAMING = 1;
 
+    private final int END = 2;
+
     private int roomStatus;
 
     private List<User> players;
@@ -72,12 +74,15 @@ public class RoomHandler extends Thread {
                 e.printStackTrace();
             }
         }
+        if (roomStatus == END) {
+            return;
+        }
         List<UserMessgae> userMessgaes = new ArrayList<>();
         EntityManager entityManager = gameManager.getEntityManager();
-        int minX = -300; // Minimum x coordinate
-        int maxX = 300; // Maximum x coordinate
-        int minY = -500; // Minimum y coordinate
-        int maxY = 500; // Maximum y coordinate
+        int minX = -300;
+        int maxX = 300;
+        int minY = -500;
+        int maxY = 500;
         for (User user : players) {
             UserMessgae userMessgae = new UserMessgae();
             userMessgae.setUserId(user.getUserId());
@@ -101,7 +106,7 @@ public class RoomHandler extends Thread {
     }
 
     public boolean addPlayer(User user) {
-        if (roomStatus == GAMING) {
+        if (roomStatus == GAMING || playerNum >= MAX_PLAYER_NUM || roomStatus == END) {
             return false;
         }
         synchronized (playerLock) {
@@ -115,6 +120,9 @@ public class RoomHandler extends Thread {
     }
 
     public boolean removePlayer(User user) {
+        if (roomStatus == GAMING) {
+            return false;
+        }
         synchronized (playerLock) {
             if (players.contains(user)) {
                 players.remove(user);
@@ -124,13 +132,14 @@ public class RoomHandler extends Thread {
             if (players.size() == 0) {
                 Server.getInstance().getRoomManager().removeRoom(roomId);
             }
-            return false;
+            return true;
         }
     }
 
     public void closeRoom() {
         synchronized (playerLock) {
         }
+        roomStatus = END;
         this.interrupt();
     }
 

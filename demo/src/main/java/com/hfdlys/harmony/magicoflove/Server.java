@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
+import com.hfdlys.harmony.magicoflove.database.service.LogService;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.manager.RoomManager;
 import com.hfdlys.harmony.magicoflove.network.handler.ClientHandler;
@@ -14,6 +15,8 @@ import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
 import com.hfdlys.harmony.magicoflove.view.ServerFrame;
 
 import java.util.concurrent.*;
+
+import javax.swing.JOptionPane;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -78,8 +81,8 @@ public class Server {
     private ThreadPoolExecutor executorPool;
 
     public void run() {
-        ServerFrame.getInstance().launchFrame();
         new ServerHandler().start();
+        ServerFrame.getInstance().launchFrame();
         roomManager.run();
     }
 
@@ -141,7 +144,8 @@ public class Server {
                     clientMap.put(uuid, clientHandler);
                     executorPool.execute(clientHandler);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "服务端不可用", "错误", JOptionPane.ERROR_MESSAGE);
+                    break;
                 }
             }
         }
