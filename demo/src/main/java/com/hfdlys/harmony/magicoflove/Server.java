@@ -6,7 +6,9 @@ import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
+import com.hfdlys.harmony.magicoflove.manager.RoomManager;
 import com.hfdlys.harmony.magicoflove.network.handler.ClientHandler;
+import com.hfdlys.harmony.magicoflove.network.handler.RoomHandler;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
 import com.hfdlys.harmony.magicoflove.view.ServerFrame;
@@ -71,15 +73,12 @@ public class Server {
      */
     private final int playerMax = 100;
 
-    private GameManager gameManager;
+    private RoomManager roomManager;
 
     private ThreadPoolExecutor executorPool;
 
     public void run() {
         ServerFrame.getInstance().launchFrame();
-        new Thread(() -> {
-            gameManager.runServer();
-        }).start();
         new ServerHandler().start();
         
     }
@@ -92,7 +91,7 @@ public class Server {
             clientMap = new HashMap<>();
             clientMapByUserId = new HashMap<>();
             serverSocket = new ServerSocket(port);
-            gameManager = new GameManager();
+            roomManager = new RoomManager();
             executorPool = new ThreadPoolExecutor(50, 100, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,6 +106,20 @@ public class Server {
             for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
                 ClientHandler clientHandler = entry.getValue();
                 clientHandler.sendMessage(code, content);
+            }
+        }
+    }
+
+    /**
+     * 广播信息
+     */
+    public void broadcast(int roomId, int code, Object content) {
+        synchronized (clientMapLock) {
+            for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
+                ClientHandler clientHandler = entry.getValue();
+                if (clientHandler.getRoomId() == roomId) {
+                    clientHandler.sendMessage(code, content);
+                }
             }
         }
     }

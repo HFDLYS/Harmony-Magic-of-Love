@@ -38,6 +38,11 @@ public class GameManager {
     private int userId;
 
     /**
+     * 房间id
+     */
+    private int roomId;
+
+    /**
      * 游戏时间戳（游戏帧的编号）
      */
     private int timeStamp;
@@ -79,6 +84,18 @@ public class GameManager {
         timeStamp = 0;
         playerSkin = new HashMap<>();
         entityManager = new EntityManager(this);
+        isClient = true;
+    }
+
+    /**
+     * 构造方法
+     */
+    public GameManager(int roomId) {
+        timeStamp = 0;
+        playerSkin = new HashMap<>();
+        this.roomId = roomId;
+        entityManager = new EntityManager(this);
+        isClient = false;
     }
 
     /**
@@ -136,7 +153,9 @@ public class GameManager {
      * 游戏主循环（客户端）
      */
     public void run() {
-
+        if (!isClient) {
+            return;
+        }
         init();
         GameFrame.getInstance().init();
         long lastTime = -1;
@@ -181,6 +200,9 @@ public class GameManager {
     }
 
     public void runServer() {
+        if (isClient) {
+            return;
+        }
         MapFactory.createMap(this);
 
         long lastTime = -1;
@@ -197,7 +219,7 @@ public class GameManager {
 
             // 调用其他管理器
             entityManager.run();
-            Server.getInstance().broadcast(MessageCodeConstants.ENTITY_MANAGER_INFO, entityManager.getEntityManagerMessage());
+            Server.getInstance().broadcast(roomId, MessageCodeConstants.ENTITY_MANAGER_INFO, entityManager.getEntityManagerMessage());
 
             // 帧数限制
             long time = System.currentTimeMillis();

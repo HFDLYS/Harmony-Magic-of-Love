@@ -69,6 +69,11 @@ public class Character extends Entity {
     private String username;
 
     /**
+     * 阵营
+     */
+    private int camp;
+
+    /**
      * 移动动画
      * 0: 上
      * 1: 左
@@ -190,6 +195,15 @@ public class Character extends Entity {
      */
     public Texture getCurrentTexture(GameManager gameManager) {
         Texture character;
+        int hp = getHp();
+        if (hp <= 0) {
+            if (deadAnimation.getCnt() == deadAnimation.getCntLength() - 1) {
+                character = deadAnimation.getTextures()[5];
+            } else {
+                character = deadAnimation.play(gameManager.getTimeStamp());
+            }
+            return character;
+        }
         int vx = getHitbox().getVx();
         int vy = getHitbox().getVy();
         if(vx == 0 && vy == 0) character = moveAnimation[lastDirect].getTextures()[0];

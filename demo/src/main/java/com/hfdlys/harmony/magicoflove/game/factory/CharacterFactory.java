@@ -123,7 +123,7 @@ public class CharacterFactory {
             }
             Animation deadAnimation = new Animation(texture, 6);
             return new Character(
-                new Hitbox(0, 0, 0, 0, 8, 16),
+                new Hitbox(0, 0, 0, 0, 8, 15),
                 texture_move[2][0],
                 400,
                 400,

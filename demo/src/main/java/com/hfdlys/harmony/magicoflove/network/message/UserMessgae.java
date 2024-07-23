@@ -20,4 +20,9 @@ public class UserMessgae {
         this.username = user.getUsername();
         this.skin = user.getSkin();
     }
+
+    @Override
+    public String toString() {
+        return "用户名：" + username;
+    }
 }

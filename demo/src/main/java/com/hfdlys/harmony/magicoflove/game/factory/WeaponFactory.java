@@ -48,7 +48,7 @@ public class WeaponFactory {
                 Weapon weapon = new Weapon(
                         type,
                         gameManager,
-                        projectile, 1440 / gameManager.getFps(), 50, 7200 / gameManager.getFps(), 12, ProjectileFactory.RAMDOM,
+                        projectile, 1440 / gameManager.getFps(), 50, 7200 / gameManager.getFps(), 16, ProjectileFactory.SWORD_QI,
                         textures,
                         ProjectileFactory.SWORD_QI
                 );

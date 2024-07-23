@@ -20,11 +20,17 @@ public class EntityManagerMessage {
      */
     private HashMap<Integer, EntityMessage> entityMessageHashMap;
 
+    /**
+     * 阵营信息
+     */
+    private HashMap<Integer, Integer> entityCamp;
+
     public EntityManagerMessage() {
     }
 
-    public EntityManagerMessage(HashMap<Integer, EntityRegisterMessage> entityRegisterMessages, HashMap<Integer, EntityMessage> entityMessageHashMap) {
+    public EntityManagerMessage(HashMap<Integer, EntityRegisterMessage> entityRegisterMessages, HashMap<Integer, EntityMessage> entityMessageHashMap, HashMap<Integer, Integer> entityCamp) {
         this.entityRegisterMessages = entityRegisterMessages;
         this.entityMessageHashMap = entityMessageHashMap;
+        this.entityCamp = entityCamp;
     }
 }

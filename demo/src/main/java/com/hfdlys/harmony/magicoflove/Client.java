@@ -7,6 +7,7 @@ import java.io.*;
 import javax.swing.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hfdlys.harmony.magicoflove.constant.GameViewConstants;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.game.controller.ClientController;
 import com.hfdlys.harmony.magicoflove.game.controller.Controller;
@@ -16,6 +17,7 @@ import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityManagerMessage;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.network.message.PingMessage;
+import com.hfdlys.harmony.magicoflove.network.message.RoomInfoMessage;
 import com.hfdlys.harmony.magicoflove.network.message.UserMessgae;
 import com.hfdlys.harmony.magicoflove.view.GameFrame;
 
@@ -96,28 +98,55 @@ public class Client {
                                 userId = objectMapper.readValue(message.getContent(), UserMessgae.class).getUserId();
                                 log.info("User id: " + userId);
                                 Client.getInstance().setUserId(userId);
-                                GameFrame.getInstance().setMenuState(5);
+                                Client.getInstance().sendMessage(MessageCodeConstants.ASK_LOBBY_INFO, null);
                                 break;
                             case MessageCodeConstants.FAIL:
                                 if (userId != null) {
                                     break;
                                 }
-                                GameFrame.getInstance().setMenuState(1);
+                                GameFrame.getInstance().setGameState(GameViewConstants.LOGIN_VIEW);
                                 break;
                             case MessageCodeConstants.USER_INFO:
                                 if (userId == null) {
                                     break;
                                 }
-                                // log.info("User info: " + message.getContent());
+                                log.info("get User info");
                                 List<UserMessgae> userMessgae = objectMapper.readValue(message.getContent(), objectMapper.getTypeFactory().constructCollectionType(List.class, UserMessgae.class));
                                 for (UserMessgae user : userMessgae) {
                                     gameManager.addPlayerSkin(user.getUserId(), user.getSkin());
                                 }
+                                GameFrame.getInstance().getRoomPlayerModel().clear();
+                                for (UserMessgae user : userMessgae) {
+                                    GameFrame.getInstance().getRoomPlayerModel().addElement(user);
+                                }
+                                GameFrame.getInstance().setGameState(GameViewConstants.ROOM_VIEW);
+                                break;
+                            case MessageCodeConstants.ROOM_LIST_INFO:
+                                if (userId == null) {
+                                    break;
+                                }
+                                List<RoomInfoMessage> roomInfoMessages = objectMapper.readValue(message.getContent(), objectMapper.getTypeFactory().constructCollectionType(List.class, RoomInfoMessage.class));
+                                GameFrame.getInstance().getRoomListModel().clear();
+                                for (RoomInfoMessage roomInfoMessage : roomInfoMessages) {
+                                    GameFrame.getInstance().getRoomListModel().addElement(roomInfoMessage);
+                                }
+                                GameFrame.getInstance().setGameState(GameViewConstants.LOBBY_VIEW);
                                 break;
                             case MessageCodeConstants.ENTITY_MANAGER_INFO:
-                                // log.info("Entity manager info: " + message.getContent());
+                                if (userId == null) {
+                                    break;
+                                }
+                                if (GameFrame.getInstance().getGameState() != GameViewConstants.GAME_VIEW) {
+                                    GameFrame.getInstance().setGameState(GameViewConstants.GAME_VIEW);
+                                }
                                 gameManager.getEntityManager().loadEntityManagerMessage(objectMapper.readValue(message.getContent(), EntityManagerMessage.class));
                                 break;
+                            case MessageCodeConstants.START_GAME:
+                                if (userId == null) {
+                                    break;
+                                }
+                                gameManager.getEntityManager().restart();
+                                GameFrame.getInstance().setGameState(GameViewConstants.GAME_VIEW);
                             default:
                                 break;
                         }

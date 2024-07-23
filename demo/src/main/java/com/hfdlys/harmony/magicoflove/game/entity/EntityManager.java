@@ -2,6 +2,7 @@ package com.hfdlys.harmony.magicoflove.game.entity;
 
 import java.util.*;
 
+import com.hfdlys.harmony.magicoflove.Client;
 import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
 import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
@@ -16,6 +17,7 @@ import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.EntityRegis
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ObstacleRegisterMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ProjectileRegisterMessage;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,6 +31,11 @@ public class EntityManager {
      * 实体注册信息
      */
     private HashMap<Integer, EntityRegisterMessage> entityRegisterMessages;
+
+    /**
+     * 阵营信息
+     */
+    private HashMap<Integer, Integer> entityCamp;
 
     /**
      * 实体信息
@@ -58,9 +65,43 @@ public class EntityManager {
             entityList = new ArrayList<>();
             entityRegisterMessages = new HashMap<>();
             entityMessageHashMap = new HashMap<>();
+            entityCamp = new HashMap<>();
         }
         this.gameManager = gameManager;
         entityCount = 0;
+    }
+
+    public String getCampName(int id) {
+        id = getCamp(id);
+        if (entityRegisterMessages.get(id) instanceof CharacterRegisterMessage) {
+            return ((CharacterRegisterMessage)entityRegisterMessages.get(id)).getUsername();
+        } else {
+            return "???";
+        }
+    }
+
+    /**
+     * 查看玩家阵营
+     */
+    public int getCamp(int id) {
+        if (entityCamp.get(id) == null || entityCamp.get(id) == id) {
+            entityCamp.put(id, id);
+            return id;
+        } else {
+            entityCamp.put(id, getCamp(entityCamp.get(id)));
+            return entityCamp.get(id);
+        }
+    }
+
+    /**
+     * 合并阵营
+     */
+    public void mergeCamp(int id1, int id2) {
+        int camp1 = getCamp(id1);
+        int camp2 = getCamp(id2);
+        if (camp1 != camp2) {
+            entityCamp.put(camp1, camp2);
+        }
     }
 
     /**
@@ -73,38 +114,41 @@ public class EntityManager {
             return;
         }
         clearDeadEntity();
-        // 第一阶段，实体刷新（控制器）+ 掉线判断
+        // 实体刷新（控制器）+ 掉线判断
         for(int i = 0; i < entityList.size(); i++) {
             if(entityList.get(i) instanceof Character) {
                 Character character = (Character)entityList.get(i);
                 if(Server.getInstance().getClientMapByUserId().get(character.getUserId()) == null) {
-                    character.reduceHp(10000);
+                    character.reduceHp(10000000);
                 }
-                character.play();
+                if (character.getHp() > 0)
+                    character.play();
             }
         }
 
 
-        // 第二阶段，以移动为核心的判断（移动、碰撞、伤害）
+        // 以移动为核心的判断（移动、碰撞、伤害）
         for(int i = 0; i < entityList.size(); i++) {
             Entity entity = entityList.get(i);
 
             if(entity instanceof Obstacle) continue; // 障碍物不会移动
             if(entity.getHitbox().getVx() == 0 && entity.getHitbox().getVy() == 0) continue; // 静止实体不会移动
+            if (entity.getHp() <= 0) continue; // 死亡实体不会移动
 
             Hitbox hitbox = entity.getHitbox();
             
-            // 移动↓
-            Hitbox nextHitbox = entity.getHitbox().nextFrameHitbox(); // "true" next frame hitbox
+            Hitbox nextHitbox = entity.getHitbox().nextFrameHitbox();
+            
             for(int j = 0; j < entityList.size(); j++) {
                 if(i == j) continue; // 同个物体，跳过
 
                 Entity anotherEntity = entityList.get(j);
+                if (anotherEntity.getHp() <= 0) continue; // 死亡实体不会移动
                 //if(!entityList.get(j).isExist()) // 实体不存在，跳过
                 if(!anotherEntity.getHitbox().isHit(nextHitbox)) continue; // 没碰撞，跳过
 
-                if(entity instanceof Projectile && anotherEntity instanceof Character && ((Projectile)entity).getSenderID() == (anotherEntity).getId()) continue;
-                if(anotherEntity instanceof Projectile && entity instanceof Character && ((Projectile)anotherEntity).getSenderID() == (entity).getId()) continue;
+                if(entity instanceof Projectile && anotherEntity instanceof Character && (getCamp(((Projectile)entity).getSenderID()) == getCamp((anotherEntity).getId()))) continue;
+                if(anotherEntity instanceof Projectile && entity instanceof Character && (getCamp(((Projectile)anotherEntity).getSenderID()) == getCamp((entity).getId()))) continue;
 
                 Hitbox anotherHitbox = anotherEntity.getHitbox();
 
@@ -148,13 +192,16 @@ public class EntityManager {
 
                 // 2. 伤害处理
                 if(entity instanceof Projectile) {
+                    
                     anotherEntity.reduceHp(((Projectile)entity).getDamage());
-                    entity.reduceHp(1);
-                } else if(anotherEntity instanceof Projectile) {
-                    entity.reduceHp(((Projectile)anotherEntity).getDamage());
-                    anotherEntity.reduceHp(1);
+                    if (anotherEntity instanceof Character) {
+                        Character character = (Character)anotherEntity;
+                        if (character.getHp() <= 0 && ((Projectile)entity).getSenderID() != 0) {
+                            mergeCamp(character.getId(), ((Projectile)entity).getSenderID());
+                        }
+                    }
+                    entity.reduceHp(10000);
                 }
-
                 
             }
 
@@ -165,7 +212,7 @@ public class EntityManager {
                 int y = hitbox.getY();
                 int range = ((Projectile)entity).getRange();
                 if (Math.abs(x - xo) * Math.abs(x - xo) + Math.abs(y - yo) * Math.abs(y - yo) >= range * range) {
-                    entity.reduceHp(10000);
+                    entity.reduceHp(100000);
                 }
             }
 
@@ -181,6 +228,7 @@ public class EntityManager {
                 Character character = (Character)e;
                 entityMessage.setAimX(character.getAimX());
                 entityMessage.setAimY(character.getAimY());
+                entityMessage.setCamp(character.getCamp());
                 if (character.getWeapon() != null) {
                     entityMessage.setWeaponType(character.getWeapon().getType());
                 }
@@ -188,8 +236,6 @@ public class EntityManager {
             
             entityMessageHashMap.put(e.getId(), entityMessage);
         }
-
-        // 第三阶段，将死亡(hp<=0)的实体从entityList中移除
         
     }
 
@@ -197,15 +243,30 @@ public class EntityManager {
         synchronized (entityListModifyLock) {
             ArrayList<Entity> newEntityList = new ArrayList<>();
             for(Entity e: entityList) {
-                if(!e.isExist()) { // 死亡
-                    entityMessageHashMap.remove(e.getId());
-                    entityRegisterMessages.remove(e.getId());
-                    if(e instanceof Character) {
-                        // TODO 播放死亡特效
+                if(e instanceof Character) {
+                    Character character = (Character)e;
+                    if(e.getHp() <= -200000) {
+                        entityMessageHashMap.remove(e.getId());
+                        entityRegisterMessages.remove(e.getId());
+                    } else if (e.getHp() <= -3000)  {
+                        e.setHp(300);
+                        newEntityList.add(e);
+                    } else {
+                        if (e.getHp() <= 0) {
+                            e.reduceHp(1);
+                            newEntityList.add(e);
+                        } else {
+                            newEntityList.add(e);
+                        }
                     }
                 } else {
-                    newEntityList.add(e);
+                    if(!e.isExist()) { // 死亡
+                        entityMessageHashMap.remove(e.getId());
+                        entityRegisterMessages.remove(e.getId());
+                    } else {
+                        newEntityList.add(e);
 
+                    }
                 }
             }
             entityList = newEntityList;
@@ -230,7 +291,6 @@ public class EntityManager {
     */
     public int add(Entity entity, EntityRegisterMessage entityRegisterMessage) {
         if(entity == null) {
-            System.out.println("添加了空实体");
             return -1;
         }
         
@@ -251,7 +311,6 @@ public class EntityManager {
      */
     public void addWithoutMessage(int ID, Entity entity) {
         if(entity == null) {
-            System.out.println("添加了空实体");
             return;
         }
         entity.setId(ID);
@@ -267,7 +326,6 @@ public class EntityManager {
      */
     public void addWithoutMessage(Entity entity) {
         if(entity == null) {
-            System.out.println("添加了空实体");
             return;
         }
         entity.setId(++entityCount);
@@ -308,7 +366,7 @@ public class EntityManager {
      * @return 实体管理器信息
      */
     public EntityManagerMessage getEntityManagerMessage() {
-        EntityManagerMessage entityManagerMessage = new EntityManagerMessage(entityRegisterMessages, entityMessageHashMap);
+        EntityManagerMessage entityManagerMessage = new EntityManagerMessage(entityRegisterMessages, entityMessageHashMap, entityCamp);
         // 清空实体注册信息
         // entityRegisterMessages = new ArrayList<>();
         return entityManagerMessage;
@@ -319,7 +377,7 @@ public class EntityManager {
      * @param entityManagerMessage 实体管理器信息
      */
     public void loadEntityManagerMessage(EntityManagerMessage entityManagerMessage) {
-        
+        entityRegisterMessages = entityManagerMessage.getEntityRegisterMessages();
         for (EntityRegisterMessage entityRegisterMessage: entityManagerMessage.getEntityRegisterMessages().values()) {
             if (entityMessageHashMap.get(entityRegisterMessage.getId()) != null) continue;
             if (entityRegisterMessage instanceof CharacterRegisterMessage) {
@@ -356,6 +414,8 @@ public class EntityManager {
                 }
             }
         }
+
+        this.entityCamp = entityManagerMessage.getEntityCamp();
         clearDeadEntity();
     }
 

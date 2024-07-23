@@ -19,7 +19,7 @@ public class ProjectileFactory {
         try {
             Texture texture_all = new Texture("weapon/projectile.png", 48, 160, 16, 16);
             return new Projectile(
-                new Hitbox(0, 0, 0, 0, 8),
+                new Hitbox(0, 0, 0, 0, 4),
                 texture_all.getCutTexture(tx * 16, ty * 16, 16, 16, 8, 8),
                 damage, 
                 senderID,
@@ -67,7 +67,7 @@ public class ProjectileFactory {
             switch (type) {
                 case BROKEN_HEART:
                     return new Projectile(
-                        new Hitbox(0, 0, 0, 0, 8),
+                        new Hitbox(0, 0, 0, 0, 4),
                         texture_all.getCutTexture(0 * 16, 4 * 16, 16, 16, 8, 8),
                         20,
                         senderId,
@@ -76,7 +76,7 @@ public class ProjectileFactory {
                         oy);
                 case HEART:
                     return new Projectile(
-                        new Hitbox(0, 0, 0, 0, 8),
+                        new Hitbox(0, 0, 0, 0, 4),
                         texture_all.getCutTexture(0 * 16, 5 * 16, 16, 16, 8, 8),
                         10,
                         senderId,
@@ -96,7 +96,7 @@ public class ProjectileFactory {
                     int x = (int)((Math.random() * 2) + 0.5);
                     int y = (int)((Math.random() * 9) + 0.5);
                     return new Projectile(
-                        new Hitbox(0, 0, 0, 0, 8),
+                        new Hitbox(0, 0, 0, 0, 4),
                         texture_all.getCutTexture(x * 16, y * 16, 16, 16, 8, 8),
                         10,
                         senderId,

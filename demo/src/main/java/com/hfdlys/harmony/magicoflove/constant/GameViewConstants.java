@@ -7,7 +7,9 @@ public class GameViewConstants {
 
     final static public int LOADING_VIEW = 3;
 
-    final static public int ROOM_VIEW = 4;
+    final static public int LOBBY_VIEW = 4;
+
+    final static public int ROOM_VIEW = 6;
 
     final static public int GAME_VIEW = 5;
 }

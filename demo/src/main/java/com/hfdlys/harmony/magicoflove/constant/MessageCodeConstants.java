@@ -76,5 +76,15 @@ public class MessageCodeConstants {
      */
     public static final int START_GAME = 404;
 
+    /**
+     * 退出房间
+     */
+    public static final int EXIT_ROOM = 405;
+
+    /**
+     * 获取房间列表
+     */
+    public static final int ASK_LOBBY_INFO = 406;
+
     
 }

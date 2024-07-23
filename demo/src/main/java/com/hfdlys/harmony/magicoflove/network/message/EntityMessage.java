@@ -59,6 +59,11 @@ public class EntityMessage {
      */
     private int weaponType;
 
+    /**
+     * 阵营
+     */
+    private int camp;
+
     public EntityMessage() {
     }
 

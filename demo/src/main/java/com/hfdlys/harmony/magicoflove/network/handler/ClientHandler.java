@@ -14,6 +14,7 @@ import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
 import com.hfdlys.harmony.magicoflove.network.message.LoginMessage;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.network.message.RegisterMessage;
+import com.hfdlys.harmony.magicoflove.network.message.RoomInfoMessage;
 import com.hfdlys.harmony.magicoflove.network.message.UserMessgae;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.CharacterRegisterMessage;
 import com.hfdlys.harmony.magicoflove.view.ServerFrame;
@@ -81,10 +82,14 @@ public class ClientHandler extends Thread {
                             this.user = UserService.getInstance().login(loginMessage.getUsername(), loginMessage.getPassword());
                             if (user != null) {
                                 Integer userId = user.getUserId();
+                                if (Server.getInstance().getClientMapByUserId().containsKey(userId)) {
+                                    ServerFrame.getInstance().appendText("用户" + userId + "已登录\n");
+                                    sendMessage(MessageCodeConstants.FAIL, "");
+                                    break;
+                                }
                                 ServerFrame.getInstance().appendText("用户" + userId + "登录成功\n");
                                 UserMessgae userMessgae = new UserMessgae();
                                 userMessgae.setUserId(userId);
-                                Server.getInstance().getGameManager().addPlayerSkin(userId, user.getSkin());
                                 sendMessage(MessageCodeConstants.SUCCESS, userMessgae);
                                 initGame();
                             } else {
@@ -106,7 +111,6 @@ public class ClientHandler extends Thread {
                                 ServerFrame.getInstance().appendText("用户" + registerUserId + "注册成功\n");
                                 UserMessgae userMessgae = new UserMessgae();
                                 userMessgae.setUserId(registerUserId);
-                                Server.getInstance().getGameManager().addPlayerSkin(userId, registerMessage.getSkin());
                                 sendMessage(MessageCodeConstants.SUCCESS, userMessgae);
                                 initGame();
                             } else {
@@ -122,50 +126,102 @@ public class ClientHandler extends Thread {
                             }
                             controller.setControlMessage(objectMapper.readValue(message.getContent(), ControlMessage.class));
                             break;
+                        case MessageCodeConstants.CREATE_ROOM:
+                            if (this.user == null) {
+                                ServerFrame.getInstance().appendText("用户未登录\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            if (roomId != 0) {
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "已在房间" + roomId + "中\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            String roomName = objectMapper.readValue(message.getContent(), String.class);
+                            roomId = Server.getInstance().getRoomManager().createRoom(user, roomName);
+                        case MessageCodeConstants.JOIN_ROOM:
+                            if (this.user == null) {
+                                ServerFrame.getInstance().appendText("用户未登录\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            if (roomId != 0) {
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "已在房间" + roomId + "中\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            roomId = objectMapper.readValue(message.getContent(), Integer.class);
+                            if (Server.getInstance().getRoomManager().joinRoom(roomId, user) == false) {
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "加入房间" + roomId + "失败\n");
+                                sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            break;
+                        case MessageCodeConstants.START_GAME:
+                            if (this.user == null) {
+                                ServerFrame.getInstance().appendText("用户未登录\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            if (roomId == 0) {
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "未在房间中\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            if (Server.getInstance().getRoomManager().startGame(roomId, user) == false) {
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "开始游戏失败\n");
+                                sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            break;
+                        case MessageCodeConstants.EXIT_ROOM:
+                            if (this.user == null) {
+                                ServerFrame.getInstance().appendText("用户未登录\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            if (roomId == 0) {
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "未在房间中\n");
+                                // sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            if (Server.getInstance().getRoomManager().leaveRoom(roomId, user) == false) {
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "退出房间失败\n");
+                                sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            sendMessage(MessageCodeConstants.SUCCESS, "");
+                            break;
+                        case MessageCodeConstants.ASK_LOBBY_INFO:
+                            if (this.user == null) {
+                                ServerFrame.getInstance().appendText("用户未登录\n");
+                                sendMessage(MessageCodeConstants.FAIL, "");
+                                break;
+                            }
+                            List<RoomInfoMessage> roomInfoMessages = new ArrayList<>();
+                            for (RoomHandler roomHandler : Server.getInstance().getRoomManager().getRoomMap().values()) {
+                                RoomInfoMessage roomInfoMessage = new RoomInfoMessage();
+                                roomInfoMessage.setRoomId(roomHandler.getRoomId());
+                                roomInfoMessage.setRoomName(roomHandler.getRoomName());
+                                roomInfoMessage.setRoomPlayer(roomHandler.getPlayerNum());
+                                roomInfoMessage.setMaxPlayer(roomHandler.getMAX_PLAYER_NUM());
+                                roomInfoMessages.add(roomInfoMessage);
+                            }
+                            sendMessage(MessageCodeConstants.ROOM_LIST_INFO, roomInfoMessages);
+                            break;
                         default:
+                            
                             break;
                     }
                 }
             }
         } catch (Exception e) {
-            ServerFrame.getInstance().appendText("用户" + user.getUsername() + "退出游戏\n");
-            Server.getInstance().getClientMapByUserId().remove(user.getUserId());
+            close();
         }
     }
 
     public void initGame() {
         Server.getInstance().getClientMapByUserId().put(user.getUserId(), this);
-        ServerFrame.getInstance().appendText("用户" + user.getUsername() + "初始化游戏\n");
-        List<UserMessgae> userMessgaes = new ArrayList<>();
-        for (ClientHandler clientHandler : Server.getInstance().getClientMap().values()) {
-            if (clientHandler.getUser() != null) {
-                UserMessgae userMessgae = new UserMessgae();
-                userMessgae.setUserId(clientHandler.getUser().getUserId());
-                userMessgae.setUsername(clientHandler.getUser().getUsername());
-                userMessgae.setSkin(clientHandler.getUser().getSkin());
-                userMessgaes.add(userMessgae);
-            }
-        }
-        try {
-            sendMessage(MessageCodeConstants.USER_INFO, userMessgaes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        UserMessgae myUserMessgae = new UserMessgae(user);
-        List<UserMessgae> myUserMessgaes = new ArrayList<>();
-        myUserMessgaes.add(myUserMessgae);
-        try {
-            Server.getInstance().broadcast(MessageCodeConstants.USER_INFO, myUserMessgaes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Random random = new Random();
-        int min = 1;
-        int max = 4;
-        int randomInt = random.nextInt(max - min) + min;
-        Server.getInstance().getGameManager().getEntityManager().add(CharacterFactory.getCharacter(user.getUserId(), user.getUsername(), randomInt, controller, Server.getInstance().getGameManager()), new CharacterRegisterMessage(0, user.getUserId(), user.getUsername(), randomInt));
     }
 
     public void sendMessage(int code, Object content) {
@@ -190,8 +246,17 @@ public class ClientHandler extends Thread {
 
     public void close() {
         try {
-            socket.close();
-        } catch (IOException e) {
+            ServerFrame.getInstance().appendText("用户" + user.getUsername() + "退出游戏\n");
+            Server.getInstance().getClientMapByUserId().remove(user.getUserId());
+            if (roomId != 0) {
+                Server.getInstance().getRoomManager().leaveRoom(roomId, user);
+            }
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
