@@ -4,6 +4,11 @@ import com.hfdlys.harmony.magicoflove.database.entity.User;
 
 import lombok.Data;
 
+/**
+ * 用户信息
+ * @author Jiasheng Wang
+ * @since 2024-07-18
+ */
 @Data
 public class UserMessgae {
     private Integer userId;

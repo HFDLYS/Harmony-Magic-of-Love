@@ -7,6 +7,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import lombok.Data;
 
+/**
+ * 实体注册信息
+ * @author Jiasheng Wang
+ * @since 2024-07-21
+ */
 @Data
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.CLASS,

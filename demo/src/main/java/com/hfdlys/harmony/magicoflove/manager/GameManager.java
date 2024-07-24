@@ -267,6 +267,11 @@ public class GameManager {
         playerSkin.put(id, texture);
     }
 
+    /**
+     * 获取玩家皮肤
+     * @param id 玩家id
+     * @return 玩家皮肤
+     */
     public Texture getPlayerSkin(int id) {
         return playerSkin.get(id);
     }
@@ -279,8 +284,4 @@ public class GameManager {
         this.isClient = isClient;
     }
 
-
-    public static void main(String[] args) {
-        
-    }
 }

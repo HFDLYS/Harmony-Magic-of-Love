@@ -10,6 +10,7 @@ import lombok.Data;
  * @since 2024-07-18
  */
 
+
 @Data
 public class ControlMessage {
     /**

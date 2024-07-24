@@ -47,6 +47,12 @@ public class UserService {
         return instance;
     }
 
+    /**
+     * <p>登录</p>
+     * @param username
+     * @param password
+     * @return 用户
+     */
     public User login(String username, String password) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, username);
@@ -65,6 +71,15 @@ public class UserService {
         }
     }
 
+
+    /**
+     * <p>注册</p>
+     * @param username 
+     * @param password
+     * @param email
+     * @param skin 皮肤材质
+     * @return 用户id
+     */
     public Integer register(String username, String password, String email, byte[] skin) {
         User user = new User();
         user.setUsername(username);

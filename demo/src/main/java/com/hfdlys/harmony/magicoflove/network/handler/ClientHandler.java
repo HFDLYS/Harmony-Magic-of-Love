@@ -31,7 +31,7 @@ import java.util.*;
 
 /**
  * 客户端处理类
- * 话虽如此，其实是给客户端处理的线程
+ * 话虽如此，其实是给服务端用的线程
  * @author Jiasheng Wang
  * @since 2024-07-18
  */
@@ -97,14 +97,15 @@ public class ClientHandler extends Thread {
                                 break;
                             }
                             LoginMessage loginMessage = objectMapper.readValue(message.getContent(), LoginMessage.class);
-                            this.user = UserService.getInstance().login(loginMessage.getUsername(), loginMessage.getPassword());
-                            if (user != null) {
-                                Integer userId = user.getUserId();
+                            User usertemp = UserService.getInstance().login(loginMessage.getUsername(), loginMessage.getPassword());
+                            if (usertemp != null) {
+                                Integer userId = usertemp.getUserId();
                                 if (Server.getInstance().getClientMapByUserId().containsKey(userId)) {
                                     ServerFrame.getInstance().appendText("用户" + userId + "已登录\n");
                                     sendMessage(MessageCodeConstants.FAIL, "此用户正在线中");
                                     break;
                                 }
+                                this.user = usertemp;
                                 ServerFrame.getInstance().appendText("用户" + userId + "登录成功\n");
                                 UserMessgae userMessgae = new UserMessgae();
                                 userMessgae.setUserId(userId);
@@ -124,6 +125,7 @@ public class ClientHandler extends Thread {
                             RegisterMessage registerMessage = objectMapper.readValue(message.getContent(), RegisterMessage.class);
                             Integer registerUserId = UserService.getInstance().register(registerMessage.getUsername(), registerMessage.getPassword(), registerMessage.getEmail(), registerMessage.getSkin());
                             if (registerUserId == -1) {
+                                ServerFrame.getInstance().appendText("有用户注册失败\n");
                                 sendMessage(MessageCodeConstants.FAIL, "注册失败");
                                 break;
                             } else if (registerUserId == -2) {
@@ -177,7 +179,7 @@ public class ClientHandler extends Thread {
                             int roomIdTemp = objectMapper.readValue(message.getContent(), Integer.class);
                             if (Server.getInstance().getRoomManager().joinRoom(roomIdTemp, user) == false) {
                                 ServerFrame.getInstance().appendText("用户" + user.getUsername() + "加入房间" + roomIdTemp + "失败\n");
-                                sendMessage(MessageCodeConstants.FAIL, "用户" + user.getUsername() + "加入房间" + roomIdTemp + "失败");
+                                sendMessage(MessageCodeConstants.FAIL, "此房间姑且不可加入");
                                 break;
                             }
                             roomId = roomIdTemp;
@@ -261,6 +263,11 @@ public class ClientHandler extends Thread {
         Server.getInstance().getClientMapByUserId().put(user.getUserId(), this);
     }
 
+    /**
+     * 发送信息
+     * @param code 信息代码
+     * @param content 信息内容
+     */
     public void sendMessage(int code, Object content) {
         try {
             synchronized(writer) {
@@ -281,6 +288,9 @@ public class ClientHandler extends Thread {
     }
 
 
+    /**
+     * 关闭连接
+     */
     public void close() {
         try {
             ServerFrame.getInstance().appendText("用户" + socket.getInetAddress() + "退出游戏\n");

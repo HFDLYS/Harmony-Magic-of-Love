@@ -27,6 +27,11 @@ import com.hfdlys.harmony.magicoflove.view.GameFrame;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 客户端类
+ * @auther Jiasheng Wang
+ * @since 2024-07-18
+ */
 @Data
 @Slf4j
 public class Client {
@@ -108,9 +113,6 @@ public class Client {
                                 break;
                             // 操作失败
                             case MessageCodeConstants.FAIL:
-                                if (userId != null) {
-                                    break;
-                                }
                                 try {
                                     String info = objectMapper.readValue(message.getContent(), String.class);
                                     log.error(info);
@@ -173,7 +175,6 @@ public class Client {
                                 JOptionPane.showMessageDialog(null, "大家一起走到了最后，真是又一次合家欢庆的结果", "游戏结束", JOptionPane.INFORMATION_MESSAGE);
                                 Client.getInstance().getGameManager().getEntityManager().restart();
                                 sendMessage(MessageCodeConstants.ASK_LOBBY_INFO, null);
-                                GameFrame.getInstance().setGameState(GameViewConstants.LOBBY_VIEW);
                                 break;
                             default:
                                 break;

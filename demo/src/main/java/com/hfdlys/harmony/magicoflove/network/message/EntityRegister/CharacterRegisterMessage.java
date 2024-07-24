@@ -5,6 +5,11 @@ import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * 角色注册信息
+ * @author Jiasheng Wang
+ * @since 2024-07-21
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class CharacterRegisterMessage extends EntityRegisterMessage {

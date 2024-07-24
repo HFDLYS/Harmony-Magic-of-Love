@@ -9,6 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 信息
+ * @since 2024-07-18
+ */
 @Data
 public class Message {
     private static final ObjectMapper objectMapper = new ObjectMapper();

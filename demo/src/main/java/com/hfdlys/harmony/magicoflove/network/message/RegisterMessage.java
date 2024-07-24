@@ -2,6 +2,11 @@ package com.hfdlys.harmony.magicoflove.network.message;
 
 import lombok.Data;
 
+/**
+ * 注册信息
+ * @author Jiasheng Wang
+ * @since 2024-07-18
+ */
 @Data
 public class RegisterMessage {
     private String username;

@@ -9,6 +9,13 @@ import com.hfdlys.harmony.magicoflove.database.service.UserService;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * 服务器窗口类
+ * 用于显示服务器日志
+ * @author Jiasheng Wang
+ * @since 2024-07-22
+ *
+ */
 public class ServerFrame extends JFrame {
     /**
      * 初始窗口大小
@@ -22,6 +29,9 @@ public class ServerFrame extends JFrame {
      */
     private final int WINDOW_Y = 1000;
 
+    /**
+     * 日志列表
+     */
     private JList<String> logList;
     
     private static ServerFrame instance = null;
@@ -56,6 +66,9 @@ public class ServerFrame extends JFrame {
         ).toArray(String[]::new));
     }
 
+    /**
+     * <p>启动窗口</p>
+     */
     public void launchFrame() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());        

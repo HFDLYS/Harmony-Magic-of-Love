@@ -13,6 +13,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 房间管理器
+ * @auther Jiasheng Wang
+ * @since 2024-07-23
+ */
 @Data
 public class RoomManager {
 
@@ -39,7 +44,9 @@ public class RoomManager {
     }
 
     /**
-     * 
+     * 创建房间
+     * @param user 用户
+     * @param roomName 房间名
      */
     public int createRoom(User user, String roomName) {
         roomId++;
@@ -51,6 +58,12 @@ public class RoomManager {
         return roomId;
     }
 
+    /**
+     * 加入房间
+     * @param roomId 房间号
+     * @param user 用户
+     * @return  是否加入成功    true:成功    false:失败
+     */
     public boolean joinRoom(int roomId, User user) {
         RoomHandler roomHandler = roomMap.get(roomId);
         if (roomHandler == null) {
@@ -59,6 +72,7 @@ public class RoomManager {
         return roomHandler.addPlayer(user);
     }
 
+    
     public boolean startGame(int roomId, User user) {
         RoomHandler roomHandler = roomMap.get(roomId);
         if (roomHandler == null) {
@@ -73,6 +87,7 @@ public class RoomManager {
             return true;
         }
         ServerFrame.getInstance().appendText(user.getUsername() + "离开了房间" + roomId + "\n");
+        Server.getInstance().getClientMapByUserId().get(user.getUserId()).setRoomId(0);
         return roomHandler.removePlayer(user);
     }
 

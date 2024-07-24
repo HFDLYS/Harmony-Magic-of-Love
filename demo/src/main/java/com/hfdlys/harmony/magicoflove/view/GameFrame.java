@@ -69,6 +69,7 @@ public class GameFrame extends JFrame {
      */
     private float scale = 1.0f;
 
+
     private Image backgroundImage0;
 
     private Image backgroundImage1;
@@ -81,8 +82,14 @@ public class GameFrame extends JFrame {
 
     private File selectedFile = null;
 
+    /**
+     * 房间列表
+     */
     private DefaultListModel<RoomInfoMessage> roomListModel;
 
+    /**
+     * 房间玩家列表
+     */
     private DefaultListModel<UserMessgae> roomPlayerModel;
 
     /**
@@ -164,6 +171,7 @@ public class GameFrame extends JFrame {
      * 
      */
     public void renderMenu() {
+        // 切换界面
         if (gameState == GameViewConstants.LOGIN_VIEW) {
             launchLoginFrame();
         } else if (gameState == GameViewConstants.REGISTER_VIEW) {
@@ -270,7 +278,9 @@ public class GameFrame extends JFrame {
         isRendered = true;
 
         if (Client.getInstance().getUserId() != null) {
-
+            setGameState(GameViewConstants.LOADING_VIEW);
+            Client.getInstance().sendMessage(MessageCodeConstants.ASK_LOBBY_INFO, null);
+            return;
         }
         setTitle("登录");
         JPanel contentPanel = new JPanel(new BorderLayout()) {

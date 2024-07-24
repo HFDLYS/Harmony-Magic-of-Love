@@ -8,6 +8,11 @@ import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.EntityRegis
 
 import lombok.Data;
 
+/**
+ * 实体管理器信息
+ * @author Jiasheng Wang
+ * @since 2024-07-21
+ */
 @Data
 public class EntityManagerMessage {
     /**

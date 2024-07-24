@@ -5,6 +5,11 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+/**
+ * 邮件工具类
+ * @author Jiasheng Wang
+ * @since 2024-07-23
+ */
 public class EmailUtil {
     public static boolean sendEmail(String to, String subject, String content) {
         // 收件人邮箱

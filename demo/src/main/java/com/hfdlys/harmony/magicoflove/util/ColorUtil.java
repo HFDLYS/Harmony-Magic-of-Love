@@ -3,6 +3,11 @@ package com.hfdlys.harmony.magicoflove.util;
 import java.awt.Color;
 import java.util.Random;
 
+/**
+ * 颜色工具类
+ * @author Jiasheng Wang
+ * @since 2024-07-23
+ */
 public class ColorUtil {
     public static Color convertToColor(String s) {
         long seed = s.hashCode();

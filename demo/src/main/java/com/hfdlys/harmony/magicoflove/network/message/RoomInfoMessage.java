@@ -2,6 +2,11 @@ package com.hfdlys.harmony.magicoflove.network.message;
 
 import lombok.Data;
 
+/**
+ * 房间信息
+ * @author Jiasheng Wang
+ * @since 2024-07-21
+ */
 @Data
 public class RoomInfoMessage {
     /**

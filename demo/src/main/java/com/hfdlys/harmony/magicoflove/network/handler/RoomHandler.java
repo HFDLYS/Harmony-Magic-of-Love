@@ -16,12 +16,23 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 房间处理类
+ * @auther Jiasheng Wang
+ * @since 2024-07-18
+ */
 @Data
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
 public class RoomHandler extends Thread {
+    /**
+     * 房间id
+     */
     private int roomId;
 
+    /**
+     * 玩家数量
+     */
     private int playerNum;
 
     private final int WAITING = 0;
@@ -30,16 +41,34 @@ public class RoomHandler extends Thread {
 
     private final int END = 2;
 
+    /**
+     * 房间状态
+     */
     private int roomStatus;
 
+    /**
+     * 玩家列表
+     */
     private List<User> players;
 
+    /**
+     * 房间名
+     */
     private String roomName;
 
+    /**
+     * 最大玩家数量
+     */
     private final int MAX_PLAYER_NUM = 6;
 
+    /**
+     * 玩家锁
+     */
     private final Object playerLock = new Object();
 
+    /**
+     * 游戏管理器，获取引用
+     */
     private GameManager gameManager;
 
     public RoomHandler(int roomId, String roomName) {
@@ -119,10 +148,12 @@ public class RoomHandler extends Thread {
         }
     }
 
+    /**
+     * 移除玩家
+     * @param user
+     * @return 是否成功
+     */
     public boolean removePlayer(User user) {
-        if (roomStatus == GAMING) {
-            return false;
-        }
         synchronized (playerLock) {
             if (players.contains(user)) {
                 players.remove(user);
@@ -136,6 +167,9 @@ public class RoomHandler extends Thread {
         }
     }
 
+    /**
+     * 关闭房间
+     */
     public void closeRoom() {
         synchronized (playerLock) {
         }
@@ -143,6 +177,11 @@ public class RoomHandler extends Thread {
         this.interrupt();
     }
 
+    /**
+     * 开始游戏
+     * @param user
+     * @return 是否成功
+     */
     public boolean startGame(User user) {
         if (roomStatus == GAMING) {
             return false;
