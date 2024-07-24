@@ -15,7 +15,6 @@ import com.hfdlys.harmony.magicoflove.Client;
 import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.game.common.Texture;
-import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.game.factory.MapFactory;
 import com.hfdlys.harmony.magicoflove.network.message.Message;
 import com.hfdlys.harmony.magicoflove.view.GameFrame;
@@ -220,6 +219,17 @@ public class GameManager {
             // 调用其他管理器
             entityManager.run();
             Server.getInstance().broadcast(roomId, MessageCodeConstants.ENTITY_MANAGER_INFO, entityManager.getEntityManagerMessage());
+
+            if (Server.getInstance().getRoomManager().getRoomMap().get(roomId).getRoomStatus() == 2) {
+                break;
+            }
+
+            if (entityManager.getCampCount() == 1) {
+                Server.getInstance().getRoomManager().getRoomMap().get(roomId).setRoomStatus(2);
+                Server.getInstance().broadcast(roomId, MessageCodeConstants.GAME_OVER, null);
+                Server.getInstance().getRoomManager().removeRoom(roomId);
+                break;
+            } 
 
             // 帧数限制
             long time = System.currentTimeMillis();

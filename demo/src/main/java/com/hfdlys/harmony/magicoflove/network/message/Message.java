@@ -25,16 +25,11 @@ public class Message {
     public Message() {
     }
 
-    public Message(int code, String content) {
-        this.code = code;
-        this.content = content;
-    }
-
     public Message(int code, Object content) throws Exception {
         this.code = code;
         this.content = objectMapper.writeValueAsString(content);
     }
-    /*
+
     public String getContent() {
         return RSAUtil.getInstance().decrypt(content);
     }
@@ -42,5 +37,4 @@ public class Message {
     public void setContent(String content) {
         this.content = RSAUtil.getInstance().encrypt(content);
     }
-    */
 }

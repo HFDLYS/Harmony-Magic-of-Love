@@ -1,5 +1,6 @@
 package com.hfdlys.harmony.magicoflove.network.handler;
 
+import com.hfdlys.harmony.magicoflove.manager.EntityManager;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.UserMessgae;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.CharacterRegisterMessage;
@@ -7,7 +8,6 @@ import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.game.entity.Character;
 import com.hfdlys.harmony.magicoflove.database.entity.User;
-import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
 
 import java.util.*;

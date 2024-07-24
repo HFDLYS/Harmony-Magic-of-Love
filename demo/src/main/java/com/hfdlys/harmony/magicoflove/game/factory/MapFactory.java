@@ -1,6 +1,6 @@
 package com.hfdlys.harmony.magicoflove.game.factory;
 
-import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
+import com.hfdlys.harmony.magicoflove.manager.EntityManager;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ObstacleRegisterMessage;
 

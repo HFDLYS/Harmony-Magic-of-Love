@@ -4,9 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hfdlys.harmony.magicoflove.database.MySQLJDBC;
 import com.hfdlys.harmony.magicoflove.database.entity.User;
 import com.hfdlys.harmony.magicoflove.database.mapper.UserMapper;
+import com.hfdlys.harmony.magicoflove.util.EmailUtil;
 import com.hfdlys.harmony.magicoflove.util.SecurityUtil;
 
 
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.*;
+import java.util.List;
 
 /**
  * <p>
@@ -57,7 +65,7 @@ public class UserService {
         }
     }
 
-    public Integer register(String username, String password, byte[] skin) {
+    public Integer register(String username, String password, String email, byte[] skin) {
         User user = new User();
         user.setUsername(username);
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
@@ -65,6 +73,12 @@ public class UserService {
         if (userMapper.selectOne(wrapper) != null) {
             return -1;
         }
+
+        if (!EmailUtil.sendEmail(email, "注册成功", "您已成功注册")) {
+            return -2;
+        }
+
+        user.setEmail(email);
         
         try {
             user.setSkin(skin);
@@ -74,6 +88,44 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
+        }
+    }
+
+    public void deleteUser(int id) {
+        userMapper.deleteById(id);
+    }
+
+    public void updateUser(User user) {
+        userMapper.updateById(user);
+    }
+
+    public List<User> getUserList() {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        return userMapper.selectList(wrapper);
+    }
+
+    public void exportUser(String path) {
+        try (Workbook workbook = new HSSFWorkbook()) {
+            List<User> userList = getUserList();
+            
+            Sheet sheet = workbook.createSheet("User");
+            sheet.createRow(0).createCell(0).setCellValue("Id");
+            sheet.getRow(0).createCell(1).setCellValue("Username");
+            sheet.getRow(0).createCell(2).setCellValue("Email");
+            for (int i = 0; i < userList.size(); i++) {
+                User user = userList.get(i);
+                sheet.createRow(i + 1).createCell(0).setCellValue(user.getUserId());
+                sheet.getRow(i + 1).createCell(1).setCellValue(user.getUsername());
+                sheet.getRow(i + 1).createCell(2).setCellValue(user.getEmail());
+            }
+            for (int i = 0; i < 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+            path = path + "/user.xls";
+            FileOutputStream fileOut = new FileOutputStream(path);
+            workbook.write(fileOut);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -135,16 +135,20 @@ public class Server {
         @Override
         public void run() {
             new HeartBeatThread().start();
+            // 服务器接收客户端连接的线程
             while (true) {
                 try {
                     log.info("Waiting for connection...");
                     Socket socket = serverSocket.accept();
                     ClientHandler clientHandler = new ClientHandler(socket);
                     String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+                    log.info("Client " + uuid + " connected");
+                    ServerFrame.getInstance().appendText("客户端" + uuid + "已连接\n");
                     clientMap.put(uuid, clientHandler);
                     executorPool.execute(clientHandler);
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "服务端不可用", "错误", JOptionPane.ERROR_MESSAGE);
+                    System.exit(0);
                     break;
                 }
             }
@@ -163,6 +167,7 @@ public class Server {
                     Thread.sleep(3000);
                     PingMessage pingMessage = new PingMessage();
                     pingMessage.setTimestamp(System.currentTimeMillis());
+                    // 遍历客户端列表，发送心跳包，保证客户端在线
                     synchronized (clientMapLock) {
                         for (Map.Entry<String, ClientHandler> entry : clientMap.entrySet()) {
                             ClientHandler clientHandler = entry.getValue();

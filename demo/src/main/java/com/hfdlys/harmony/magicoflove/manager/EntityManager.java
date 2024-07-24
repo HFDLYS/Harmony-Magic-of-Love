@@ -1,15 +1,18 @@
-package com.hfdlys.harmony.magicoflove.game.entity;
+package com.hfdlys.harmony.magicoflove.manager;
 
 import java.util.*;
 
 import com.hfdlys.harmony.magicoflove.Client;
 import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
+import com.hfdlys.harmony.magicoflove.game.entity.Character;
+import com.hfdlys.harmony.magicoflove.game.entity.Entity;
+import com.hfdlys.harmony.magicoflove.game.entity.Obstacle;
+import com.hfdlys.harmony.magicoflove.game.entity.Projectile;
 import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ObstacleFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ProjectileFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.WeaponFactory;
-import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.EntityManagerMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityMessage;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.CharacterRegisterMessage;
@@ -58,6 +61,11 @@ public class EntityManager {
     private int entityCount;
 
     /**
+     * 阵营数
+     */
+    private int campCount;
+
+    /**
      * 游戏管理器
      */
     private GameManager gameManager;
@@ -74,6 +82,7 @@ public class EntityManager {
         }
         this.gameManager = gameManager;
         entityCount = 0;
+        campCount = 0;
     }
 
     public String getCampName(int id) {
@@ -118,6 +127,13 @@ public class EntityManager {
     }
 
     /**
+     * 获取阵营数
+     */
+    public int getCampCount() {
+        return campCount;
+    }
+
+    /**
      * 让所有实体进行一帧运动（移动、碰撞、伤害、死亡判断）
      */
     public void run() {
@@ -128,6 +144,10 @@ public class EntityManager {
         }
         clearDeadEntity();
         // 实体刷新（控制器）+ 掉线判断
+        
+        // 阵营类别计数
+        Set<Integer> campSet = new HashSet<>();
+        
         for(int i = 0; i < entityList.size(); i++) {
             if(entityList.get(i) instanceof Character) {
                 Character character = (Character)entityList.get(i);
@@ -136,8 +156,11 @@ public class EntityManager {
                 }
                 if (character.getHp() > 0)
                     character.play();
+                campSet.add(getCamp(character.getId()));
             }
         }
+
+        campCount = campSet.size();
 
 
         // 以移动为核心的判断（移动、碰撞、伤害）
@@ -293,8 +316,12 @@ public class EntityManager {
     public void restart() {
         synchronized (entityListModifyLock) {
             entityList = new ArrayList<>();
+            entityRegisterMessages = new HashMap<>();
+            entityMessageHashMap = new HashMap<>();
+            entityCamp = new HashMap<>();
         }
         entityCount = 0;
+        campCount = 0;
     }
 
     /**
@@ -391,6 +418,9 @@ public class EntityManager {
      */
     public void loadEntityManagerMessage(EntityManagerMessage entityManagerMessage) {
         entityRegisterMessages = entityManagerMessage.getEntityRegisterMessages();
+        /*
+         * 1. 遍历entityRegisterMessages，如果entityMessageHashMap中没有对应的实体信息，则注册实体
+         */
         for (EntityRegisterMessage entityRegisterMessage: entityManagerMessage.getEntityRegisterMessages().values()) {
             if (entityMessageHashMap.get(entityRegisterMessage.getId()) != null) continue;
             if (entityRegisterMessage instanceof CharacterRegisterMessage) {
@@ -407,6 +437,9 @@ public class EntityManager {
                 addWithoutMessage(projectileRegisterMessage.getId(), projectile);
             }
         }
+        /*
+         * 2. 遍历entityList，如果entityMessageHashMap中没有对应的实体信息，则删除实体
+         */
         this.entityMessageHashMap = entityManagerMessage.getEntityMessageHashMap();
         for(int i = 0; i < entityList.size(); i++) {
             Entity entity = entityList.get(i);

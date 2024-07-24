@@ -1,5 +1,6 @@
 package com.hfdlys.harmony.magicoflove.manager;
 
+import com.hfdlys.harmony.magicoflove.Server;
 import com.hfdlys.harmony.magicoflove.database.entity.User;
 import com.hfdlys.harmony.magicoflove.network.handler.RoomHandler;
 import com.hfdlys.harmony.magicoflove.network.message.RoomInfoMessage;
@@ -81,6 +82,9 @@ public class RoomManager {
             return false;
         }
         roomHandler.closeRoom();
+        for (User user : roomHandler.getPlayers()) {
+            Server.getInstance().getClientMapByUserId().get(user.getUserId()).setRoomId(0);
+        }
         roomMap.remove(roomId);
         ServerFrame.getInstance().appendText("房间" + roomId + "已解散\n");
         return true;

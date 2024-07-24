@@ -57,6 +57,11 @@ public class MessageCodeConstants {
     public static final int GAME_START = 305;
 
     /**
+     * 游戏结束
+     */
+    public static final int GAME_OVER = 306;
+
+    /**
      * 控制信息
      */
     public static final int CONTROL = 401;

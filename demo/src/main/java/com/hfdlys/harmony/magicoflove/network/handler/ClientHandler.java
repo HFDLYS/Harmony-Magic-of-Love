@@ -9,8 +9,8 @@ import com.hfdlys.harmony.magicoflove.database.service.LogService;
 import com.hfdlys.harmony.magicoflove.database.service.UserService;
 import com.hfdlys.harmony.magicoflove.game.controller.Controller;
 import com.hfdlys.harmony.magicoflove.game.controller.ServerRemoteController;
-import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
+import com.hfdlys.harmony.magicoflove.manager.EntityManager;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
 import com.hfdlys.harmony.magicoflove.network.message.LoginMessage;
@@ -40,14 +40,29 @@ import java.util.*;
 @Slf4j
 @EqualsAndHashCode(callSuper = true)
 public class ClientHandler extends Thread {
+    /**
+     * 客户端socket
+     */
     private Socket socket;
     
+    /*
+     * 读取客户端信息
+     */
     private BufferedReader reader;
 
+    /*
+     * 向客户端发送信息
+     */
     private PrintWriter writer;
 
+    /**
+     * 对象映射，序列化和反序列化
+     */
     private ObjectMapper objectMapper;
 
+    /**
+     * 游戏控制器，接收用户输入并处理
+     */
     private Controller controller;
 
     private int roomId;
@@ -68,6 +83,7 @@ public class ClientHandler extends Thread {
             log.info("Client connected: " + socket.getInetAddress());
             ServerFrame.getInstance().appendText("接收连接：" + socket.getInetAddress() + "\n");
             while (true) {
+                // 读取客户端信息
                 synchronized(reader) {
                     Message message = objectMapper.readValue(reader.readLine(), Message.class);
                     switch (message.getCode()) {
@@ -86,7 +102,7 @@ public class ClientHandler extends Thread {
                                 Integer userId = user.getUserId();
                                 if (Server.getInstance().getClientMapByUserId().containsKey(userId)) {
                                     ServerFrame.getInstance().appendText("用户" + userId + "已登录\n");
-                                    sendMessage(MessageCodeConstants.FAIL, "");
+                                    sendMessage(MessageCodeConstants.FAIL, "此用户正在线中");
                                     break;
                                 }
                                 ServerFrame.getInstance().appendText("用户" + userId + "登录成功\n");
@@ -96,20 +112,26 @@ public class ClientHandler extends Thread {
                                 initGame();
                             } else {
                                 ServerFrame.getInstance().appendText("用户登录失败\n");
-                                sendMessage(MessageCodeConstants.FAIL, "");
+                                sendMessage(MessageCodeConstants.FAIL, "用户登录失败");
                             }
                             break;
                         case MessageCodeConstants.REGISTER:
                             if (this.user != null) {
                                 ServerFrame.getInstance().appendText("用户" + this.user.getUsername() + "已登录\n");
-                                sendMessage(MessageCodeConstants.FAIL, "");
+                                sendMessage(MessageCodeConstants.FAIL, "这不已经登录了吗");
                                 break;
                             }
                             RegisterMessage registerMessage = objectMapper.readValue(message.getContent(), RegisterMessage.class);
-                            Integer registerUserId = UserService.getInstance().register(registerMessage.getUsername(), registerMessage.getPassword(), registerMessage.getSkin());
+                            Integer registerUserId = UserService.getInstance().register(registerMessage.getUsername(), registerMessage.getPassword(), registerMessage.getEmail(), registerMessage.getSkin());
+                            if (registerUserId == -1) {
+                                sendMessage(MessageCodeConstants.FAIL, "注册失败");
+                                break;
+                            } else if (registerUserId == -2) {
+                                sendMessage(MessageCodeConstants.FAIL, "邮件发送失败");
+                                break;
+                            } 
                             this.user = UserService.getInstance().login(registerMessage.getUsername(), registerMessage.getPassword());
                             if (registerUserId != null && registerUserId != -1) {
-                                Integer userId = registerUserId;
                                 ServerFrame.getInstance().appendText("用户" + registerUserId + "注册成功\n");
                                 UserMessgae userMessgae = new UserMessgae();
                                 userMessgae.setUserId(registerUserId);
@@ -154,8 +176,8 @@ public class ClientHandler extends Thread {
                             }
                             int roomIdTemp = objectMapper.readValue(message.getContent(), Integer.class);
                             if (Server.getInstance().getRoomManager().joinRoom(roomIdTemp, user) == false) {
-                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "加入房间" + roomId + "失败\n");
-                                sendMessage(MessageCodeConstants.FAIL, "用户" + user.getUsername() + "加入房间" + roomId + "失败");
+                                ServerFrame.getInstance().appendText("用户" + user.getUsername() + "加入房间" + roomIdTemp + "失败\n");
+                                sendMessage(MessageCodeConstants.FAIL, "用户" + user.getUsername() + "加入房间" + roomIdTemp + "失败");
                                 break;
                             }
                             roomId = roomIdTemp;
@@ -233,6 +255,7 @@ public class ClientHandler extends Thread {
             close();
         }
     }
+
 
     public void initGame() {
         Server.getInstance().getClientMapByUserId().put(user.getUserId(), this);

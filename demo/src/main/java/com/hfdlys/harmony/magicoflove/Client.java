@@ -13,7 +13,7 @@ import com.hfdlys.harmony.magicoflove.constant.GameViewConstants;
 import com.hfdlys.harmony.magicoflove.constant.MessageCodeConstants;
 import com.hfdlys.harmony.magicoflove.game.controller.ClientController;
 import com.hfdlys.harmony.magicoflove.game.controller.Controller;
-import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
+import com.hfdlys.harmony.magicoflove.manager.EntityManager;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.manager.MusicManager;
 import com.hfdlys.harmony.magicoflove.network.message.ControlMessage;
@@ -91,10 +91,12 @@ public class Client {
                         String line = reader.readLine();
                         Message message = objectMapper.readValue(line, Message.class);
                         switch (message.getCode()) {
+                            // 服务器心跳
                             case MessageCodeConstants.HEART_BEAT:
                                 PingMessage pingMessage = objectMapper.readValue(message.getContent(), PingMessage.class);
                                 log.info("Ping: " + (System.currentTimeMillis() - pingMessage.getTimestamp()));
                                 break;
+                            // 登录成功
                             case MessageCodeConstants.SUCCESS:
                                 if (userId != null) {
                                     break;
@@ -104,12 +106,14 @@ public class Client {
                                 Client.getInstance().setUserId(userId);
                                 Client.getInstance().sendMessage(MessageCodeConstants.ASK_LOBBY_INFO, null);
                                 break;
+                            // 操作失败
                             case MessageCodeConstants.FAIL:
                                 if (userId != null) {
                                     break;
                                 }
                                 try {
                                     String info = objectMapper.readValue(message.getContent(), String.class);
+                                    log.error(info);
                                     if (info != null && !info.isEmpty()) {
                                         JOptionPane.showMessageDialog(null, info, "Error", JOptionPane.ERROR_MESSAGE);
                                     }
@@ -117,11 +121,11 @@ public class Client {
                                 }
                                 GameFrame.getInstance().setGameState(GameViewConstants.LOGIN_VIEW);
                                 break;
+                            // 服务器返回的房间信息
                             case MessageCodeConstants.USER_INFO:
                                 if (userId == null) {
                                     break;
                                 }
-                                log.info("get User info");
                                 List<UserMessgae> userMessgae = objectMapper.readValue(message.getContent(), objectMapper.getTypeFactory().constructCollectionType(List.class, UserMessgae.class));
                                 for (UserMessgae user : userMessgae) {
                                     gameManager.addPlayerSkin(user.getUserId(), user.getSkin());
@@ -132,6 +136,7 @@ public class Client {
                                 }
                                 GameFrame.getInstance().setGameState(GameViewConstants.ROOM_VIEW);
                                 break;
+                            // 服务器返回的房间信息
                             case MessageCodeConstants.ROOM_LIST_INFO:
                                 if (userId == null) {
                                     break;
@@ -143,6 +148,7 @@ public class Client {
                                 }
                                 GameFrame.getInstance().setGameState(GameViewConstants.LOBBY_VIEW);
                                 break;
+                            // 服务器返回的游戏内实体信息
                             case MessageCodeConstants.ENTITY_MANAGER_INFO:
                                 if (userId == null) {
                                     break;
@@ -152,12 +158,23 @@ public class Client {
                                 }
                                 gameManager.getEntityManager().loadEntityManagerMessage(objectMapper.readValue(message.getContent(), EntityManagerMessage.class));
                                 break;
+                            // 游戏开始信号
                             case MessageCodeConstants.START_GAME:
                                 if (userId == null) {
                                     break;
                                 }
                                 gameManager.getEntityManager().restart();
                                 GameFrame.getInstance().setGameState(GameViewConstants.GAME_VIEW);
+                            // 游戏结束信号
+                            case MessageCodeConstants.GAME_OVER:
+                                if (userId == null) {
+                                    break;
+                                }
+                                JOptionPane.showMessageDialog(null, "大家一起走到了最后，真是又一次合家欢庆的结果", "游戏结束", JOptionPane.INFORMATION_MESSAGE);
+                                Client.getInstance().getGameManager().getEntityManager().restart();
+                                sendMessage(MessageCodeConstants.ASK_LOBBY_INFO, null);
+                                GameFrame.getInstance().setGameState(GameViewConstants.LOBBY_VIEW);
+                                break;
                             default:
                                 break;
                         }

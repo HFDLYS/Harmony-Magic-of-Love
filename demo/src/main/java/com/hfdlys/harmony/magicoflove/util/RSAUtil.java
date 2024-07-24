@@ -90,7 +90,6 @@ public class RSAUtil {
             byte[] encryptedBytes = cipher.doFinal(data.getBytes());
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (Exception e) {
-            log.error("Failed to encrypt data", e);
             return data;
         }
     }
@@ -110,7 +109,6 @@ public class RSAUtil {
             byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
             return new String(decryptedBytes);
         } catch (Exception e) {
-            log.error("Failed to decrypt data", e);
             return encryptedData;
         }
     }

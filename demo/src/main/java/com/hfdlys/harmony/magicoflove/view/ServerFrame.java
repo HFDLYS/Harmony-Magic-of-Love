@@ -4,6 +4,7 @@ import java.net.*;
 import javax.swing.*;
 
 import com.hfdlys.harmony.magicoflove.database.service.LogService;
+import com.hfdlys.harmony.magicoflove.database.service.UserService;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -48,7 +49,11 @@ public class ServerFrame extends JFrame {
         addWindowListener(new WindowCloseListener());
 
         logList = new JList<>();
-        logList.setListData(LogService.getInstance().getLogList().stream().map(log -> log.getContent()).toArray(String[]::new));
+        logList.setListData(LogService.getInstance().getLogList().stream().map(
+            log -> {
+                return log.getContent() + "--" + log.getCreateTime();
+            }
+        ).toArray(String[]::new));
     }
 
     public void launchFrame() {
@@ -68,6 +73,7 @@ public class ServerFrame extends JFrame {
             if (result == JFileChooser.APPROVE_OPTION) {
                 String path = fileChooser.getSelectedFile().getAbsolutePath();
                 LogService.getInstance().exportLog(path);
+                UserService.getInstance().exportUser(path);
             }
         });
 

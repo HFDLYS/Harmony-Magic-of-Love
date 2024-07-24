@@ -2,9 +2,9 @@ package com.hfdlys.harmony.magicoflove.game.entity.weapon;
 
 import com.hfdlys.harmony.magicoflove.game.common.Hitbox;
 import com.hfdlys.harmony.magicoflove.game.common.Texture;
-import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.game.entity.Projectile;
 import com.hfdlys.harmony.magicoflove.game.factory.ProjectileFactory;
+import com.hfdlys.harmony.magicoflove.manager.EntityManager;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.network.message.EntityRegister.ProjectileRegisterMessage;
 

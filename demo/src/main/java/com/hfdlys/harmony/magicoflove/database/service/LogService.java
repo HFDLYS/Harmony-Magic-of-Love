@@ -7,6 +7,11 @@ import com.hfdlys.harmony.magicoflove.database.mapper.LogMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
 import java.io.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -61,15 +66,32 @@ public class LogService {
     }
 
     public void exportLog(String path) {
-        try {
+        try (Workbook workbook = new HSSFWorkbook()) {
             List<Log> logList = getLogList();
-            File file = new File(path, "log.txt");
-            FileWriter writer = new FileWriter(file);
-            for (Log log : logList) {
-                writer.write(log.getContent() + "\n");
+            
+
+            Sheet sheet = workbook.createSheet("Log");
+
+            sheet.createRow(0).createCell(0).setCellValue("Id");
+            sheet.getRow(0).createCell(1).setCellValue("Content");
+            sheet.getRow(0).createCell(2).setCellValue("CreateTime");
+
+            for (int i = 0; i < logList.size(); i++) {
+                Log log = logList.get(i);
+                sheet.createRow(i + 1).createCell(0).setCellValue(log.getId());
+                sheet.getRow(i + 1).createCell(1).setCellValue(log.getContent());
+                sheet.getRow(i + 1).createCell(2).setCellValue(log.getCreateTime().toString());
             }
-            writer.close();
-            log.info("Export log to " + file.getAbsolutePath());
+
+            for (int i = 0; i < 2; i++) {
+                sheet.autoSizeColumn(i);
+            }
+            path = path + "/log.xls";
+
+            FileOutputStream fileOut = new FileOutputStream(path);
+
+            workbook.write(fileOut);
+
         } catch (IOException e) {
             log.error("Export log failed", e);
         }

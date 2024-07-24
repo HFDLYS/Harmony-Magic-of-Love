@@ -23,10 +23,10 @@ import com.hfdlys.harmony.magicoflove.game.controller.ClientController;
 import com.hfdlys.harmony.magicoflove.game.controller.Controller;
 import com.hfdlys.harmony.magicoflove.game.entity.Character;
 import com.hfdlys.harmony.magicoflove.game.entity.Entity;
-import com.hfdlys.harmony.magicoflove.game.entity.EntityManager;
 import com.hfdlys.harmony.magicoflove.game.factory.CharacterFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.ObstacleFactory;
 import com.hfdlys.harmony.magicoflove.game.factory.WeaponFactory;
+import com.hfdlys.harmony.magicoflove.manager.EntityManager;
 import com.hfdlys.harmony.magicoflove.manager.GameManager;
 import com.hfdlys.harmony.magicoflove.manager.MusicManager;
 import com.hfdlys.harmony.magicoflove.network.message.LoginMessage;
@@ -417,25 +417,41 @@ public class GameFrame extends JFrame {
         gbc.anchor = GridBagConstraints.LINE_START;
         mainPane.add(usernameField, gbc);
 
+        // 邮箱
+
+        JLabel emailLabel = new JLabel("邮箱：");
+        JTextField emailField = new JTextField(20);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.LINE_END;
+        mainPane.add(emailLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        mainPane.add(emailField, gbc);
+
+
         // 创建密码标签和密码框
         JLabel passwordLabel = new JLabel("密码：");
         JPasswordField passwordField = new JPasswordField(20);
         
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.LINE_END;
         mainPane.add(passwordLabel, gbc);
         
         // 设置密码框的布局
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.LINE_START;
         mainPane.add(passwordField, gbc);
 
         JLabel chooseFileLabel = new JLabel("皮肤文件:");
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.LINE_START;
         mainPane.add(chooseFileLabel, gbc);
@@ -467,7 +483,8 @@ public class GameFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
-                if (username.isEmpty() || password.isEmpty()) {
+                String email = emailField.getText();
+                if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "用户名和密码不能为空");
                     return;
                 }
@@ -477,7 +494,7 @@ public class GameFrame extends JFrame {
                 }
                 try (InputStream in = new FileInputStream(selectedFile)) {
                     byte[] imageBytes = in.readAllBytes();
-                    RegisterMessage registerMessage = new RegisterMessage(username, password, imageBytes);
+                    RegisterMessage registerMessage = new RegisterMessage(username, password, email,imageBytes);
                     Client.getInstance().sendMessage(MessageCodeConstants.REGISTER, registerMessage);
                     setGameState(GameViewConstants.LOADING_VIEW);
                 } catch (Exception ex) {
@@ -487,19 +504,19 @@ public class GameFrame extends JFrame {
         });
         
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.LINE_END;
         mainPane.add(chooseFileButton, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.LINE_START;
         mainPane.add(cancelButton, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.LAST_LINE_END;
         mainPane.add(registerButton, gbc);
